@@ -1,372 +1,638 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Prim Hesaplama</title>
-<style>
-:root{
-  --primary:#1976d2;
-  --bg:#f4f4f4;
-  --card:#ffffff;
-  --text:#333;
-}
-[data-theme="dark"]{
-  --bg:#121212;
-  --card:#1e1e1e;
-  --text:#eee;
-  --primary:#2196f3;
-}
-/* Koyu tema bilgi kutusu yazısını görünür yap */
-[data-theme="dark"] .info-box{
-  background:#1a237e; /* koyu mavi arka plan */
-  color:#fff; /* beyaz yazı */
-}
-
-html,body{height:100%;margin:0;font-family:sans-serif;background:var(--bg);color:var(--text);}
-body{display:flex;justify-content:center;padding:16px;align-items:flex-start;}
-.wrap{
-  width:100%;
-  max-width:480px;
-  background:var(--card);
-  border-radius:10px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.08);
-  padding:20px;
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-}
-label{display:block;margin-top:12px;font-weight:600;font-size:14px;}
-select,input[type="number"],input[type="text"],input[type="password"]{
-  width:100%;
-  padding:10px;
-  margin-top:6px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  font-size:14px;
-  box-sizing:border-box;
-  background:var(--card);
-  color:var(--text);
-}
-.kredi-row{display:flex;align-items:center;gap:10px;margin-top:10px;}
-.kredi-row input[type="checkbox"]{width:18px;height:18px;}
-.actions{display:flex;gap:10px;margin-top:16px;}
-button{
-  flex:1;
-  padding:12px;
-  border-radius:8px;
-  border:none;
-  cursor:pointer;
-  font-weight:700;
-  color:white;
-  font-size:14px;
-}
-.btn-calc{background:var(--primary);}
-.btn-clear{background:#ccc;color:#333;}
-.result{
-  background:var(--card);
-  border-radius:8px;
-  padding:16px;
-  border:1px solid #ddd;
-}
-.result h3{margin:0 0 8px 0;font-size:16px;}
-.line{display:flex;justify-content:space-between;margin:6px 0;font-size:14px;}
-.muted{color:#666;font-weight:600;}
-.big{font-size:18px;font-weight:800;}
-.by{text-align:right;color:#999;font-weight:600;font-size:12px;margin-top:6px;}
-.hidden{display:none;}
-.info-box{background:#eef; padding:10px;border-radius:6px; font-size:14px;margin-top:10px;}
-.theme-switch{margin-top:10px;text-align:right;}
-.footer-credit{
-  text-align:center;
-  font-weight:700;
-  font-size:14px;
-  margin-top:10px;
-  color: #d32f2f; /* kırmızı renkli */
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Prim Hesaplayıcı</title>
+    <!-- Tailwind CSS (Modern Tasarım İçin) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome (İkonlar İçin) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Özel Geçiş Efektleri */
+        .transition-height {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            max-height: 1000px;
+            opacity: 1;
+            overflow: hidden;
+        }
+        .collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0 !important;
+        }
+        /* Inputlardaki okları gizle */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        /* Animasyonlu arka plan */
+        .bg-pattern {
+            background-color: #f3f4f6;
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .dark .bg-pattern {
+            background-color: #111827;
+            background-image: radial-gradient(#374151 1px, transparent 1px);
+        }
+    </style>
 </head>
-<body data-theme="light">
+<body class="bg-pattern text-gray-800 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-300">
 
-<!-- Giriş Ekranı -->
-<div class="wrap" id="loginWrap">
-  <h1>Giriş Yap</h1>
-  <label for="userId">Kullanıcı Adı</label>
-  <input type="text" id="userId" placeholder="Kullanıcı adı">
-  <label for="userPass">Şifre</label>
-  <input type="password" id="userPass" placeholder="Şifre">
-  <div style="margin-top:8px;">
-    <input type="checkbox" id="rememberMe">
-    <label for="rememberMe" style="font-weight:400;font-size:14px;">Beni hatırla</label>
-  </div>
-  <div class="actions">
-    <button id="btnLogin" class="btn-calc">GİRİŞ</button>
-  </div>
-</div>
+    <!-- Navbar / Header -->
+    <nav class="w-full bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="bg-primary-600 text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">Prim<span class="text-primary-600">Pro</span></span>
+                </div>
+                <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-<!-- Prim Hesaplama Ekranı -->
-<div class="wrap hidden" id="primWrap">
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
+        
+        <!-- Login Card -->
+        <div id="loginCard" class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300">
+            <div class="p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Giriş Yap</h2>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Devam etmek için kimlik bilgilerinizi doğrulayın.</p>
+                </div>
+                <form id="loginForm" class="space-y-6">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kullanıcı Adı</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fa-regular fa-user text-gray-400"></i>
+                            </div>
+                            <input type="text" id="username" class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow sm:text-sm" placeholder="Kullanıcı adınızı girin">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Şifre</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-lock text-gray-400"></i>
+                            </div>
+                            <input type="password" id="password" class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow sm:text-sm" placeholder="••••••">
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember-me" type="checkbox" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer">
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300 cursor-pointer">Beni Hatırla</label>
+                        </div>
+                    </div>
 
-  <h1>Prim Hesaplama</h1>
+                    <button type="submit" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                        Giriş Yap
+                    </button>
+                </form>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700/50 px-8 py-4 border-t border-gray-100 dark:border-gray-700 flex justify-center">
+                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">BİR KAHRAMANMARAŞ YAPIMIDIR 🍦</p>
+            </div>
+        </div>
 
-  <!-- Tema Seçimi -->
-  <div class="theme-switch">
-    <label>🌗 Tema: </label>
-    <select id="themeSelect">
-      <option value="light">Açık Mavi</option>
-      <option value="dark">Koyu</option>
-    </select>
-  </div>
+        <!-- Calculator App (Initially Hidden) -->
+        <div id="appCard" class="hidden w-full max-w-5xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300">
+            <div class="grid grid-cols-1 lg:grid-cols-3 min-h-[600px]">
+                
+                <!-- Left Column: Inputs -->
+                <div class="lg:col-span-2 p-6 sm:p-8 border-r border-gray-100 dark:border-gray-700">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-primary-500"></i> Hesaplama Parametreleri
+                        </h2>
+                        <button id="logoutBtn" class="text-sm text-red-500 hover:text-red-700 font-medium transition-colors">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış
+                        </button>
+                    </div>
 
-  <label for="urun">ÜRÜN SEÇİN</label>
-  <select id="urun"></select>
+                    <div class="space-y-6">
+                        <!-- Ürün ve Satış Tipi -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ürün Grubu</label>
+                                <select id="urun" class="block w-full py-2.5 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-shadow">
+                                    <!-- Options populated by JS -->
+                                </select>
+                            </div>
+                            
+                            <!-- Toggle Switch for Credit Card -->
+                            <div class="flex items-end pb-2">
+                                <label class="inline-flex items-center cursor-pointer select-none group">
+                                    <input type="checkbox" id="checkKrediKart" class="sr-only peer">
+                                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                                    <span class="ms-3 text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-primary-600 transition-colors">Kredi Kartı Satışı</span>
+                                </label>
+                            </div>
+                        </div>
 
-  <label for="satis">SATIŞ ŞEKLİ SEÇİN</label>
-  <select id="satis"></select>
+                        <!-- Dynamic Selection Area -->
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700">
+                            <div id="normalSatisRow" class="transition-height">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vade / Taksit Seçeneği</label>
+                                <select id="satis" class="block w-full py-2.5 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
 
-  <div class="kredi-row">
-    <input type="checkbox" id="checkKredi">
-    <label for="checkKredi">Kredi Kartı Seçeneği</label>
-    <select id="krediOpt" disabled style="flex:1;"></select>
-  </div>
+                            <div id="krediSatisRow" class="collapsed transition-height">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kredi Kartı Taksit Seçeneği</label>
+                                <select id="krediKart" class="block w-full py-2.5 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+                        </div>
 
-  <label for="toplam">TOPLAM SATIŞ TUTARI (₺)</label>
-  <input id="toplam" type="number" step="0.01" disabled>
+                        <!-- Financial Inputs -->
+                        <div class="space-y-4">
+                            <!-- Toplam Satış (Read-only) -->
+                            <div class="relative">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Toplam Satış Tutarı</label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <span class="text-gray-500 sm:text-sm">₺</span>
+                                    </div>
+                                    <input type="text" id="toplamSatis" disabled class="block w-full rounded-lg border-0 py-3 pl-8 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 bg-gray-50 dark:bg-gray-600 dark:text-white dark:ring-gray-600 sm:text-lg font-bold tracking-wider" placeholder="0.00">
+                                </div>
+                            </div>
 
-  <label for="nakit">NAKİT TUTARI (₺)</label>
-  <input id="nakit" type="number" step="0.01" placeholder="Nakit tutarını girin">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="cashInputs">
+                                <!-- Nakit Girişi -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nakit Tutar</label>
+                                    <div class="relative rounded-md shadow-sm">
+                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                            <span class="text-gray-500 sm:text-sm">₺</span>
+                                        </div>
+                                        <input type="number" id="nakit" class="block w-full rounded-lg border-0 py-2.5 pl-8 pr-4 text-gray-900 dark:text-white dark:bg-gray-700 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm" placeholder="0">
+                                    </div>
+                                </div>
+                                <!-- Senet (Auto) -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Senet Tutarı</label>
+                                    <div class="relative rounded-md shadow-sm">
+                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                            <span class="text-gray-500 sm:text-sm">₺</span>
+                                        </div>
+                                        <input type="text" id="senet" disabled class="block w-full rounded-lg border-0 py-2.5 pl-8 pr-4 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 ring-1 ring-inset ring-gray-200 dark:ring-gray-700 sm:text-sm font-medium" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
 
-  <label for="senet">SENET TUTARI (₺) — otomatik</label>
-  <input id="senet" type="number" step="0.01" disabled>
+                            <!-- Hesaba Düşen (Kredi Kartı Özel) -->
+                            <div id="hesabaInputRow" class="collapsed transition-height">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hesaba Düşen Tutar</label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <span class="text-gray-500 sm:text-sm">₺</span>
+                                    </div>
+                                    <input type="number" id="hesabaDusen" class="block w-full rounded-lg border-0 py-2.5 pl-8 pr-4 text-gray-900 dark:text-white dark:bg-gray-700 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm" placeholder="Tutarı giriniz">
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">POS cihazından geçen veya bankaya yatan net tutar.</p>
+                            </div>
+                        </div>
 
-  <label for="hesaba">HESABA DÜŞEN (₺) — (kredi kartı için)</label>
-  <input id="hesaba" type="number" step="0.01" placeholder="Kredi kartı için" disabled>
+                        <!-- Buttons -->
+                        <div class="flex gap-3 pt-4">
+                            <button id="btnTemizle" class="flex-1 py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
+                                <i class="fa-solid fa-rotate-left mr-2"></i> Temizle
+                            </button>
+                            <button id="btnHesapla" class="flex-[2] py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all transform hover:scale-[1.02]">
+                                <i class="fa-solid fa-calculator mr-2"></i> HESAPLA
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-  <div style="display:flex;gap:10px;margin-top:10px;">
-    <button id="btnHesapla" class="btn-calc">HESAPLA</button>
-    <button id="btnTemizle" class="btn-clear">TEMİZLE</button>
-    <button id="btnResetAll" class="btn-clear">HIZLI SIFIRLA</button>
-  </div>
+                <!-- Right Column: Results -->
+                <div class="bg-gray-50 dark:bg-gray-900/50 p-6 sm:p-8 flex flex-col justify-center relative">
+                    <!-- Placeholder State -->
+                    <div id="resultPlaceholder" class="text-center text-gray-400 dark:text-gray-500 py-12">
+                        <i class="fa-solid fa-chart-pie text-6xl mb-4 opacity-20"></i>
+                        <p class="text-lg font-medium">Sonuçlar burada görünecek</p>
+                        <p class="text-sm">Lütfen soldaki formu doldurup "Hesapla" butonuna basın.</p>
+                    </div>
 
-  <!-- Yardım / Bilgi -->
-  <button id="btnInfo" class="btn-clear" style="margin-top:10px;">Prim Hesaplama Açıklaması</button>
-  <div id="infoBox" class="info-box hidden">
-    Nakit tutarı KDV dahil 1,20 oranıyla bölünür ve %21 prim alınır. Senet tutarı (Kredi Kartı seçili değilse) ürün ve satış şekline göre %17-%11 oranlarında prim hesaplanır. Kredi Kartı için hesaba düşen tutarın %21’i prim olarak eklenir. Toplam prim tüm primlerin toplamıdır.
-  </div>
+                    <!-- Result Content (Hidden by default) -->
+                    <div id="sonucLayout" class="hidden space-y-6 animate-fade-in">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Hesap Özeti</h3>
+                        
+                        <!-- Cards for details -->
+                        <div class="space-y-3">
+                            <!-- Row 1 -->
+                            <div class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                                <span class="text-sm text-gray-500 dark:text-gray-400">KDV Hariç Tutar</span>
+                                <span id="resKdvHaric" class="font-semibold text-gray-900 dark:text-white">₺0.00</span>
+                            </div>
+                            
+                            <!-- Nakit Prim -->
+                            <div id="rowNakitPrim" class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 border-l-4 border-l-blue-400">
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-600 dark:text-gray-300 font-medium">Nakit Primi</span>
+                                    <span id="labelNakitOran" class="text-xs text-gray-400">%0</span>
+                                </div>
+                                <span id="resNakitPrim" class="font-bold text-blue-600 dark:text-blue-400">₺0.00</span>
+                            </div>
 
-  <div class="result">
-    <h3>Hesap Sonuçları</h3>
-    <div class="line"><div class="muted">Toplam Satış</div><div id="rToplam" class="muted">₺0,00</div></div>
-    <div class="line"><div class="muted">Nakit (KDV'li)</div><div id="rNakitKdv">₺0,00</div></div>
-    <div class="line"><div class="muted">Senet (KDV'li)</div><div id="rSenetKdv">₺0,00</div></div>
-    <div class="line"><div class="muted">Nakit Prim</div><div id="rNakitPrim">₺0,00</div></div>
-    <div class="line"><div class="muted">Senet Prim</div><div id="rSenetPrim">₺0,00</div></div>
-    <div class="line"><div class="muted">Kredi Kartı Primi</div><div id="rKrediPrim">₺0,00</div></div>
-    <div class="line"><div class="muted">Toplam Prim</div><div id="rTopPrim" class="big">₺0,00</div></div>
-  </div>
+                            <!-- Senet Prim -->
+                            <div id="rowSenetPrim" class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 border-l-4 border-l-purple-400">
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-600 dark:text-gray-300 font-medium">Senet Primi</span>
+                                    <span id="labelSenetOran" class="text-xs text-gray-400">%0</span>
+                                </div>
+                                <span id="resSenetPrim" class="font-bold text-purple-600 dark:text-purple-400">₺0.00</span>
+                            </div>
+                        </div>
 
-  <div class="by">by_Oğuz</div>
-  <div class="footer-credit">BİR KAHRAMANMARAŞ YAPIMIDIR</div>
-</div>
+                        <!-- Grand Total -->
+                        <div class="mt-8 pt-6 border-t border-dashed border-gray-300 dark:border-gray-700">
+                            <div class="flex justify-between items-end">
+                                <span class="text-lg font-bold text-gray-600 dark:text-gray-400">TOPLAM PRİM</span>
+                                <span id="resToplamPrim" class="text-3xl font-extrabold text-green-600 dark:text-green-400 tracking-tight">₺0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute bottom-4 right-6 text-right">
+                        <span class="text-xs font-bold text-gray-300 dark:text-gray-700 select-none">by_Oğuz</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-<script>
-// --- Giriş Kontrol ve Beni Hatırla ---
-const loginWrap = document.getElementById('loginWrap');
-const primWrap = document.getElementById('primWrap');
-const btnLogin = document.getElementById('btnLogin');
+    <script>
+        // --- DATA & CONFIG ---
+        const satisMap = {
+            "TR": { "1+1":63000, "1+5":70000, "1+8":75000, "1+12":80000, "1+15":84000, "1+18":90000, "1+21":96000, "1+24":102000, "K.KARTI TEK ÇEKİM":60000, "K.KARTI 2 TAKSİT":63000, "K.KARTI 5 TAKSİT":65000, "K.KARTI 9 TAKSİT":70000 },
+            "RO - Unique": { "1+1":24000,"1+4":26000,"1+7":28000,"1+12":30000,"1+15":32000,"1+18":34000,"1+21":35000,"K.KARTI TEK ÇEKİM":23000,"K.KARTI 2 TAKSİT":24000,"K.KARTI 5 TAKSİT":25000,"K.KARTI 9 TAKSİT":28000 },
+            "RO - Unique M5": { "1+1":24500,"1+4":27000,"1+7":29000,"1+12":31000,"1+15":33000,"1+18":35000,"1+21":36000,"K.KARTI TEK ÇEKİM":23500,"K.KARTI 2 TAKSİT":24500,"K.KARTI 5 TAKSİT":26000,"K.KARTI 9 TAKSİT":29000 },
+            "RO - Platinum": { "1+1":15000,"1+4":17000,"1+7":18000,"1+12":20000,"1+15":21000,"K.KARTI TEK ÇEKİM":15000,"K.KARTI 2 TAKSİT":15500,"K.KARTI 9 TAKSİT":18500 },
+            "RO - Silver": { "1+1":6200,"1+4":6700,"1+7":7200,"1+12":7700,"1+15":8200,"K.KARTI TEK ÇEKİM":5900,"K.KARTI 2 TAKSİT":6200,"K.KARTI 9 TAKSİT":7000 },
+            "Klima-12": { "1+4":31000,"1+9":36000,"1+12":37500,"K.KARTI TEK ÇEKİM":27900,"K.KARTI 9 TAKSİT":31000 },
+            "Klima-18": { "1+4":43500,"1+9":50500,"1+12":55000,"K.KARTI TEK ÇEKİM":38500,"K.KARTI 9 TAKSİT":43500 }
+        };
 
-window.addEventListener('DOMContentLoaded',()=>{
-  const savedId = localStorage.getItem('savedUser');
-  const savedPass = localStorage.getItem('savedPass');
-  if(savedId && savedPass){
-    document.getElementById('userId').value = savedId;
-    document.getElementById('userPass').value = savedPass;
-    document.getElementById('rememberMe').checked = true;
-  }
-});
+        // --- DOM ELEMENTS ---
+        const loginCard = document.getElementById('loginCard');
+        const appCard = document.getElementById('appCard');
+        const loginForm = document.getElementById('loginForm');
+        const themeToggle = document.getElementById('themeToggle');
+        
+        const urunSelect = document.getElementById('urun');
+        const satisSelect = document.getElementById('satis');
+        const krediSelect = document.getElementById('krediKart');
+        const checkKredi = document.getElementById('checkKrediKart');
+        
+        const normalSatisRow = document.getElementById('normalSatisRow');
+        const krediSatisRow = document.getElementById('krediSatisRow');
+        const hesabaInputRow = document.getElementById('hesabaInputRow');
+        const cashInputs = document.getElementById('cashInputs');
+        
+        const toplamInput = document.getElementById('toplamSatis');
+        const nakitInput = document.getElementById('nakit');
+        const senetInput = document.getElementById('senet');
+        const hesabaInput = document.getElementById('hesabaDusen');
+        
+        const resultPlaceholder = document.getElementById('resultPlaceholder');
+        const sonucLayout = document.getElementById('sonucLayout');
 
-btnLogin.addEventListener('click',()=>{
-  const id = document.getElementById('userId').value.trim();
-  const pass = document.getElementById('userPass').value.trim();
-  const remember = document.getElementById('rememberMe').checked;
+        // --- AUTH LOGIC ---
+        // Check local storage on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('savedUser');
+            if(savedUser === 'ihlas') {
+                document.getElementById('username').value = 'ihlas';
+                document.getElementById('password').value = '1234'; // Pre-fill for UX if remembered
+                document.getElementById('remember-me').checked = true;
+            }
+            
+            // Theme Check
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
 
-  if(id==='ihlas' && pass==='1234'){
-    if(remember){
-      localStorage.setItem('savedUser', id);
-      localStorage.setItem('savedPass', pass);
-    } else {
-      localStorage.removeItem('savedUser');
-      localStorage.removeItem('savedPass');
-    }
-    loginWrap.classList.add('hidden');
-    primWrap.classList.remove('hidden');
-  } else {
-    alert('Kullanıcı adı veya şifre yanlış!');
-  }
-});
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
+            const remember = document.getElementById('remember-me').checked;
 
-// --- Tema Seçimi ---
-const themeSelect = document.getElementById('themeSelect');
-themeSelect.addEventListener('change',()=>{ document.body.setAttribute('data-theme', themeSelect.value); });
+            if (u === 'ihlas' && p === '1234') {
+                if(remember) { localStorage.setItem('savedUser', u); } 
+                else { localStorage.removeItem('savedUser'); }
+                
+                // Animation transition
+                loginCard.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    loginCard.classList.add('hidden');
+                    appCard.classList.remove('hidden');
+                    // Small delay to trigger transition
+                    setTimeout(() => appCard.classList.remove('opacity-0', 'scale-95'), 50);
+                }, 300);
+            } else {
+                // Shake animation for error
+                loginCard.classList.add('animate-pulse');
+                setTimeout(() => loginCard.classList.remove('animate-pulse'), 500);
+                alert("Hatalı Kullanıcı Adı veya Şifre!");
+            }
+        });
 
-// --- Yardım / Bilgi Toggle ---
-const btnInfo = document.getElementById('btnInfo');
-const infoBox = document.getElementById('infoBox');
-btnInfo.addEventListener('click',()=>{ infoBox.classList.toggle('hidden'); });
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            appCard.classList.add('hidden');
+            loginCard.classList.remove('hidden', 'opacity-0', 'scale-95');
+            // Reset fields
+            document.getElementById('btnTemizle').click();
+        });
 
-// --- Hızlı Sıfırla ---
-const btnResetAll = document.getElementById('btnResetAll');
+        // --- THEME LOGIC ---
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if(document.documentElement.classList.contains('dark')){
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
 
-// --- Prim Hesaplama Elemanları ---
-const urunEl=document.getElementById('urun'),
-      satisEl=document.getElementById('satis'),
-      toplamEl=document.getElementById('toplam'),
-      nakitEl=document.getElementById('nakit'),
-      senetEl=document.getElementById('senet'),
-      checkKredi=document.getElementById('checkKredi'),
-      krediOpt=document.getElementById('krediOpt'),
-      hesabaEl=document.getElementById('hesaba');
+        // --- APP LOGIC ---
+        
+        function populateUrun() {
+            urunSelect.innerHTML = "";
+            Object.keys(satisMap).forEach(u => {
+                const opt = document.createElement("option");
+                opt.value = u;
+                opt.text = u;
+                urunSelect.add(opt);
+            });
+        }
 
-const rToplam=document.getElementById('rToplam'),
-      rNakitKdv=document.getElementById('rNakitKdv'),
-      rSenetKdv=document.getElementById('rSenetKdv'),
-      rNakitPrim=document.getElementById('rNakitPrim'),
-      rSenetPrim=document.getElementById('rSenetPrim'),
-      rKrediPrim=document.getElementById('rKrediPrim'),
-      rTopPrim=document.getElementById('rTopPrim');
+        function updateSatis() {
+            const urun = urunSelect.value;
+            satisSelect.innerHTML = "";
+            Object.keys(satisMap[urun]).filter(k => !k.includes("K.KARTI")).forEach(k => {
+                const opt = document.createElement("option");
+                opt.value = k;
+                opt.text = k;
+                satisSelect.add(opt);
+            });
+            // Update Toplam immediately
+            if (!checkKredi.checked) updateToplam();
+        }
 
-const btnHesapla=document.getElementById('btnHesapla'),
-      btnTemizle=document.getElementById('btnTemizle');
+        function updateKredi() {
+            const urun = urunSelect.value;
+            krediSelect.innerHTML = "";
+            Object.keys(satisMap[urun]).filter(k => k.includes("K.KARTI")).forEach(k => {
+                const opt = document.createElement("option");
+                opt.value = k;
+                opt.text = k;
+                krediSelect.add(opt);
+            });
+            if (checkKredi.checked) updateToplam();
+        }
 
-btnResetAll.addEventListener('click',()=>{
-  toplamEl.value=''; nakitEl.value=''; senetEl.value=''; hesabaEl.value='';
-  checkKredi.checked=false; krediOpt.disabled=true; hesabaEl.disabled=true;
-  renderResultsReset();
-});
+        function updateToplam() {
+            const urun = urunSelect.value;
+            let val = 0;
+            if (checkKredi.checked) {
+                const k = krediSelect.value;
+                val = satisMap[urun][k] || 0;
+            } else {
+                const s = satisSelect.value;
+                val = satisMap[urun][s] || 0;
+            }
+            toplamInput.value = formatCurrency(val);
+            calculateSenet();
+        }
 
-// --- TL Format Fonksiyonu ---
-function tl(v){return '₺'+Number(v||0).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+        function calculateSenet() {
+            if (checkKredi.checked) return;
+            
+            // Fix: TR formatlı stringi (örn: 63.000,00) düzgün parse etme
+            // 1. Noktaları (binlik ayracı) kaldır
+            // 2. Virgülü (ondalık ayracı) noktaya çevir
+            let rawToplam = toplamInput.value;
+            rawToplam = rawToplam.replace(/\./g, ''); // 63.000,00 -> 63000,00
+            rawToplam = rawToplam.replace(',', '.');  // 63000,00 -> 63000.00
+            
+            const toplam = parseFloat(rawToplam) || 0;
+            const nakit = parseFloat(nakitInput.value) || 0;
+            const senet = Math.max(toplam - nakit, 0);
+            senetInput.value = formatCurrency(senet);
+        }
 
-// --- Satış Verisi ---
-const satisMap = {
-  "TR":{"1+1":63000,"1+5":70000,"1+8":75000,"1+12":80000,"1+15":84000,"1+18":90000,"1+21":96000,"1+24":102000,"K.KARTI TEK ÇEKİM":60000,"K.KARTI 2 TAKSİT":63000,"K.KARTI 5 TAKSİT":65000,"K.KARTI 9 TAKSİT":70000},
-  "RO - Unique":{"1+1":24000,"1+4":26000,"1+7":28000,"1+12":30000,"1+15":32000,"1+18":34000,"1+21":35000,"K.KARTI TEK ÇEKİM":23000,"K.KARTI 2 TAKSİT":24000,"K.KARTI 5 TAKSİT":25000,"K.KARTI 9 TAKSİT":28000},
-  "RO - Unique M5":{"1+1":24500,"1+4":27000,"1+7":29000,"1+12":31000,"1+15":33000,"1+18":35000,"1+21":36000,"K.KARTI TEK ÇEKİM":23500,"K.KARTI 2 TAKSİT":24500,"K.KARTI 5 TAKSİT":26000,"K.KARTI 9 TAKSİT":29000},
-  "RO - Platinum":{"1+1":15000,"1+4":17000,"1+7":18000,"1+12":20000,"1+15":21000,"K.KARTI TEK ÇEKİM":15000,"K.KARTI 2 TAKSİT":15500,"K.KARTI 9 TAKSİT":18500},
-  "RO - Silver":{"1+1":6200,"1+4":6700,"1+7":7200,"1+12":7700,"1+15":8200,"K.KARTI TEK ÇEKİM":5900,"K.KARTI 2 TAKSİT":6200,"K.KARTI 9 TAKSİT":7000},
-  "Klima-12":{"1+4":31000,"1+9":36000,"1+12":37500,"K.KARTI TEK ÇEKİM":27900,"K.KARTI 9 TAKSİT":31000},
-  "Klima-18":{"1+4":43500,"1+9":50500,"1+12":55000,"K.KARTI TEK ÇEKİM":38500,"K.KARTI 9 TAKSİT":43500}
-};
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+        }
 
-// --- Fonksiyonlar ve Eventler ---
-function populateUrunler(){
-  urunEl.innerHTML='';
-  for(const u of Object.keys(satisMap)){
-    const opt=document.createElement('option');
-    opt.value=u;
-    opt.textContent=u;
-    urunEl.appendChild(opt);
-  }
-}
+        function parseCurrency(str) {
+            if(!str) return 0;
+            // Remove non-numeric except dot and comma, then normalize decimal
+            // Simple assumption: input[type=number] gives clean value, but mapped values need care
+            // For this logic, we mostly deal with raw numbers or formatted strings
+            if (typeof str === 'number') return str;
+            return parseFloat(str.replace(/\./g, '').replace(',', '.')); 
+        }
 
-function updateSatisOptions(){
-  const u = urunEl.value;
-  satisEl.innerHTML='';
-  if(!satisMap[u]) return;
-  const keys=Object.keys(satisMap[u]).filter(k=>!k.includes('K.KARTI'));
-  keys.forEach(k=>{
-    const opt=document.createElement('option');
-    opt.value=k;
-    opt.textContent=k;
-    satisEl.appendChild(opt);
-  });
-  satisEl.selectedIndex=0;
-  toplamEl.value = keys[0] ? satisMap[u][keys[0]] : 0;
-  updateSenet();
-  renderResultsReset();
-}
+        // Event Listeners
+        urunSelect.addEventListener("change", () => {
+            updateSatis();
+            updateKredi();
+        });
 
-function updateKrediOptions(){
-  const u = urunEl.value;
-  krediOpt.innerHTML='';
-  const krediKeys = Object.keys(satisMap[u]||{}).filter(k=>k.includes('K.KARTI'));
-  krediKeys.forEach(k=>{
-    const opt=document.createElement('option');
-    opt.value=k; opt.textContent=k; krediOpt.appendChild(opt);
-  });
-}
+        satisSelect.addEventListener("change", updateToplam);
+        krediSelect.addEventListener("change", updateToplam);
+        
+        nakitInput.addEventListener("input", calculateSenet);
 
-function updateSenet(){
-  const toplam=parseFloat(toplamEl.value)||0;
-  const nakit=parseFloat(nakitEl.value)||0;
-  const senet=Math.max(toplam-nakit,0);
-  senetEl.value=senet.toFixed(2);
-}
+        checkKredi.addEventListener("change", () => {
+            const isCredit = checkKredi.checked;
+            
+            // Toggle UI Elements with animation classes
+            if (isCredit) {
+                normalSatisRow.classList.add('collapsed');
+                cashInputs.classList.add('opacity-50', 'pointer-events-none'); // Dim instead of hide to keep layout stable but indicate disabled
+                
+                krediSatisRow.classList.remove('collapsed');
+                hesabaInputRow.classList.remove('collapsed');
+                
+                nakitInput.disabled = true;
+                nakitInput.value = '';
+                senetInput.value = '';
+            } else {
+                krediSatisRow.classList.add('collapsed');
+                hesabaInputRow.classList.add('collapsed');
+                
+                normalSatisRow.classList.remove('collapsed');
+                cashInputs.classList.remove('opacity-50', 'pointer-events-none');
+                
+                nakitInput.disabled = false;
+            }
+            updateToplam();
+            resetResultUI();
+        });
 
-function renderResultsReset(){
-  rToplam.textContent=tl(0);
-  rNakitKdv.textContent=tl(0);
-  rSenetKdv.textContent=tl(0);
-  rNakitPrim.textContent=tl(0);
-  rSenetPrim.textContent=tl(0);
-  rKrediPrim.textContent=tl(0);
-  rTopPrim.textContent=tl(0);
-}
+        document.getElementById("btnTemizle").addEventListener("click", () => {
+            nakitInput.value = "";
+            senetInput.value = "";
+            hesabaInput.value = "";
+            checkKredi.checked = false;
+            // Trigger change manually to reset UI state
+            checkKredi.dispatchEvent(new Event('change'));
+            urunSelect.selectedIndex = 0;
+            updateSatis();
+            updateKredi();
+            resetResultUI();
+        });
 
-function hesapla(){
-  const toplam = parseFloat(toplamEl.value) || 0;
-  const nakit = parseFloat(nakitEl.value) || 0;
-  const senet = Math.max(toplam - nakit, 0);
-  const hesaba = parseFloat(hesabaEl.value) || 0;
+        function resetResultUI() {
+            resultPlaceholder.classList.remove('hidden');
+            sonucLayout.classList.add('hidden');
+        }
 
-  const kdvFactor = 1.20;
-  const nakitKdv = nakit / kdvFactor;
-  const nakitPrim = nakitKdv * 0.21;
+        // --- CALCULATION LOGIC ---
+        document.getElementById("btnHesapla").addEventListener("click", () => {
+            let toplam = 0, nakit = 0, senet = 0;
+            let nakitOran = 0, senetOran = 0;
+            const kdvOran = 1.20;
+            
+            // Reset UI
+            resultPlaceholder.classList.add('hidden');
+            sonucLayout.classList.remove('hidden');
 
-  const krediSecili = checkKredi.checked;
+            // Hide/Show Rows based on type
+            const rowNakit = document.getElementById('rowNakitPrim');
+            const rowSenet = document.getElementById('rowSenetPrim');
 
-  let senetPrim = 0;
-  let senetKdv = 0;
-  if (!krediSecili) {
-    const satisKey = satisEl.value || "";
-    const satisNum = parseInt(satisKey.split("+")[1]) || 0;
-    const urun = urunEl.value;
-    let senetOran = 0.17;
-    if (urun === "TR") senetOran = (satisNum > 12) ? 0.11 : 0.17;
-    else if (urun === "RO - Unique" || urun === "RO - Unique M5") senetOran = (satisNum > 7) ? 0.11 : 0.17;
-    else if (urun === "RO - Platinum" || urun === "RO - Silver") senetOran = 0.11;
-    else if (urun === "Klima-12" || urun === "Klima-18") senetOran = 0.09;
+            if (checkKredi.checked) {
+                // Kredi Kartı Logic
+                const hesaba = parseFloat(hesabaInput.value) || 0;
+                const kdvHaric = hesaba / kdvOran;
+                const prim = kdvHaric * 0.21; // %21 sabit
 
-    senetKdv = senet / kdvFactor;
-    senetPrim = senetKdv * senetOran;
-  }
+                document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(kdvHaric)}`;
+                
+                // Repurpose Nakit Row for Credit Result or hide distinct rows and show total
+                // To keep it simple, let's just use the Total Prim mostly, but we can show breakdown
+                rowNakit.classList.add('hidden');
+                rowSenet.classList.add('hidden'); // Hide senet row
+                
+                // Show a custom row or just use Total
+                // Let's repurpose rowNakit for "Kredi Kartı Primi" visually
+                rowNakit.classList.remove('hidden');
+                rowNakit.querySelector('.flex-col span').innerText = "Kredi Kartı Primi";
+                document.getElementById('labelNakitOran').innerText = "%21";
+                document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(prim)}`;
 
-  const krediPrim = krediSecili ? (hesaba / kdvFactor) * 0.21 : 0;
-  const toplamPrim = nakitPrim + senetPrim + krediPrim;
+                document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(prim)}`;
 
-  rToplam.textContent = tl(toplam);
-  rNakitKdv.textContent = tl(nakitKdv);
-  rSenetKdv.textContent = tl(senetKdv);
-  rNakitPrim.textContent = tl(nakitPrim);
-  rSenetPrim.textContent = tl(senetPrim);
-  rKrediPrim.textContent = tl(krediPrim);
-  rTopPrim.textContent = tl(toplamPrim);
-}
+            } else {
+                // Senetli/Nakit Logic
+                rowNakit.classList.remove('hidden');
+                rowSenet.classList.remove('hidden');
+                rowNakit.querySelector('.flex-col span').innerText = "Nakit Primi";
+                rowSenet.querySelector('.flex-col span').innerText = "Senet Primi";
 
-// --- Event Listeners ---
-urunEl.addEventListener('change',()=>{updateSatisOptions();updateKrediOptions()});
-satisEl.addEventListener('change',()=>{toplamEl.value = (satisMap[urunEl.value][satisEl.value]||0); updateSenet(); renderResultsReset()});
-nakitEl.addEventListener('input',()=>{updateSenet(); renderResultsReset()});
-btnHesapla.addEventListener('click',()=>{if(checkKredi.checked){hesabaEl.disabled=false;krediOpt.disabled=false} hesapla()});
-btnTemizle.addEventListener('click',()=>{urunEl.selectedIndex=0; populateUrunler(); updateSatisOptions(); nakitEl.value=''; senetEl.value=''; hesabaEl.value=''; checkKredi.checked=false; krediOpt.disabled=true; hesabaEl.disabled=true; renderResultsReset();});
-checkKredi.addEventListener('change',()=>{ const on=checkKredi.checked; satisEl.disabled=on; nakitEl.disabled=on; senetEl.disabled=on; hesabaEl.disabled=!on; krediOpt.disabled=!on; if(on){ const u=urunEl.value; const k=krediOpt.value||"K.KARTI TEK ÇEKİM"; const fiyat=(satisMap[u]&&satisMap[u][k])?satisMap[u][k]:0; toplamEl.value=fiyat; nakitEl.value=''; senetEl.value=''; } else { const u=urunEl.value; const s=satisEl.value; if(u&&s&&satisMap[u]&&satisMap[u][s]!==undefined){toplamEl.value=satisMap[u][s]} hesabaEl.value=''; } renderResultsReset(); });
-krediOpt.addEventListener('change',()=>{ if(checkKredi.checked){ const u=urunEl.value; const k=krediOpt.value; const fiyat=(satisMap[u]&&satisMap[u][k])?satisMap[u][k]:0; toplamEl.value=fiyat; nakitEl.value=''; senetEl.value=''; renderResultsReset(); } });
+                const urun = urunSelect.value;
+                const satisKey = satisSelect.value;
+                
+                // Parse raw values
+                // Toplam is display only, get from calculation
+                const mapVal = satisMap[urun][satisKey] || 0;
+                nakit = parseFloat(nakitInput.value) || 0;
+                senet = Math.max(mapVal - nakit, 0);
 
-// --- Init ---
-populateUrunler();
-updateSatisOptions();
-updateKrediOptions();
-renderResultsReset();
-</script>
+                const nakitKdv = nakit / kdvOran;
+                const senetKdv = senet / kdvOran;
+
+                let satisNum = parseInt(satisKey.split("+")[1]) || 0;
+                
+                // Determine Rates
+                switch (urun) {
+                    case "TR": 
+                        [nakitOran, senetOran] = (satisNum > 12) ? [21, 11] : [21, 17]; 
+                        break;
+                    case "RO - Unique":
+                    case "RO - Unique M5": 
+                        [nakitOran, senetOran] = (satisNum > 7) ? [21, 11] : [21, 17]; 
+                        break;
+                    case "RO - Platinum":
+                    case "RO - Silver": 
+                        [nakitOran, senetOran] = [13, 11]; 
+                        break;
+                    case "Klima-12":
+                    case "Klima-18": 
+                        [nakitOran, senetOran] = [11, 9]; 
+                        break;
+                    default: 
+                        [nakitOran, senetOran] = [0, 0];
+                }
+
+                const nakitPrim = nakitKdv * nakitOran / 100;
+                const senetPrim = senetKdv * senetOran / 100;
+                const toplamPrim = nakitPrim + senetPrim;
+
+                // Update UI
+                const totalKdvHaric = nakitKdv + senetKdv;
+                document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(totalKdvHaric)}`;
+
+                document.getElementById('labelNakitOran').innerText = `%${nakitOran}`;
+                document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(nakitPrim)}`;
+
+                document.getElementById('labelSenetOran').innerText = `%${senetOran}`;
+                document.getElementById('resSenetPrim').innerText = `₺${formatCurrency(senetPrim)}`;
+
+                document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(toplamPrim)}`;
+            }
+        });
+
+        // Initialize
+        populateUrun();
+        updateSatis();
+        updateKredi();
+    </script>
 </body>
 </html>
