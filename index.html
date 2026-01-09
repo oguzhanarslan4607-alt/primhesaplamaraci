@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Prim Hesaplayıcı</title>
-    <!-- Tailwind CSS (Modern Tasarım İçin) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome (İkonlar İçin) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
@@ -65,7 +62,6 @@
 </head>
 <body class="bg-pattern text-gray-800 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-300">
 
-    <!-- Navbar / Header -->
     <nav class="w-full bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
@@ -83,10 +79,8 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
         
-        <!-- Login Card -->
         <div id="loginCard" class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300">
             <div class="p-8">
                 <div class="text-center mb-8">
@@ -130,11 +124,9 @@
             </div>
         </div>
 
-        <!-- Calculator App (Initially Hidden) -->
         <div id="appCard" class="hidden w-full max-w-5xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300">
             <div class="grid grid-cols-1 lg:grid-cols-3 min-h-[600px]">
                 
-                <!-- Left Column: Inputs -->
                 <div class="lg:col-span-2 p-6 sm:p-8 border-r border-gray-100 dark:border-gray-700">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
@@ -146,16 +138,13 @@
                     </div>
 
                     <div class="space-y-6">
-                        <!-- Ürün ve Satış Tipi -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ürün Grubu</label>
                                 <select id="urun" class="block w-full py-2.5 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-shadow">
-                                    <!-- Options populated by JS -->
-                                </select>
+                                    </select>
                             </div>
                             
-                            <!-- Toggle Switch for Credit Card -->
                             <div class="flex items-end pb-2">
                                 <label class="inline-flex items-center cursor-pointer select-none group">
                                     <input type="checkbox" id="checkKrediKart" class="sr-only peer">
@@ -165,26 +154,21 @@
                             </div>
                         </div>
 
-                        <!-- Dynamic Selection Area -->
                         <div class="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700">
                             <div id="normalSatisRow" class="transition-height">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vade / Taksit Seçeneği</label>
                                 <select id="satis" class="block w-full py-2.5 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
-                                    <!-- Populated by JS -->
-                                </select>
+                                    </select>
                             </div>
 
                             <div id="krediSatisRow" class="collapsed transition-height">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kredi Kartı Taksit Seçeneği</label>
                                 <select id="krediKart" class="block w-full py-2.5 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
-                                    <!-- Populated by JS -->
-                                </select>
+                                    </select>
                             </div>
                         </div>
 
-                        <!-- Financial Inputs -->
                         <div class="space-y-4">
-                            <!-- Toplam Satış (Read-only) -->
                             <div class="relative">
                                 <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Toplam Satış Tutarı</label>
                                 <div class="relative rounded-md shadow-sm">
@@ -196,7 +180,6 @@
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="cashInputs">
-                                <!-- Nakit Girişi -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nakit Tutar</label>
                                     <div class="relative rounded-md shadow-sm">
@@ -206,7 +189,6 @@
                                         <input type="number" id="nakit" class="block w-full rounded-lg border-0 py-2.5 pl-8 pr-4 text-gray-900 dark:text-white dark:bg-gray-700 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm" placeholder="0">
                                     </div>
                                 </div>
-                                <!-- Senet (Auto) -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Senet Tutarı</label>
                                     <div class="relative rounded-md shadow-sm">
@@ -218,7 +200,6 @@
                                 </div>
                             </div>
 
-                            <!-- Hesaba Düşen (Kredi Kartı Özel) -->
                             <div id="hesabaInputRow" class="collapsed transition-height">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hesaba Düşen Tutar</label>
                                 <div class="relative rounded-md shadow-sm">
@@ -231,7 +212,6 @@
                             </div>
                         </div>
 
-                        <!-- Buttons -->
                         <div class="flex gap-3 pt-4">
                             <button id="btnTemizle" class="flex-1 py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
                                 <i class="fa-solid fa-rotate-left mr-2"></i> Temizle
@@ -243,28 +223,22 @@
                     </div>
                 </div>
 
-                <!-- Right Column: Results -->
                 <div class="bg-gray-50 dark:bg-gray-900/50 p-6 sm:p-8 flex flex-col justify-center relative">
-                    <!-- Placeholder State -->
                     <div id="resultPlaceholder" class="text-center text-gray-400 dark:text-gray-500 py-12">
                         <i class="fa-solid fa-chart-pie text-6xl mb-4 opacity-20"></i>
                         <p class="text-lg font-medium">Sonuçlar burada görünecek</p>
                         <p class="text-sm">Lütfen soldaki formu doldurup "Hesapla" butonuna basın.</p>
                     </div>
 
-                    <!-- Result Content (Hidden by default) -->
                     <div id="sonucLayout" class="hidden space-y-6 animate-fade-in">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Hesap Özeti</h3>
                         
-                        <!-- Cards for details -->
                         <div class="space-y-3">
-                            <!-- Row 1 -->
                             <div class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
                                 <span class="text-sm text-gray-500 dark:text-gray-400">KDV Hariç Tutar</span>
                                 <span id="resKdvHaric" class="font-semibold text-gray-900 dark:text-white">₺0.00</span>
                             </div>
                             
-                            <!-- Nakit Prim -->
                             <div id="rowNakitPrim" class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 border-l-4 border-l-blue-400">
                                 <div class="flex flex-col">
                                     <span class="text-sm text-gray-600 dark:text-gray-300 font-medium">Nakit Primi</span>
@@ -273,7 +247,6 @@
                                 <span id="resNakitPrim" class="font-bold text-blue-600 dark:text-blue-400">₺0.00</span>
                             </div>
 
-                            <!-- Senet Prim -->
                             <div id="rowSenetPrim" class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 border-l-4 border-l-purple-400">
                                 <div class="flex flex-col">
                                     <span class="text-sm text-gray-600 dark:text-gray-300 font-medium">Senet Primi</span>
@@ -283,7 +256,6 @@
                             </div>
                         </div>
 
-                        <!-- Grand Total -->
                         <div class="mt-8 pt-6 border-t border-dashed border-gray-300 dark:border-gray-700">
                             <div class="flex justify-between items-end">
                                 <span class="text-lg font-bold text-gray-600 dark:text-gray-400">TOPLAM PRİM</span>
@@ -308,8 +280,8 @@
             "RO - Unique M5": { "1+1":24500,"1+4":27000,"1+7":29000,"1+12":31000,"1+15":33000,"1+18":35000,"1+21":36000,"K.KARTI TEK ÇEKİM":23500,"K.KARTI 2 TAKSİT":24500,"K.KARTI 5 TAKSİT":26000,"K.KARTI 9 TAKSİT":29000 },
             "RO - Platinum": { "1+1":15000,"1+4":17000,"1+7":18000,"1+12":20000,"1+15":21000,"K.KARTI TEK ÇEKİM":15000,"K.KARTI 2 TAKSİT":15500,"K.KARTI 9 TAKSİT":18500 },
             "RO - Silver": { "1+1":6200,"1+4":6700,"1+7":7200,"1+12":7700,"1+15":8200,"K.KARTI TEK ÇEKİM":5900,"K.KARTI 2 TAKSİT":6200,"K.KARTI 9 TAKSİT":7000 },
-            "Klima-12": { "1+4":31000,"1+9":36000,"1+12":37500,"K.KARTI TEK ÇEKİM":27900,"K.KARTI 9 TAKSİT":31000 },
-            "Klima-18": { "1+4":43500,"1+9":50500,"1+12":55000,"K.KARTI TEK ÇEKİM":38500,"K.KARTI 9 TAKSİT":43500 }
+            "Klima-12": { "1+1":31000,"1+4":35900,"1+9":43000,"1+12":48600,"K.KARTI TEK ÇEKİM":31000,"K.KARTI 9 TAKSİT":35900 },
+            "Klima-18": { "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 }
         };
 
         // --- DOM ELEMENTS ---
