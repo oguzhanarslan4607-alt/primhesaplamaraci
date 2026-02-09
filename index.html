@@ -65,6 +65,15 @@
         .transition-transform {
             transition: transform 0.3s ease;
         }
+        /* Disabled input styling adjustment */
+        input:disabled {
+            background-color: #f3f4f6;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        .dark input:disabled {
+            background-color: #374151;
+        }
     </style>
 </head>
 <body class="bg-pattern text-gray-800 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-300">
@@ -293,13 +302,13 @@
     <script>
         // --- DATA & CONFIG ---
         const satisMap = {
-            "TR": { "1+1":68000, "1+5":80000, "1+8":85000, "1+12":90000, "1+15":95000, "1+18":100000, "1+21":105000, "1+24":110000, "K.KARTI TEK ÇEKİM":65000, "K.KARTI 2 TAKSİT":68000, "K.KARTI 5 TAKSİT":75000, "K.KARTI 9 TAKSİT":80000 },
-            "RO - Unique": { "1+1":24000,"1+4":26000,"1+7":28000,"1+12":30000,"1+15":32000,"1+18":34000,"1+21":35000,"K.KARTI TEK ÇEKİM":23000,"K.KARTI 2 TAKSİT":24000,"K.KARTI 5 TAKSİT":25000,"K.KARTI 9 TAKSİT":28000 },
-            "RO - Unique M5": { "1+1":24500,"1+4":27000,"1+7":29000,"1+12":31000,"1+15":33000,"1+18":35000,"1+21":36000,"K.KARTI TEK ÇEKİM":23500,"K.KARTI 2 TAKSİT":24500,"K.KARTI 5 TAKSİT":26000,"K.KARTI 9 TAKSİT":29000 },
-            "RO - Platinum": { "1+1":15000,"1+4":17000,"1+7":18000,"1+12":20000,"1+15":21000,"K.KARTI TEK ÇEKİM":15000,"K.KARTI 2 TAKSİT":15500,"K.KARTI 9 TAKSİT":18500 },
-            "RO - Silver": { "1+1":6200,"1+4":6700,"1+7":7200,"1+12":7700,"1+15":8200,"K.KARTI TEK ÇEKİM":5900,"K.KARTI 2 TAKSİT":6200,"K.KARTI 9 TAKSİT":7000 },
-            "Klima-12": { "1+1":31000,"1+4":35900,"1+9":43000,"1+12":48600,"K.KARTI TEK ÇEKİM":31000,"K.KARTI 9 TAKSİT":35900 },
-            "Klima-18": { "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 }
+            "TR": { "PEŞİN":65000, "1+1":68000, "1+5":80000, "1+8":85000, "1+12":90000, "1+15":95000, "1+18":100000, "1+21":105000, "1+24":110000, "K.KARTI TEK ÇEKİM":65000, "K.KARTI 2 TAKSİT":68000, "K.KARTI 5 TAKSİT":75000, "K.KARTI 9 TAKSİT":80000 },
+            "RO - Unique": { "PEŞİN":23000, "1+1":24000,"1+4":26000,"1+7":28000,"1+12":30000,"1+15":32000,"1+18":34000,"1+21":35000,"K.KARTI TEK ÇEKİM":23000,"K.KARTI 2 TAKSİT":24000,"K.KARTI 5 TAKSİT":25000,"K.KARTI 9 TAKSİT":28000 },
+            "RO - Unique M5": { "PEŞİN":23500, "1+1":24500,"1+4":27000,"1+7":29000,"1+12":31000,"1+15":33000,"1+18":35000,"1+21":36000,"K.KARTI TEK ÇEKİM":23500,"K.KARTI 2 TAKSİT":24500,"K.KARTI 5 TAKSİT":26000,"K.KARTI 9 TAKSİT":29000 },
+            "RO - Platinum": { "PEŞİN":15000, "1+1":15500,"1+4":17000,"1+7":18000,"1+12":20000,"1+15":21000,"K.KARTI TEK ÇEKİM":15000,"K.KARTI 2 TAKSİT":15500,"K.KARTI 9 TAKSİT":18500 },
+            "RO - Silver": { "PEŞİN":5900, "1+1":6200,"1+4":6700,"1+7":7200,"1+12":7700,"1+15":8200,"K.KARTI TEK ÇEKİM":5900,"K.KARTI 2 TAKSİT":6200,"K.KARTI 9 TAKSİT":7000 },
+            "Klima-12": { "PEŞİN":29900, "1+1":31000,"1+4":35900,"1+9":43000,"1+12":48600,"K.KARTI TEK ÇEKİM":31000,"K.KARTI 9 TAKSİT":35900 },
+            "Klima-18": { "PEŞİN":40900, "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 }
         };
 
         // --- DOM ELEMENTS ---
@@ -441,18 +450,28 @@
                 val = satisMap[urun][s] || 0;
             }
             toplamInput.value = formatCurrency(val);
+            
+            // PEŞİN Kontrolü
+            if (satisSelect.value === "PEŞİN" && !checkKredi.checked) {
+                nakitInput.value = val;
+                nakitInput.disabled = true;
+            } else if (!checkKredi.checked) {
+                // Eğer PEŞİN değilse ve disable edildiyse aç
+                if(nakitInput.disabled) {
+                    nakitInput.disabled = false;
+                    nakitInput.value = ""; // Sıfırla ki kullanıcı yeni değer girebilsin
+                }
+            }
+
             calculateSenet();
         }
 
         function calculateSenet() {
             if (checkKredi.checked) return;
             
-            // Fix: TR formatlı stringi (örn: 63.000,00) düzgün parse etme
-            // 1. Noktaları (binlik ayracı) kaldır
-            // 2. Virgülü (ondalık ayracı) noktaya çevir
             let rawToplam = toplamInput.value;
-            rawToplam = rawToplam.replace(/\./g, ''); // 63.000,00 -> 63000,00
-            rawToplam = rawToplam.replace(',', '.');  // 63000,00 -> 63000.00
+            rawToplam = rawToplam.replace(/\./g, '');
+            rawToplam = rawToplam.replace(',', '.'); 
             
             const toplam = parseFloat(rawToplam) || 0;
             const nakit = parseFloat(nakitInput.value) || 0;
@@ -462,15 +481,6 @@
 
         function formatCurrency(num) {
             return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
-        }
-
-        function parseCurrency(str) {
-            if(!str) return 0;
-            // Remove non-numeric except dot and comma, then normalize decimal
-            // Simple assumption: input[type=number] gives clean value, but mapped values need care
-            // For this logic, we mostly deal with raw numbers or formatted strings
-            if (typeof str === 'number') return str;
-            return parseFloat(str.replace(/\./g, '').replace(',', '.')); 
         }
 
         // Toggle Details Logic
@@ -501,7 +511,7 @@
             // Toggle UI Elements with animation classes
             if (isCredit) {
                 normalSatisRow.classList.add('collapsed');
-                cashInputs.classList.add('opacity-50', 'pointer-events-none'); // Dim instead of hide to keep layout stable but indicate disabled
+                cashInputs.classList.add('opacity-50', 'pointer-events-none'); 
                 
                 krediSatisRow.classList.remove('collapsed');
                 hesabaInputRow.classList.remove('collapsed');
@@ -516,7 +526,15 @@
                 normalSatisRow.classList.remove('collapsed');
                 cashInputs.classList.remove('opacity-50', 'pointer-events-none');
                 
-                nakitInput.disabled = false;
+                // Eğer Peşin seçili değilse aç
+                if (satisSelect.value !== "PEŞİN") {
+                    nakitInput.disabled = false;
+                } else {
+                    // Peşin seçiliyse değerini doldur ve kilitle
+                    let rawVal = toplamInput.value.replace(/\./g, '').replace(',', '.');
+                    nakitInput.value = parseFloat(rawVal) || 0;
+                    nakitInput.disabled = true;
+                }
             }
             updateToplam();
             resetResultUI();
@@ -553,8 +571,6 @@
             // Reset UI
             resultPlaceholder.classList.add('hidden');
             sonucLayout.classList.remove('hidden');
-            // Optionally close details on new calculation or keep open if user opened it
-            // Let's keep it as is, but clear the content first
             detailSteps.innerHTML = "";
 
             // Hide/Show Rows based on type
@@ -597,10 +613,7 @@
             } else {
                 // Senetli/Nakit Logic
                 rowNakit.classList.remove('hidden');
-                rowSenet.classList.remove('hidden');
-                rowNakit.querySelector('.flex-col span').innerText = "Nakit Primi";
-                rowSenet.querySelector('.flex-col span').innerText = "Senet Primi";
-
+                
                 const urun = urunSelect.value;
                 const satisKey = satisSelect.value;
                 
@@ -614,24 +627,51 @@
                 let satisNum = parseInt(satisKey.split("+")[1]) || 0;
                 
                 // Determine Rates
-                switch (urun) {
-                    case "TR": 
-                        [nakitOran, senetOran] = (satisNum > 12) ? [21, 11] : [21, 17]; 
-                        break;
-                    case "RO - Unique":
-                    case "RO - Unique M5": 
-                        [nakitOran, senetOran] = (satisNum > 7) ? [21, 11] : [21, 17]; 
-                        break;
-                    case "RO - Platinum":
-                    case "RO - Silver": 
-                        [nakitOran, senetOran] = [13, 11]; 
-                        break;
-                    case "Klima-12":
-                    case "Klima-18": 
-                        [nakitOran, senetOran] = [11, 9]; 
-                        break;
-                    default: 
-                        [nakitOran, senetOran] = [0, 0];
+                if (satisKey === "PEŞİN") {
+                    // PEŞİN DURUMU: Senet Oranı Daima 0
+                    senetOran = 0;
+                    // Sadece Nakit Primi Hesapla, Senet Primi Gösterme
+                    rowSenet.classList.add('hidden');
+
+                    switch (urun) {
+                        case "TR": 
+                        case "RO - Unique":
+                        case "RO - Unique M5": 
+                            nakitOran = 21; 
+                            break;
+                        case "RO - Platinum":
+                        case "RO - Silver": 
+                            nakitOran = 13; 
+                            break;
+                        case "Klima-12":
+                        case "Klima-18":
+                            nakitOran = 11;
+                            break;
+                        default: 
+                            nakitOran = 0;
+                    }
+                } else {
+                    // VADELİ DURUMU
+                    rowSenet.classList.remove('hidden');
+                    switch (urun) {
+                        case "TR": 
+                            [nakitOran, senetOran] = (satisNum > 12) ? [21, 11] : [21, 17]; 
+                            break;
+                        case "RO - Unique":
+                        case "RO - Unique M5": 
+                            [nakitOran, senetOran] = (satisNum > 7) ? [21, 11] : [21, 17]; 
+                            break;
+                        case "RO - Platinum":
+                        case "RO - Silver": 
+                            [nakitOran, senetOran] = [13, 11]; 
+                            break;
+                        case "Klima-12":
+                        case "Klima-18": 
+                            [nakitOran, senetOran] = [11, 9]; 
+                            break;
+                        default: 
+                            [nakitOran, senetOran] = [0, 0];
+                    }
                 }
 
                 const nakitPrim = nakitKdv * nakitOran / 100;
@@ -642,18 +682,22 @@
                 const totalKdvHaric = nakitKdv + senetKdv;
                 document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(totalKdvHaric)}`;
 
+                rowNakit.querySelector('.flex-col span').innerText = "Nakit Primi";
                 document.getElementById('labelNakitOran').innerText = `%${nakitOran}`;
                 document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(nakitPrim)}`;
 
-                document.getElementById('labelSenetOran').innerText = `%${senetOran}`;
-                document.getElementById('resSenetPrim').innerText = `₺${formatCurrency(senetPrim)}`;
+                if (satisKey !== "PEŞİN") {
+                    rowSenet.querySelector('.flex-col span').innerText = "Senet Primi";
+                    document.getElementById('labelSenetOran').innerText = `%${senetOran}`;
+                    document.getElementById('resSenetPrim').innerText = `₺${formatCurrency(senetPrim)}`;
+                }
 
                 document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(toplamPrim)}`;
 
                 // Build Detail String for Nakit/Senet
                 if(nakit > 0) {
                      detailHtml += `
-                        <div class="border-b border-gray-300 dark:border-gray-600 pb-2 mb-2 font-bold text-blue-600">Nakit Kısmı Hesaplaması</div>
+                        <div class="border-b border-gray-300 dark:border-gray-600 pb-2 mb-2 font-bold text-blue-600">Nakit Kısmı Hesaplaması ${satisKey === "PEŞİN" ? "(PEŞİN)" : ""}</div>
                         <div class="flex justify-between">
                             <span>Nakit Girişi:</span>
                             <span>₺${formatCurrency(nakit)}</span>
@@ -666,11 +710,11 @@
                             <span>Prim (%${nakitOran}):</span>
                             <span>₺${formatCurrency(nakitKdv)} x 0.${nakitOran} = <strong>₺${formatCurrency(nakitPrim)}</strong></span>
                         </div>
-                        <div class="my-3 border-t border-dashed border-gray-300 dark:border-gray-600"></div>
                     `;
                 }
 
-                if(senet > 0) {
+                if(senet > 0 && satisKey !== "PEŞİN") {
+                     if (nakit > 0) detailHtml += `<div class="my-3 border-t border-dashed border-gray-300 dark:border-gray-600"></div>`;
                      detailHtml += `
                         <div class="border-b border-gray-300 dark:border-gray-600 pb-2 mb-2 font-bold text-purple-600">Senet Kısmı Hesaplaması</div>
                         <div class="flex justify-between">
