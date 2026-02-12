@@ -2,8 +2,15 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>İhlas Prim Hesaplama Aracı</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PrimPro">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -300,6 +307,15 @@
     </main>
 
     <script>
+        // --- PWA SERVICE WORKER KAYDI ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('SW Başarılı:', reg))
+                    .catch(err => console.log('SW Hatası:', err));
+            });
+        }
+
         // --- DATA & CONFIG ---
         const satisMap = {
             "TR": { "PEŞİN":65000, "1+1":68000, "1+5":80000, "1+8":85000, "1+12":90000, "1+15":95000, "1+18":100000, "1+21":105000, "1+24":110000, "K.KARTI TEK ÇEKİM":65000, "K.KARTI 2 TAKSİT":68000, "K.KARTI 5 TAKSİT":75000, "K.KARTI 9 TAKSİT":80000 },
@@ -581,7 +597,18 @@
                 // Kredi Kartı Logic
                 const hesaba = parseFloat(hesabaInput.value) || 0;
                 const kdvHaric = hesaba / kdvOran;
-                const prim = kdvHaric * 0.21; // %21 sabit
+                
+                // DİNAMİK ORAN BELİRLEME
+                const urun = urunSelect.value;
+                let oran = 21; // Varsayılan (Diğer ürünler için)
+                
+                if (urun === "RO - Platinum" || urun === "RO - Silver") {
+                    oran = 13;
+                } else if (urun === "Klima-12" || urun === "Klima-18") {
+                    oran = 11;
+                }
+
+                const prim = kdvHaric * (oran / 100);
 
                 document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(kdvHaric)}`;
                 
@@ -589,7 +616,7 @@
                 rowNakit.classList.remove('hidden');
                 rowSenet.classList.add('hidden'); 
                 rowNakit.querySelector('.flex-col span').innerText = "Kredi Kartı Primi";
-                document.getElementById('labelNakitOran').innerText = "%21";
+                document.getElementById('labelNakitOran').innerText = `%${oran}`;
                 document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(prim)}`;
                 document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(prim)}`;
 
@@ -605,8 +632,8 @@
                         <span>= ₺${formatCurrency(kdvHaric)}</span>
                     </div>
                     <div class="flex justify-between mt-1 pt-1 border-t border-gray-200 dark:border-gray-700">
-                        <span>Prim (%21):</span>
-                        <span>₺${formatCurrency(kdvHaric)} x 0.21 = <strong>₺${formatCurrency(prim)}</strong></span>
+                        <span>Prim (%${oran}):</span>
+                        <span>₺${formatCurrency(kdvHaric)} x 0.${oran} = <strong>₺${formatCurrency(prim)}</strong></span>
                     </div>
                 `;
 
