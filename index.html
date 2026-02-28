@@ -161,6 +161,20 @@
                     </div>
 
                     <div class="space-y-6">
+                        <div class="flex items-center justify-between bg-blue-50 dark:bg-gray-700/50 p-3 rounded-lg border border-blue-100 dark:border-gray-600 mb-2">
+                            <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Fiyat Listesi:</label>
+                            <div class="flex items-center gap-4">
+                                <label class="inline-flex items-center cursor-pointer group">
+                                    <input type="radio" name="priceList" value="yeni" checked class="w-4 h-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-500 dark:bg-gray-600">
+                                    <span class="ml-2 text-sm font-bold text-primary-700 dark:text-primary-400 group-hover:text-primary-800">Yeni Fiyatlar</span>
+                                </label>
+                                <label class="inline-flex items-center cursor-pointer group">
+                                    <input type="radio" name="priceList" value="eski" class="w-4 h-4 text-gray-500 focus:ring-gray-400 border-gray-300 dark:border-gray-500 dark:bg-gray-600">
+                                    <span class="ml-2 text-sm font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-800">Eski Fiyatlar</span>
+                                </label>
+                            </div>
+                        </div>
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ürün Grubu</label>
@@ -317,7 +331,7 @@
         }
 
         // --- DATA & CONFIG ---
-        const satisMap = {
+        const satisMapEski = {
             "TR": { "PEŞİN":65000, "1+1":68000, "1+5":80000, "1+8":85000, "1+12":90000, "1+15":95000, "1+18":100000, "1+21":105000, "1+24":110000, "K.KARTI TEK ÇEKİM":65000, "K.KARTI 2 TAKSİT":68000, "K.KARTI 5 TAKSİT":75000, "K.KARTI 9 TAKSİT":80000 },
             "RO - Unique": { "PEŞİN":23000, "1+1":24000,"1+4":26000,"1+7":28000,"1+12":30000,"1+15":32000,"1+18":34000,"1+21":35000,"K.KARTI TEK ÇEKİM":23000,"K.KARTI 2 TAKSİT":24000,"K.KARTI 5 TAKSİT":25000,"K.KARTI 9 TAKSİT":28000 },
             "RO - Unique M5": { "PEŞİN":23500, "1+1":24500,"1+4":27000,"1+7":29000,"1+12":31000,"1+15":33000,"1+18":35000,"1+21":36000,"K.KARTI TEK ÇEKİM":23500,"K.KARTI 2 TAKSİT":24500,"K.KARTI 5 TAKSİT":26000,"K.KARTI 9 TAKSİT":29000 },
@@ -326,6 +340,18 @@
             "Klima-12": { "PEŞİN":29900, "1+1":31000,"1+4":35900,"1+9":43000,"1+12":48600,"K.KARTI TEK ÇEKİM":31000,"K.KARTI 9 TAKSİT":35900 },
             "Klima-18": { "PEŞİN":40900, "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 }
         };
+
+        const satisMapYeni = {
+            "TR": { "PEŞİN":65000, "1+1":68000, "1+5":80000, "1+8":85000, "1+12":90000, "1+15":95000, "1+18":100000, "1+21":105000, "1+24":110000, "K.KARTI TEK ÇEKİM":65000, "K.KARTI 2 TAKSİT":68000, "K.KARTI 5 TAKSİT":75000, "K.KARTI 9 TAKSİT":80000 },
+            "RO - Unique": { "PEŞİN":25000, "1+1":26000,"1+4":28000,"1+7":31000,"1+12":32000,"1+15":34000,"1+18":36000,"1+21":38000,"K.KARTI TEK ÇEKİM":25000,"K.KARTI 2 TAKSİT":26000,"K.KARTI 5 TAKSİT":28000,"K.KARTI 9 TAKSİT":31000 },
+            "RO - Unique M5": { "PEŞİN":25500, "1+1":26500,"1+4":29000,"1+7":32000,"1+12":33000,"1+15":35000,"1+18":37000,"1+21":39000,"K.KARTI TEK ÇEKİM":25500,"K.KARTI 2 TAKSİT":26500,"K.KARTI 5 TAKSİT":29000,"K.KARTI 9 TAKSİT":32000 },
+            "RO - Platinum": { "PEŞİN":16500, "1+1":17000,"1+4":18000,"1+7":20000,"1+12":22000,"1+15":24000,"K.KARTI TEK ÇEKİM":16500,"K.KARTI 2 TAKSİT":17500,"K.KARTI 9 TAKSİT":20500 },
+            "RO - Silver": { "PEŞİN":6200, "1+1":6500,"1+4":7200,"1+7":7700,"1+12":8300,"1+15":8800,"K.KARTI TEK ÇEKİM":6200,"K.KARTI 2 TAKSİT":6500,"K.KARTI 9 TAKSİT":7600 },
+            "Klima-12": { "PEŞİN":29900, "1+1":31000,"1+4":35900,"1+9":43000,"1+12":48600,"K.KARTI TEK ÇEKİM":31000,"K.KARTI 9 TAKSİT":35900 },
+            "Klima-18": { "PEŞİN":40900, "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 }
+        };
+
+        let satisMap = satisMapYeni; // Varsayılan olarak yeni fiyatları kullan
 
         // --- DOM ELEMENTS ---
         const loginCard = document.getElementById('loginCard');
@@ -508,6 +534,30 @@
                 detailContent.classList.add('collapsed');
                 detailArrow.classList.remove('rotate-180-cw');
             }
+        });
+
+        // Fiyat Listesi Toggle Listener
+        document.querySelectorAll('input[name="priceList"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                satisMap = e.target.value === 'eski' ? satisMapEski : satisMapYeni;
+                
+                // Mevcut seçimleri kaydet
+                const currUrun = urunSelect.value;
+                const currSatis = satisSelect.value;
+                const currKredi = krediSelect.value;
+                
+                // Listeleri yeniden oluştur
+                populateUrun();
+                if(satisMap[currUrun]) urunSelect.value = currUrun;
+                
+                updateSatis();
+                if(Array.from(satisSelect.options).some(o => o.value === currSatis)) satisSelect.value = currSatis;
+                
+                updateKredi();
+                if(Array.from(krediSelect.options).some(o => o.value === currKredi)) krediSelect.value = currKredi;
+                
+                updateToplam();
+            });
         });
 
         // Event Listeners
