@@ -11,7 +11,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="PrimPro">
     <link rel="apple-touch-icon" href="icon-192.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PDF Export için html2pdf kütüphanesi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -102,7 +106,7 @@
         </div>
     </nav>
 
-    <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6 pb-20">
         
         <div id="loginCard" class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300">
             <div class="p-8">
@@ -150,7 +154,8 @@
         <div id="appCard" class="hidden w-full max-w-5xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300">
             <div class="grid grid-cols-1 lg:grid-cols-3 min-h-[600px]">
                 
-                <div class="lg:col-span-2 p-6 sm:p-8 border-r border-gray-100 dark:border-gray-700">
+                <!-- Sol Taraf (Parametreler) -->
+                <div class="lg:col-span-2 p-6 sm:p-8 border-r border-gray-100 dark:border-gray-700 flex flex-col">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
                             <i class="fa-solid fa-sliders text-primary-500"></i> Hesaplama Parametreleri
@@ -160,7 +165,7 @@
                         </button>
                     </div>
 
-                    <div class="space-y-6">
+                    <div class="space-y-6 flex-grow">
                         <div class="flex items-center justify-between bg-blue-50 dark:bg-gray-700/50 p-3 rounded-lg border border-blue-100 dark:border-gray-600 mb-2">
                             <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Fiyat Listesi:</label>
                             <div class="flex items-center gap-4">
@@ -260,6 +265,7 @@
                     </div>
                 </div>
 
+                <!-- Sağ Taraf (Sonuçlar) -->
                 <div class="bg-gray-50 dark:bg-gray-900/50 p-6 sm:p-8 flex flex-col justify-center relative">
                     <div id="resultPlaceholder" class="text-center text-gray-400 dark:text-gray-500 py-12">
                         <i class="fa-solid fa-chart-pie text-6xl mb-4 opacity-20"></i>
@@ -267,7 +273,7 @@
                         <p class="text-sm">Lütfen soldaki formu doldurup "Hesapla" butonuna basın.</p>
                     </div>
 
-                    <div id="sonucLayout" class="hidden space-y-6 animate-fade-in">
+                    <div id="sonucLayout" class="hidden space-y-6 animate-fade-in flex-grow">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Hesap Özeti</h3>
                         
                         <div class="space-y-3">
@@ -310,12 +316,75 @@
                                     </div>
                             </div>
                         </div>
+                        
+                        <!-- Listeye Ekle Butonu ve İsim Girişi -->
+                        <div id="listeEkleGrup" class="hidden mt-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+                            <label for="satisIsmi" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Müşteri / Satış Adı (İsteğe Bağlı)</label>
+                            <input type="text" id="satisIsmi" class="block w-full py-2 px-3 mb-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm text-gray-900 dark:text-white" placeholder="Örn: Ahmet Yılmaz">
+                            <button id="btnListeyeEkle" type="button" class="w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:scale-[1.02] flex justify-center items-center gap-2">
+                                <i class="fa-solid fa-plus-circle"></i> Satışı Listeye Ekle
+                            </button>
+                        </div>
+
                     </div>
                     
                     <div class="absolute bottom-4 right-6 text-right">
                         <span class="text-xs font-bold text-gray-300 dark:text-gray-700 select-none">by_Oğuz</span>
                     </div>
                 </div>
+
+                <!-- Alt Taraf (Prim Özeti Tablosu) -->
+                <div class="lg:col-span-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 p-6 sm:p-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center">
+                            <i class="fa-solid fa-list-check text-primary-500 mr-2"></i> Prim Özeti Tablosu
+                        </h3>
+                        <div class="flex items-center gap-2">
+                            <button id="btnExportPDF" type="button" onclick="exportToPDF()" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors hidden px-3 py-1.5 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">
+                                <i class="fa-solid fa-file-pdf mr-1"></i> PDF İndir
+                            </button>
+                            <button id="btnClearHistory" type="button" onclick="clearAllHistory()" class="text-sm text-red-500 hover:text-red-700 font-medium transition-colors hidden px-3 py-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+                                <i class="fa-solid fa-trash-can mr-1"></i> Tümünü Sil
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Bu kapsayıcı (pdfContentArea) PDF'e dönüştürülecek alan -->
+                    <div id="pdfContentArea" class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-4 sm:p-0 sm:border-0 sm:bg-transparent dark:sm:bg-transparent">
+                        <!-- Yalnızca PDF'de görünecek olan özel başlık alanı -->
+                        <div id="pdfHeader" class="hidden text-center mb-6 pt-4">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-1">Satış ve Prim Özeti Tablosu</h2>
+                            <p class="text-gray-500 text-sm" id="pdfDateText"></p>
+                        </div>
+
+                        <div class="overflow-x-auto sm:rounded-lg sm:border sm:border-gray-200 dark:sm:border-gray-700 sm:shadow-sm">
+                            <table class="w-full text-sm text-left text-gray-600 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-3">Ürün</th>
+                                        <th scope="col" class="px-4 py-3">Satış Tipi</th>
+                                        <th scope="col" class="px-4 py-3 text-right">Satış Tutarı</th>
+                                        <th scope="col" class="px-4 py-3 text-right">Prim Tutarı</th>
+                                        <!-- PDF'de bu sütunu yoksay -->
+                                        <th scope="col" class="px-4 py-3 text-center w-16" data-html2canvas-ignore="true">Sil</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <!-- Dinamik Kayıtlar Buraya Gelecek -->
+                                </tbody>
+                                <tfoot>
+                                    <tr class="font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700/80 border-t border-gray-200 dark:border-gray-600">
+                                        <td colspan="3" class="px-4 py-4 text-right">GENEL TOPLAM PRİM:</td>
+                                        <td class="px-4 py-4 text-right text-lg text-emerald-600 dark:text-emerald-400" id="historyGrandTotal">₺0.00</td>
+                                        <!-- PDF'de bu sütunu yoksay -->
+                                        <td data-html2canvas-ignore="true"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </main>
@@ -353,6 +422,10 @@
 
         let satisMap = satisMapYeni; // Varsayılan olarak yeni fiyatları kullan
 
+        // --- HISTORY STATE ---
+        let savedCalculations = JSON.parse(localStorage.getItem('primHistory')) || [];
+        let currentCalcDetails = null; // En son yapılan hesaplamayı tutar
+
         // --- DOM ELEMENTS ---
         const loginCard = document.getElementById('loginCard');
         const appCard = document.getElementById('appCard');
@@ -377,6 +450,10 @@
         const resultPlaceholder = document.getElementById('resultPlaceholder');
         const sonucLayout = document.getElementById('sonucLayout');
 
+        const listeEkleGrup = document.getElementById('listeEkleGrup');
+        const satisIsmiInput = document.getElementById('satisIsmi');
+        const btnListeyeEkle = document.getElementById('btnListeyeEkle');
+
         // Detail Elements
         const toggleDetailsBtn = document.getElementById('toggleDetailsBtn');
         const detailContent = document.getElementById('detailContent');
@@ -389,7 +466,7 @@
             const savedUser = localStorage.getItem('savedUser');
             if(savedUser === 'ihlas') {
                 document.getElementById('username').value = 'ihlas';
-                document.getElementById('password').value = '1234'; // Pre-fill for UX if remembered
+                document.getElementById('password').value = '1234';
                 document.getElementById('remember-me').checked = true;
             }
             
@@ -399,6 +476,9 @@
             } else {
                 document.documentElement.classList.remove('dark');
             }
+
+            // Tabloyu yükle
+            renderHistory();
         });
 
         loginForm.addEventListener('submit', (e) => {
@@ -411,16 +491,13 @@
                 if(remember) { localStorage.setItem('savedUser', u); } 
                 else { localStorage.removeItem('savedUser'); }
                 
-                // Animation transition
                 loginCard.classList.add('opacity-0', 'scale-95');
                 setTimeout(() => {
                     loginCard.classList.add('hidden');
                     appCard.classList.remove('hidden');
-                    // Small delay to trigger transition
                     setTimeout(() => appCard.classList.remove('opacity-0', 'scale-95'), 50);
                 }, 300);
             } else {
-                // Shake animation for error
                 loginCard.classList.add('animate-pulse');
                 setTimeout(() => loginCard.classList.remove('animate-pulse'), 500);
                 alert("Hatalı Kullanıcı Adı veya Şifre!");
@@ -430,7 +507,6 @@
         document.getElementById('logoutBtn').addEventListener('click', () => {
             appCard.classList.add('hidden');
             loginCard.classList.remove('hidden', 'opacity-0', 'scale-95');
-            // Reset fields
             document.getElementById('btnTemizle').click();
         });
 
@@ -465,7 +541,6 @@
                 opt.text = k;
                 satisSelect.add(opt);
             });
-            // Update Toplam immediately
             if (!checkKredi.checked) updateToplam();
         }
 
@@ -493,15 +568,13 @@
             }
             toplamInput.value = formatCurrency(val);
             
-            // PEŞİN Kontrolü
             if (satisSelect.value === "PEŞİN" && !checkKredi.checked) {
                 nakitInput.value = val;
                 nakitInput.disabled = true;
             } else if (!checkKredi.checked) {
-                // Eğer PEŞİN değilse ve disable edildiyse aç
                 if(nakitInput.disabled) {
                     nakitInput.disabled = false;
-                    nakitInput.value = ""; // Sıfırla ki kullanıcı yeni değer girebilsin
+                    nakitInput.value = ""; 
                 }
             }
 
@@ -525,7 +598,6 @@
             return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
         }
 
-        // Toggle Details Logic
         toggleDetailsBtn.addEventListener('click', () => {
             if (detailContent.classList.contains('collapsed')) {
                 detailContent.classList.remove('collapsed');
@@ -536,17 +608,14 @@
             }
         });
 
-        // Fiyat Listesi Toggle Listener
         document.querySelectorAll('input[name="priceList"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
                 satisMap = e.target.value === 'eski' ? satisMapEski : satisMapYeni;
                 
-                // Mevcut seçimleri kaydet
                 const currUrun = urunSelect.value;
                 const currSatis = satisSelect.value;
                 const currKredi = krediSelect.value;
                 
-                // Listeleri yeniden oluştur
                 populateUrun();
                 if(satisMap[currUrun]) urunSelect.value = currUrun;
                 
@@ -560,7 +629,6 @@
             });
         });
 
-        // Event Listeners
         urunSelect.addEventListener("change", () => {
             updateSatis();
             updateKredi();
@@ -574,7 +642,6 @@
         checkKredi.addEventListener("change", () => {
             const isCredit = checkKredi.checked;
             
-            // Toggle UI Elements with animation classes
             if (isCredit) {
                 normalSatisRow.classList.add('collapsed');
                 cashInputs.classList.add('opacity-50', 'pointer-events-none'); 
@@ -592,11 +659,9 @@
                 normalSatisRow.classList.remove('collapsed');
                 cashInputs.classList.remove('opacity-50', 'pointer-events-none');
                 
-                // Eğer Peşin seçili değilse aç
                 if (satisSelect.value !== "PEŞİN") {
                     nakitInput.disabled = false;
                 } else {
-                    // Peşin seçiliyse değerini doldur ve kilitle
                     let rawVal = toplamInput.value.replace(/\./g, '').replace(',', '.');
                     nakitInput.value = parseFloat(rawVal) || 0;
                     nakitInput.disabled = true;
@@ -611,7 +676,6 @@
             senetInput.value = "";
             hesabaInput.value = "";
             checkKredi.checked = false;
-            // Trigger change manually to reset UI state
             checkKredi.dispatchEvent(new Event('change'));
             urunSelect.selectedIndex = 0;
             updateSatis();
@@ -622,9 +686,11 @@
         function resetResultUI() {
             resultPlaceholder.classList.remove('hidden');
             sonucLayout.classList.add('hidden');
-            // Hide detail content on reset
             detailContent.classList.add('collapsed');
             detailArrow.classList.remove('rotate-180-cw');
+            
+            currentCalcDetails = null;
+            listeEkleGrup.classList.add('hidden');
         }
 
         // --- CALCULATION LOGIC ---
@@ -632,45 +698,45 @@
             let toplam = 0, nakit = 0, senet = 0;
             let nakitOran = 0, senetOran = 0;
             const kdvOran = 1.20;
-            let detailHtml = ""; // HTML string for detailed steps
+            let detailHtml = ""; 
             
-            // Reset UI
             resultPlaceholder.classList.add('hidden');
             sonucLayout.classList.remove('hidden');
             detailSteps.innerHTML = "";
 
-            // Hide/Show Rows based on type
             const rowNakit = document.getElementById('rowNakitPrim');
             const rowSenet = document.getElementById('rowSenetPrim');
 
+            let hesaplananToplamPrim = 0;
+            const secilenUrun = urunSelect.value;
+            let satisTutari = 0;
+            let satisAciklama = "";
+
+            // Toplam girdi alanından ham rakamı alma
+            let rawToplamStr = toplamInput.value.replace(/\./g, '').replace(',', '.');
+            let rawToplamNum = parseFloat(rawToplamStr) || 0;
+
             if (checkKredi.checked) {
-                // Kredi Kartı Logic
                 const hesaba = parseFloat(hesabaInput.value) || 0;
                 const kdvHaric = hesaba / kdvOran;
+                let oran = 21; 
                 
-                // DİNAMİK ORAN BELİRLEME
-                const urun = urunSelect.value;
-                let oran = 21; // Varsayılan (Diğer ürünler için)
-                
-                if (urun === "RO - Platinum" || urun === "RO - Silver") {
-                    oran = 13;
-                } else if (urun === "Klima-12" || urun === "Klima-18") {
-                    oran = 11;
-                }
+                if (secilenUrun === "RO - Platinum" || secilenUrun === "RO - Silver") oran = 13;
+                else if (secilenUrun === "Klima-12" || secilenUrun === "Klima-18") oran = 11;
 
                 const prim = kdvHaric * (oran / 100);
+                hesaplananToplamPrim = prim;
+                satisTutari = rawToplamNum; // Katalog satış fiyatı kaydedilsin
+                satisAciklama = `K.Kartı (${krediSelect.value.replace('K.KARTI ', '')})`;
 
                 document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(kdvHaric)}`;
                 
-                // UI Updates
                 rowNakit.classList.remove('hidden');
                 rowSenet.classList.add('hidden'); 
                 rowNakit.querySelector('.flex-col span').innerText = "Kredi Kartı Primi";
                 document.getElementById('labelNakitOran').innerText = `%${oran}`;
                 document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(prim)}`;
-                document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(prim)}`;
 
-                // Build Detail String for Credit Card
                 detailHtml += `
                     <div class="border-b border-gray-300 dark:border-gray-600 pb-2 mb-2 font-bold text-primary-600">Kredi Kartı Hesaplaması</div>
                     <div class="flex justify-between">
@@ -688,13 +754,12 @@
                 `;
 
             } else {
-                // Senetli/Nakit Logic
                 rowNakit.classList.remove('hidden');
-                
-                const urun = urunSelect.value;
                 const satisKey = satisSelect.value;
-                
-                const mapVal = satisMap[urun][satisKey] || 0;
+                satisAciklama = satisKey;
+                satisTutari = rawToplamNum;
+
+                const mapVal = satisMap[secilenUrun][satisKey] || 0;
                 nakit = parseFloat(nakitInput.value) || 0;
                 senet = Math.max(mapVal - nakit, 0);
 
@@ -703,59 +768,38 @@
 
                 let satisNum = parseInt(satisKey.split("+")[1]) || 0;
                 
-                // Determine Rates
                 if (satisKey === "PEŞİN") {
-                    // PEŞİN DURUMU: Senet Oranı Daima 0
                     senetOran = 0;
-                    // Sadece Nakit Primi Hesapla, Senet Primi Gösterme
                     rowSenet.classList.add('hidden');
 
-                    switch (urun) {
+                    switch (secilenUrun) {
                         case "TR": 
                         case "RO - Unique":
-                        case "RO - Unique M5": 
-                            nakitOran = 21; 
-                            break;
+                        case "RO - Unique M5": nakitOran = 21; break;
                         case "RO - Platinum":
-                        case "RO - Silver": 
-                            nakitOran = 13; 
-                            break;
+                        case "RO - Silver": nakitOran = 13; break;
                         case "Klima-12":
-                        case "Klima-18":
-                            nakitOran = 11;
-                            break;
-                        default: 
-                            nakitOran = 0;
+                        case "Klima-18": nakitOran = 11; break;
+                        default: nakitOran = 0;
                     }
                 } else {
-                    // VADELİ DURUMU
                     rowSenet.classList.remove('hidden');
-                    switch (urun) {
-                        case "TR": 
-                            [nakitOran, senetOran] = (satisNum > 12) ? [21, 11] : [21, 17]; 
-                            break;
+                    switch (secilenUrun) {
+                        case "TR": [nakitOran, senetOran] = (satisNum > 12) ? [21, 11] : [21, 17]; break;
                         case "RO - Unique":
-                        case "RO - Unique M5": 
-                            [nakitOran, senetOran] = (satisNum > 7) ? [21, 11] : [21, 17]; 
-                            break;
+                        case "RO - Unique M5": [nakitOran, senetOran] = (satisNum > 7) ? [21, 11] : [21, 17]; break;
                         case "RO - Platinum":
-                        case "RO - Silver": 
-                            [nakitOran, senetOran] = [13, 11]; 
-                            break;
+                        case "RO - Silver": [nakitOran, senetOran] = [13, 11]; break;
                         case "Klima-12":
-                        case "Klima-18": 
-                            [nakitOran, senetOran] = [11, 9]; 
-                            break;
-                        default: 
-                            [nakitOran, senetOran] = [0, 0];
+                        case "Klima-18": [nakitOran, senetOran] = [11, 9]; break;
+                        default: [nakitOran, senetOran] = [0, 0];
                     }
                 }
 
                 const nakitPrim = nakitKdv * nakitOran / 100;
                 const senetPrim = senetKdv * senetOran / 100;
-                const toplamPrim = nakitPrim + senetPrim;
+                hesaplananToplamPrim = nakitPrim + senetPrim;
 
-                // Update UI
                 const totalKdvHaric = nakitKdv + senetKdv;
                 document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(totalKdvHaric)}`;
 
@@ -769,9 +813,6 @@
                     document.getElementById('resSenetPrim').innerText = `₺${formatCurrency(senetPrim)}`;
                 }
 
-                document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(toplamPrim)}`;
-
-                // Build Detail String for Nakit/Senet
                 if(nakit > 0) {
                      detailHtml += `
                         <div class="border-b border-gray-300 dark:border-gray-600 pb-2 mb-2 font-bold text-blue-600">Nakit Kısmı Hesaplaması ${satisKey === "PEŞİN" ? "(PEŞİN)" : ""}</div>
@@ -810,14 +851,201 @@
                 }
             }
             
-            // Inject Detail HTML
+            document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(hesaplananToplamPrim)}`;
             detailSteps.innerHTML = detailHtml;
+
+            // --- Geçiçi Kayıt İçin Hazırla ---
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            
+            currentCalcDetails = {
+                id: Date.now(),
+                urun: secilenUrun,
+                satisTipi: satisAciklama,
+                satisTutari: satisTutari,
+                primTutari: hesaplananToplamPrim,
+                tarih: timeString
+            };
+
+            // Butonu Göster ve İsim alanını temizle
+            satisIsmiInput.value = "";
+            listeEkleGrup.classList.remove('hidden');
+            btnListeyeEkle.innerHTML = '<i class="fa-solid fa-plus-circle"></i> Satışı Listeye Ekle';
+            btnListeyeEkle.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+            btnListeyeEkle.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+            btnListeyeEkle.disabled = false;
         });
 
-        // Initialize
+        // --- HISTORY KAYIT VE LİSTELEME İŞLEMLERİ ---
+
+        btnListeyeEkle.addEventListener('click', () => {
+            if (currentCalcDetails) {
+                // İsmi al ve detaya ekle
+                const isim = satisIsmiInput.value.trim();
+                currentCalcDetails.isim = isim || "İsimsiz Satış";
+
+                savedCalculations.push(currentCalcDetails);
+                localStorage.setItem('primHistory', JSON.stringify(savedCalculations));
+                renderHistory();
+
+                // UI Feedback (Kısa süreliğine eklendi bildirimi)
+                btnListeyeEkle.innerHTML = '<i class="fa-solid fa-check-circle"></i> Eklendi!';
+                btnListeyeEkle.classList.replace('bg-emerald-600', 'bg-gray-500');
+                btnListeyeEkle.classList.replace('hover:bg-emerald-700', 'hover:bg-gray-600');
+                btnListeyeEkle.disabled = true;
+
+                setTimeout(() => {
+                    listeEkleGrup.classList.add('hidden');
+                }, 1500);
+            }
+        });
+
+        function renderHistory() {
+            const tbody = document.getElementById('historyTableBody');
+            const totalEl = document.getElementById('historyGrandTotal');
+            const btnClear = document.getElementById('btnClearHistory');
+            const btnPdf = document.getElementById('btnExportPDF');
+            
+            tbody.innerHTML = '';
+            let grandTotal = 0;
+
+            if (savedCalculations.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+                        <td colspan="5" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                            <i class="fa-solid fa-clipboard-list text-3xl mb-2 opacity-30 block"></i>
+                            Henüz kaydedilmiş bir hesaplama bulunmuyor.
+                        </td>
+                    </tr>
+                `;
+                totalEl.innerText = `₺0.00`;
+                btnClear.classList.add('hidden');
+                btnPdf.classList.add('hidden');
+                return;
+            }
+
+            btnClear.classList.remove('hidden');
+            btnPdf.classList.remove('hidden');
+
+            savedCalculations.forEach((item, index) => {
+                grandTotal += item.primTutari;
+                
+                const tr = document.createElement('tr');
+                tr.className = "bg-white dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                        <div class="font-bold text-primary-600 dark:text-primary-400 mb-0.5">${item.isim || "İsimsiz Satış"}</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">${item.urun}</div>
+                        <div class="text-[10px] text-gray-400 font-normal mt-0.5"><i class="fa-regular fa-clock"></i> ${item.tarih}</div>
+                    </td>
+                    <td class="px-4 py-3 align-middle text-sm">${item.satisTipi}</td>
+                    <td class="px-4 py-3 align-middle text-right text-sm">₺${formatCurrency(item.satisTutari)}</td>
+                    <td class="px-4 py-3 align-middle text-right font-bold text-emerald-600 dark:text-emerald-400">₺${formatCurrency(item.primTutari)}</td>
+                    <td class="px-4 py-3 align-middle text-center" data-html2canvas-ignore="true">
+                        <button type="button" onclick="deleteHistoryItem(${index})" title="Bu satışı sil" class="text-red-500 hover:text-red-700 focus:outline-none p-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            totalEl.innerText = `₺${formatCurrency(grandTotal)}`;
+        }
+
+        window.deleteHistoryItem = function(index) {
+            if(confirm('Bu kaydı silmek istediğinize emin misiniz?')) {
+                savedCalculations.splice(index, 1);
+                localStorage.setItem('primHistory', JSON.stringify(savedCalculations));
+                renderHistory();
+            }
+        }
+
+        window.clearAllHistory = function() {
+            if(confirm('Tüm geçmiş kayıtları silmek istediğinize emin misiniz? Bu işlem geri alınamaz ve tüm gün sonu tablonuz temizlenir.')) {
+                savedCalculations = [];
+                localStorage.removeItem('primHistory');
+                renderHistory();
+            }
+        };
+
+        // --- PDF EXPORT LOGIC ---
+        window.exportToPDF = function() {
+            if (savedCalculations.length === 0) return;
+
+            // 1. ÇÖZÜM: Sayfa kaydırma (scroll) kaynaklı boş/siyah çıkma hatasını önlemek için en üste çık
+            const originalScroll = window.scrollY;
+            window.scrollTo(0, 0);
+
+            // 2. ÇÖZÜM: GEÇİCİ STİL. Tüm animasyonları durdur, arka planı bembeyaz yap ve metinleri PDF'te kesin görünür yap.
+            const style = document.createElement('style');
+            style.id = 'pdf-export-style';
+            style.innerHTML = `
+                * { transition: none !important; }
+                #pdfContentArea, #pdfContentArea table, #pdfContentArea tr, #pdfContentArea th, #pdfContentArea td {
+                    background-color: #ffffff !important;
+                }
+                #pdfContentArea {
+                    color: #111827 !important; /* Zorunlu koyu metin */
+                }
+                #pdfContentArea .dark\\:text-white, #pdfContentArea .text-gray-400, #pdfContentArea .dark\\:text-gray-400 {
+                    color: #4b5563 !important; /* Beyazda kaybolan gri/beyaz metinleri sabitle */
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Karanlık Mod'u algıla ve geçici olarak kapat
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            if(isDarkMode) document.documentElement.classList.remove('dark');
+
+            // PDF üzerinde görünecek dinamik başlığı ayarla ve görünür yap
+            const pdfHeader = document.getElementById('pdfHeader');
+            document.getElementById('pdfDateText').innerText = new Date().toLocaleDateString('tr-TR') + ' Tarihli Satışlar';
+            pdfHeader.classList.remove('hidden');
+
+            const element = document.getElementById('pdfContentArea');
+            const tableWrapper = element.querySelector('.overflow-x-auto');
+            
+            // Tablonun PDF'te kırpılmasını engeller
+            if (tableWrapper) tableWrapper.classList.remove('overflow-x-auto');
+
+            // PDF Ayarları
+            const opt = {
+              margin:       10,
+              filename:     `Prim_Ozeti_${new Date().toLocaleDateString('tr-TR')}.pdf`,
+              image:        { type: 'jpeg', quality: 0.98 },
+              html2canvas:  { 
+                  scale: 2, 
+                  useCORS: true, 
+                  logging: false,
+                  scrollY: 0 // Scroll hatasını çözen ana parametre
+              },
+              jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // DOM'un güncellenmesi ve renklerin oturması için bekleme süresini 400ms yapıyoruz
+            setTimeout(() => {
+                html2pdf().set(opt).from(element).save().then(() => {
+                    // İşlem bittikten sonra sayfa ayarlarını eski haline getir
+                    pdfHeader.classList.add('hidden');
+                    if (tableWrapper) tableWrapper.classList.add('overflow-x-auto');
+                    if(isDarkMode) document.documentElement.classList.add('dark');
+                    
+                    const addedStyle = document.getElementById('pdf-export-style');
+                    if(addedStyle) addedStyle.remove();
+                    
+                    // İşlem bitince ekranı eski kaldığı yere geri kaydır
+                    window.scrollTo(0, originalScroll);
+                });
+            }, 400);
+        };
+
+        // Uygulama ilk açıldığında fiyatların anında dolması için:
         populateUrun();
         updateSatis();
         updateKredi();
+        updateToplam();
+
     </script>
 </body>
 </html>
