@@ -12,6 +12,11 @@
     <meta name="apple-mobile-web-app-title" content="PrimPro">
     <link rel="apple-touch-icon" href="icon-192.png">
     
+    <!-- Güncellemelerin anında yansıması için tarayıcı önbelleğini engelleme meta etiketleri -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- PDF Export için html2pdf kütüphanesi -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -85,9 +90,41 @@
         .dark input:disabled {
             background-color: #374151;
         }
+        
+        /* Güncelleme Bildirimi İçin Stil */
+        #updateNotification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
 </head>
 <body class="bg-pattern text-gray-800 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-300">
+
+    <!-- Güncelleme Bildirimi Kutusu -->
+    <div id="updateNotification">
+        <div>
+            <p class="font-bold text-sm">Yeni bir sürüm mevcut!</p>
+            <p class="text-xs opacity-90">Uygulamayı yenilemek için tıklayın.</p>
+        </div>
+        <button onclick="window.location.reload(true)" class="bg-white text-primary-600 px-3 py-1 rounded text-sm font-bold hover:bg-gray-100 transition">
+            Yenile
+        </button>
+    </div>
 
     <nav class="w-full bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -390,12 +427,35 @@
     </main>
 
     <script>
-        // --- PWA SERVICE WORKER KAYDI ---
+        // --- PWA SERVICE WORKER KAYDI (GÜNCELLENMİŞ VERSİYON) ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('SW Başarılı:', reg))
+                    .then(reg => {
+                        console.log('SW Başarılı:', reg);
+                        
+                        // Güncelleme kontrol mekanizması eklendi
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                // Yeni sürüm yüklendiğinde ve eski sürümün yerini almaya hazır olduğunda
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // Ekrana bildirim göster
+                                    document.getElementById('updateNotification').style.display = 'flex';
+                                }
+                            });
+                        });
+                    })
                     .catch(err => console.log('SW Hatası:', err));
+            });
+            
+            // Eğer yeni bir service worker görevi devralırsa sayfayı otomatik yenile
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    window.location.reload();
+                    refreshing = true;
+                }
             });
         }
 
