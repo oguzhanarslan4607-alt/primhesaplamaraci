@@ -466,6 +466,7 @@
             "RO - Unique M5": { "PEŞİN":23500, "1+1":24500,"1+4":27000,"1+7":29000,"1+12":31000,"1+15":33000,"1+18":35000,"1+21":36000,"K.KARTI TEK ÇEKİM":23500,"K.KARTI 2 TAKSİT":24500,"K.KARTI 5 TAKSİT":26000,"K.KARTI 9 TAKSİT":29000 },
             "RO - Platinum": { "PEŞİN":15000, "1+1":15500,"1+4":17000,"1+7":18000,"1+12":20000,"1+15":21000,"K.KARTI TEK ÇEKİM":15000,"K.KARTI 2 TAKSİT":15500,"K.KARTI 9 TAKSİT":18500 },
             "RO - Silver": { "PEŞİN":5900, "1+1":6200,"1+4":6700,"1+7":7200,"1+12":7700,"1+15":8200,"K.KARTI TEK ÇEKİM":5900,"K.KARTI 2 TAKSİT":6200,"K.KARTI 9 TAKSİT":7000 },
+            "RO - Diamond": { "PEŞİN":26000, "1+1":27000,"1+4":30000,"1+7":32000,"1+12":34000,"1+15":36000,"1+18":39000,"1+21":42000,"K.KARTI TEK ÇEKİM":26000,"K.KARTI 2 TAKSİT":27000,"K.KARTI 6 TAKSİT":30000,"K.KARTI 9 TAKSİT":32000 },
             "Klima-12": { "PEŞİN":29900, "1+1":31000,"1+4":35900,"1+9":43000,"1+12":48600,"K.KARTI TEK ÇEKİM":31000,"K.KARTI 9 TAKSİT":35900 },
             "Klima-18": { "PEŞİN":40900, "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 },
             "Klima-24 Ayaklı": { "PEŞİN":56900, "1+1":59200,"1+4":68300,"1+9":81900,"1+12":92500,"K.KARTI TEK ÇEKİM":59200,"K.KARTI 9 TAKSİT":68300 },
@@ -479,6 +480,7 @@
             "RO - Unique M5": { "PEŞİN":25500, "1+1":26500,"1+4":29000,"1+7":32000,"1+12":33000,"1+15":35000,"1+18":37000,"1+21":39000,"K.KARTI TEK ÇEKİM":25500,"K.KARTI 2 TAKSİT":26500,"K.KARTI 5 TAKSİT":29000,"K.KARTI 9 TAKSİT":32000 },
             "RO - Platinum": { "PEŞİN":16000, "1+1":17000,"1+4":18000,"1+7":20000,"1+12":22000,"1+15":24000,"K.KARTI TEK ÇEKİM":16500,"K.KARTI 2 TAKSİT":17500,"K.KARTI 9 TAKSİT":20500 },
             "RO - Silver": { "PEŞİN":6200, "1+1":6500,"1+4":7200,"1+7":7700,"1+12":8300,"1+15":8800,"K.KARTI TEK ÇEKİM":6200,"K.KARTI 2 TAKSİT":6500,"K.KARTI 9 TAKSİT":7600 },
+            "RO - Diamond": { "PEŞİN":26000, "1+1":27000,"1+4":30000,"1+7":32000,"1+12":34000,"1+15":36000,"1+18":39000,"1+21":42000,"K.KARTI TEK ÇEKİM":26000,"K.KARTI 2 TAKSİT":27000,"K.KARTI 6 TAKSİT":30000,"K.KARTI 9 TAKSİT":32000 },
             "Klima-12": { "PEŞİN":29900, "1+1":31000,"1+4":35900,"1+9":43000,"1+12":48600,"K.KARTI TEK ÇEKİM":31000,"K.KARTI 9 TAKSİT":35900 },
             "Klima-18": { "PEŞİN":40900, "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 },
             "Klima-24 Ayaklı": { "PEŞİN":56900, "1+1":59200,"1+4":68300,"1+9":81900,"1+12":92500,"K.KARTI TEK ÇEKİM":59200,"K.KARTI 9 TAKSİT":68300 },
@@ -838,14 +840,14 @@
                     senetOran = 0;
                     rowSenet.classList.add('hidden');
 
-                    if (["TR", "RO - Unique", "RO - Unique M5"].includes(secilenUrun)) nakitOran = 21;
+                    if (["TR", "RO - Unique", "RO - Unique M5", "RO - Diamond"].includes(secilenUrun)) nakitOran = 21;
                     else if (["RO - Platinum", "RO - Silver"].includes(secilenUrun)) nakitOran = 13;
                     else if (secilenUrun.includes("Klima")) nakitOran = 11; // <-- KLİMA MODELLERİ İÇİN DİNAMİK KONTROL
                     else nakitOran = 0;
                 } else {
                     rowSenet.classList.remove('hidden');
                     if (secilenUrun === "TR") [nakitOran, senetOran] = (satisNum > 12) ? [21, 11] : [21, 17];
-                    else if (["RO - Unique", "RO - Unique M5"].includes(secilenUrun)) [nakitOran, senetOran] = (satisNum > 7) ? [21, 11] : [21, 17];
+                    else if (["RO - Unique", "RO - Unique M5", "RO - Diamond"].includes(secilenUrun)) [nakitOran, senetOran] = (satisNum > 7) ? [21, 11] : [21, 17];
                     else if (["RO - Platinum", "RO - Silver"].includes(secilenUrun)) [nakitOran, senetOran] = [13, 11];
                     else if (secilenUrun.includes("Klima")) [nakitOran, senetOran] = [11, 9]; // <-- KLİMA MODELLERİ İÇİN DİNAMİK KONTROL
                     else [nakitOran, senetOran] = [0, 0];
