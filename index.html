@@ -407,7 +407,10 @@
             "RO - Platinum": { "PEŞİN":15000, "1+1":15500,"1+4":17000,"1+7":18000,"1+12":20000,"1+15":21000,"K.KARTI TEK ÇEKİM":15000,"K.KARTI 2 TAKSİT":15500,"K.KARTI 9 TAKSİT":18500 },
             "RO - Silver": { "PEŞİN":5900, "1+1":6200,"1+4":6700,"1+7":7200,"1+12":7700,"1+15":8200,"K.KARTI TEK ÇEKİM":5900,"K.KARTI 2 TAKSİT":6200,"K.KARTI 9 TAKSİT":7000 },
             "Klima-12": { "PEŞİN":29900, "1+1":31000,"1+4":35900,"1+9":43000,"1+12":48600,"K.KARTI TEK ÇEKİM":31000,"K.KARTI 9 TAKSİT":35900 },
-            "Klima-18": { "PEŞİN":40900, "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 }
+            "Klima-18": { "PEŞİN":40900, "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 },
+            "Klima-24 Ayaklı": { "PEŞİN":56900, "1+1":59200,"1+4":68300,"1+9":81900,"1+12":92500,"K.KARTI TEK ÇEKİM":59200,"K.KARTI 9 TAKSİT":68300 },
+            "Klima-24 Split": { "PEŞİN":48900, "1+1":50800,"1+4":58700,"1+9":70400,"1+12":79500,"K.KARTI TEK ÇEKİM":50800,"K.KARTI 9 TAKSİT":58700 },
+            "Klima-45": { "PEŞİN":109000, "1+1":113400,"1+4":130800,"1+9":157000,"1+12":177400,"K.KARTI TEK ÇEKİM":113400,"K.KARTI 9 TAKSİT":130800 }
         };
 
         const satisMapYeni = {
@@ -417,7 +420,10 @@
             "RO - Platinum": { "PEŞİN":16000, "1+1":17000,"1+4":18000,"1+7":20000,"1+12":22000,"1+15":24000,"K.KARTI TEK ÇEKİM":16500,"K.KARTI 2 TAKSİT":17500,"K.KARTI 9 TAKSİT":20500 },
             "RO - Silver": { "PEŞİN":6200, "1+1":6500,"1+4":7200,"1+7":7700,"1+12":8300,"1+15":8800,"K.KARTI TEK ÇEKİM":6200,"K.KARTI 2 TAKSİT":6500,"K.KARTI 9 TAKSİT":7600 },
             "Klima-12": { "PEŞİN":29900, "1+1":31000,"1+4":35900,"1+9":43000,"1+12":48600,"K.KARTI TEK ÇEKİM":31000,"K.KARTI 9 TAKSİT":35900 },
-            "Klima-18": { "PEŞİN":40900, "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 }
+            "Klima-18": { "PEŞİN":40900, "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 },
+            "Klima-24 Ayaklı": { "PEŞİN":56900, "1+1":59200,"1+4":68300,"1+9":81900,"1+12":92500,"K.KARTI TEK ÇEKİM":59200,"K.KARTI 9 TAKSİT":68300 },
+            "Klima-24 Split": { "PEŞİN":48900, "1+1":50800,"1+4":58700,"1+9":70400,"1+12":79500,"K.KARTI TEK ÇEKİM":50800,"K.KARTI 9 TAKSİT":58700 },
+            "Klima-45": { "PEŞİN":109000, "1+1":113400,"1+4":130800,"1+9":157000,"1+12":177400,"K.KARTI TEK ÇEKİM":113400,"K.KARTI 9 TAKSİT":130800 }
         };
 
         let satisMap = satisMapYeni; // Varsayılan olarak yeni fiyatları kullan
@@ -722,7 +728,7 @@
                 let oran = 21; 
                 
                 if (secilenUrun === "RO - Platinum" || secilenUrun === "RO - Silver") oran = 13;
-                else if (secilenUrun === "Klima-12" || secilenUrun === "Klima-18") oran = 11;
+                else if (secilenUrun.includes("Klima")) oran = 11; // <-- KLİMA MODELLERİ İÇİN DİNAMİK KONTROL
 
                 const prim = kdvHaric * (oran / 100);
                 hesaplananToplamPrim = prim;
@@ -772,28 +778,17 @@
                     senetOran = 0;
                     rowSenet.classList.add('hidden');
 
-                    switch (secilenUrun) {
-                        case "TR": 
-                        case "RO - Unique":
-                        case "RO - Unique M5": nakitOran = 21; break;
-                        case "RO - Platinum":
-                        case "RO - Silver": nakitOran = 13; break;
-                        case "Klima-12":
-                        case "Klima-18": nakitOran = 11; break;
-                        default: nakitOran = 0;
-                    }
+                    if (["TR", "RO - Unique", "RO - Unique M5"].includes(secilenUrun)) nakitOran = 21;
+                    else if (["RO - Platinum", "RO - Silver"].includes(secilenUrun)) nakitOran = 13;
+                    else if (secilenUrun.includes("Klima")) nakitOran = 11; // <-- KLİMA MODELLERİ İÇİN DİNAMİK KONTROL
+                    else nakitOran = 0;
                 } else {
                     rowSenet.classList.remove('hidden');
-                    switch (secilenUrun) {
-                        case "TR": [nakitOran, senetOran] = (satisNum > 12) ? [21, 11] : [21, 17]; break;
-                        case "RO - Unique":
-                        case "RO - Unique M5": [nakitOran, senetOran] = (satisNum > 7) ? [21, 11] : [21, 17]; break;
-                        case "RO - Platinum":
-                        case "RO - Silver": [nakitOran, senetOran] = [13, 11]; break;
-                        case "Klima-12":
-                        case "Klima-18": [nakitOran, senetOran] = [11, 9]; break;
-                        default: [nakitOran, senetOran] = [0, 0];
-                    }
+                    if (secilenUrun === "TR") [nakitOran, senetOran] = (satisNum > 12) ? [21, 11] : [21, 17];
+                    else if (["RO - Unique", "RO - Unique M5"].includes(secilenUrun)) [nakitOran, senetOran] = (satisNum > 7) ? [21, 11] : [21, 17];
+                    else if (["RO - Platinum", "RO - Silver"].includes(secilenUrun)) [nakitOran, senetOran] = [13, 11];
+                    else if (secilenUrun.includes("Klima")) [nakitOran, senetOran] = [11, 9]; // <-- KLİMA MODELLERİ İÇİN DİNAMİK KONTROL
+                    else [nakitOran, senetOran] = [0, 0];
                 }
 
                 const nakitPrim = nakitKdv * nakitOran / 100;
