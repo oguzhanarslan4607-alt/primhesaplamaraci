@@ -1,5 +1,5 @@
 // Uygulamanızın versiyonu. Her güncellemede bu rakamı değiştirin! (Örn: v1.2, v1.3, v2.0)
-const CACHE_NAME = 'primpro-store-v1.2'; 
+const CACHE_NAME = 'primpro-store-v1.3'; 
 
 const ASSETS_TO_CACHE = [
   '/',
