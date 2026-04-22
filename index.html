@@ -21,7 +21,7 @@
     <!-- PDF Export için html2pdf kütüphanesi -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
@@ -40,6 +40,28 @@
                             600: '#2563eb',
                             700: '#1d4ed8',
                         }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'blob': 'blob 7s infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
                     }
                 }
             }
@@ -48,7 +70,7 @@
     <style>
         /* Özel Geçiş Efektleri */
         .transition-height {
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-out;
             max-height: 1000px;
             opacity: 1;
             overflow: hidden;
@@ -57,6 +79,9 @@
             max-height: 0;
             opacity: 0;
             margin-top: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border: none !important;
         }
         /* Inputlardaki okları gizle */
         input[type=number]::-webkit-inner-spin-button, 
@@ -64,48 +89,68 @@
             -webkit-appearance: none; 
             margin: 0; 
         }
-        /* Animasyonlu arka plan */
-        .bg-pattern {
-            background-color: #f3f4f6;
-            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-        .dark .bg-pattern {
-            background-color: #111827;
-            background-image: radial-gradient(#374151 1px, transparent 1px);
-        }
-        /* Rotate animation for details arrow */
-        .rotate-180-cw {
-            transform: rotate(180deg);
-        }
-        .transition-transform {
-            transition: transform 0.3s ease;
-        }
-        /* Disabled input styling adjustment */
+        
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .rotate-180-cw { transform: rotate(180deg); }
+        .transition-transform { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
         input:disabled {
-            background-color: #f3f4f6;
+            background-color: #f8fafc;
             cursor: not-allowed;
-            opacity: 0.8;
+            opacity: 0.7;
         }
-        .dark input:disabled {
-            background-color: #374151;
+        .dark input:disabled { background-color: #1f2937; }
+        
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-card {
+            background: rgba(31, 41, 55, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        }
+        .dark .glass-nav {
+            background: rgba(17, 24, 39, 0.8);
+            border-bottom: 1px solid rgba(55, 65, 81, 0.6);
         }
         
-        /* Güncelleme Bildirimi İçin Stil */
+        /* Gradient Text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
         #updateNotification {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #2563eb;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
             z-index: 9999;
             display: none;
             align-items: center;
-            gap: 12px;
-            animation: slideUp 0.3s ease-out;
+            gap: 16px;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes slideUp {
             from { transform: translateY(100px); opacity: 0; }
@@ -113,308 +158,366 @@
         }
     </style>
 </head>
-<body class="bg-pattern text-gray-800 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-300">
+<body class="bg-slate-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-300 relative overflow-x-hidden">
+
+    <!-- Ambient Background Blobs -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary-400/20 dark:bg-primary-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] opacity-70 animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-indigo-400/20 dark:bg-indigo-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] opacity-70 animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-[500px] h-[500px] bg-sky-300/20 dark:bg-blue-800/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-60 animate-blob animation-delay-4000"></div>
+    </div>
 
     <!-- Güncelleme Bildirimi Kutusu -->
     <div id="updateNotification">
         <div>
-            <p class="font-bold text-sm">Yeni bir sürüm mevcut!</p>
-            <p class="text-xs opacity-90">Uygulamayı yenilemek için tıklayın.</p>
+            <p class="font-bold text-sm">Yeni Sürüm Mevcut! ✨</p>
+            <p class="text-xs opacity-90 mt-1">Uygulamayı en iyi performansla kullanın.</p>
         </div>
-        <button onclick="window.location.reload(true)" class="bg-white text-primary-600 px-3 py-1 rounded text-sm font-bold hover:bg-gray-100 transition">
+        <button onclick="window.location.reload(true)" class="bg-white text-primary-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 shadow-sm transition-transform active:scale-95">
             Yenile
         </button>
     </div>
 
-    <nav class="w-full bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+    <nav class="w-full glass-nav sticky top-0 z-50">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-2">
-                    <div class="bg-primary-600 text-white p-2 rounded-lg">
-                        <i class="fa-solid fa-calculator"></i>
+                <div class="flex items-center gap-3">
+                    <img src="icon-192.png" alt="PrimPro Logo" class="w-9 h-9 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 object-cover bg-white" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                    <div class="hidden w-9 h-9 rounded-xl bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-600 dark:text-primary-400 border border-gray-100 dark:border-gray-700 shadow-sm">
+                        <i class="fa-solid fa-shield-halved"></i>
                     </div>
-                    <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">Prim<span class="text-primary-600">Pro</span></span>
+                    <span class="font-extrabold text-2xl tracking-tight text-gray-900 dark:text-white">
+                        Prim<span class="text-gradient bg-gradient-to-r from-primary-600 to-indigo-500">Pro</span>
+                    </span>
                 </div>
-                <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <button id="themeToggle" class="p-2.5 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700 shadow-sm border border-gray-200/50 dark:border-gray-700/50 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/50">
                     <i class="fa-solid fa-moon dark:hidden"></i>
-                    <i class="fa-solid fa-sun hidden dark:inline"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline text-amber-400"></i>
                 </button>
             </div>
         </div>
     </nav>
 
-    <main class="flex-grow flex items-center justify-center p-4 sm:p-6 pb-20">
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6 pb-20 relative z-10 w-full">
         
-        <div id="loginCard" class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300">
-            <div class="p-8">
-                <div class="text-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Giriş Yap</h2>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Devam etmek için kimlik bilgilerinizi doğrulayın.</p>
+        <!-- GİRİŞ EKRANI -->
+        <div id="loginCard" class="w-full max-w-md glass-card rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] overflow-hidden transform transition-all duration-500 animate-fade-in-up border border-white/40 dark:border-gray-700/50">
+            <div class="p-8 sm:p-10">
+                <div class="text-center mb-10">
+                    <div class="inline-block relative">
+                        <div class="absolute inset-0 bg-primary-500 blur-[20px] opacity-20 rounded-full"></div>
+                        <img src="icon-192.png" alt="Logo" class="w-24 h-24 mx-auto mb-4 relative z-10 drop-shadow-xl rounded-2xl animate-float object-cover bg-white" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                        <div class="hidden w-24 h-24 mx-auto mb-4 relative z-10 drop-shadow-xl rounded-2xl animate-float bg-white dark:bg-gray-800 flex items-center justify-center text-5xl text-primary-600 dark:text-primary-400 border border-gray-100 dark:border-gray-700">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Hoş Geldiniz</h2>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Devam etmek için giriş yapın.</p>
                 </div>
                 <form id="loginForm" class="space-y-6">
                     <div>
-                        <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kullanıcı Adı</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fa-regular fa-user text-gray-400"></i>
+                        <label for="username" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Kullanıcı Adı</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-primary-500">
+                                <i class="fa-regular fa-user text-gray-400 group-focus-within:text-primary-500 transition-colors"></i>
                             </div>
-                            <input type="text" id="username" class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow sm:text-sm" placeholder="Kullanıcı adınızı girin">
+                            <input type="text" id="username" class="block w-full pl-11 pr-4 py-3.5 border border-gray-200 dark:border-gray-600 rounded-2xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all sm:text-sm shadow-inner" placeholder="Kullanıcı adınızı girin">
                         </div>
                     </div>
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Şifre</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fa-solid fa-lock text-gray-400"></i>
+                        <label for="password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Şifre</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-lock text-gray-400 group-focus-within:text-primary-500 transition-colors"></i>
                             </div>
-                            <input type="password" id="password" class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow sm:text-sm" placeholder="••••••">
+                            <input type="password" id="password" class="block w-full pl-11 pr-4 py-3.5 border border-gray-200 dark:border-gray-600 rounded-2xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all sm:text-sm shadow-inner" placeholder="••••••">
                         </div>
                     </div>
                     
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between pl-1">
                         <div class="flex items-center">
-                            <input id="remember-me" type="checkbox" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer">
-                            <label for="remember-me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300 cursor-pointer">Beni Hatırla</label>
+                            <input id="remember-me" type="checkbox" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer transition-colors">
+                            <label for="remember-me" class="ml-2 block text-sm font-medium text-gray-600 dark:text-gray-300 cursor-pointer select-none">Beni Hatırla</label>
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                        Giriş Yap
+                    <button type="submit" class="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-2xl shadow-lg shadow-primary-500/30 text-sm font-bold text-white bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                        Giriş Yap <i class="fa-solid fa-arrow-right text-xs opacity-80"></i>
                     </button>
                 </form>
             </div>
-            <div class="bg-gray-50 dark:bg-gray-700/50 px-8 py-4 border-t border-gray-100 dark:border-gray-700 flex justify-center">
-                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">BİR KAHRAMANMARAŞ YAPIMIDIR 🍦</p>
+            <div class="bg-gray-50/50 dark:bg-gray-800/50 px-8 py-5 border-t border-gray-100 dark:border-gray-700/50 flex justify-center backdrop-blur-md">
+                <p class="text-xs text-gray-400 dark:text-gray-500 font-medium tracking-wide">BİR KAHRAMANMARAŞ YAPIMIDIR 🍦</p>
             </div>
         </div>
 
-        <div id="appCard" class="hidden w-full max-w-5xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all duration-300">
-            <div class="grid grid-cols-1 lg:grid-cols-3 min-h-[600px]">
+        <!-- ANA UYGULAMA -->
+        <div id="appCard" class="hidden w-full max-w-6xl glass-card rounded-[2rem] shadow-2xl overflow-hidden transition-all duration-500 border border-white/50 dark:border-gray-700/50">
+            <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[650px]">
                 
-                <!-- Sol Taraf (Parametreler) -->
-                <div class="lg:col-span-2 p-6 sm:p-8 border-r border-gray-100 dark:border-gray-700 flex flex-col">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                            <i class="fa-solid fa-sliders text-primary-500"></i> Hesaplama Parametreleri
+                <!-- Sol Taraf (Parametreler - 7 Kolon) -->
+                <div class="lg:col-span-7 p-6 sm:p-10 border-b lg:border-b-0 lg:border-r border-gray-200/60 dark:border-gray-700/50 flex flex-col relative overflow-hidden">
+                    
+                    <!-- Decorative element -->
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-primary-100 dark:bg-primary-900/20 rounded-bl-full -z-10 opacity-50"></div>
+
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-2xl font-extrabold text-gray-800 dark:text-white flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                                <i class="fa-solid fa-sliders"></i>
+                            </div>
+                            Parametreler
                         </h2>
-                        <button id="logoutBtn" class="text-sm text-red-500 hover:text-red-700 font-medium transition-colors">
-                            <i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış
+                        <button id="logoutBtn" class="flex items-center gap-2 px-4 py-2 text-sm text-red-500 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-lg font-semibold transition-colors">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="hidden sm:inline">Çıkış</span>
                         </button>
                     </div>
 
-                    <div class="space-y-6 flex-grow">
-                        <div class="flex items-center justify-between bg-blue-50 dark:bg-gray-700/50 p-3 rounded-lg border border-blue-100 dark:border-gray-600 mb-2">
-                            <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Fiyat Listesi:</label>
-                            <div class="flex items-center gap-4">
-                                <label class="inline-flex items-center cursor-pointer group">
-                                    <input type="radio" name="priceList" value="yeni" checked class="w-4 h-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-500 dark:bg-gray-600">
-                                    <span class="ml-2 text-sm font-bold text-primary-700 dark:text-primary-400 group-hover:text-primary-800">Yeni Fiyatlar</span>
+                    <div class="space-y-7 flex-grow">
+                        
+                        <!-- Fiyat Listesi Seçimi -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-white dark:bg-gray-800/80 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm gap-3">
+                            <label class="text-sm font-bold text-gray-700 dark:text-gray-300">Fiyat Listesi:</label>
+                            <div class="flex items-center p-1 bg-gray-100 dark:bg-gray-900 rounded-xl">
+                                <label class="relative flex-1 text-center cursor-pointer">
+                                    <input type="radio" name="priceList" value="yeni" checked class="peer sr-only">
+                                    <div class="py-1.5 px-4 rounded-lg text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-primary-600 dark:peer-checked:text-primary-400 peer-checked:shadow-sm">
+                                        Yeni Liste
+                                    </div>
                                 </label>
-                                <label class="inline-flex items-center cursor-pointer group">
-                                    <input type="radio" name="priceList" value="eski" class="w-4 h-4 text-gray-500 focus:ring-gray-400 border-gray-300 dark:border-gray-500 dark:bg-gray-600">
-                                    <span class="ml-2 text-sm font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-800">Eski Fiyatlar</span>
+                                <label class="relative flex-1 text-center cursor-pointer">
+                                    <input type="radio" name="priceList" value="eski" class="peer sr-only">
+                                    <div class="py-1.5 px-4 rounded-lg text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
+                                        Eski Liste
+                                    </div>
                                 </label>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Ürün ve Kredi Kartı Toggle -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ürün Grubu</label>
-                                <select id="urun" class="block w-full py-2.5 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-shadow">
-                                    </select>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Ürün Grubu</label>
+                                <select id="urun" class="block w-full py-3 px-4 border border-gray-200 dark:border-gray-600 bg-white/80 dark:bg-gray-800/80 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 sm:text-sm transition-all cursor-pointer font-medium appearance-none">
+                                </select>
                             </div>
                             
-                            <div class="flex items-end pb-2">
-                                <label class="inline-flex items-center cursor-pointer select-none group">
-                                    <input type="checkbox" id="checkKrediKart" class="sr-only peer">
-                                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
-                                    <span class="ms-3 text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-primary-600 transition-colors">Kredi Kartı Satışı</span>
+                            <div class="flex items-end pb-1.5">
+                                <label class="flex items-center p-3 w-full bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group shadow-sm">
+                                    <div class="relative flex items-center">
+                                        <input type="checkbox" id="checkKrediKart" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300/50 dark:peer-focus:ring-primary-800/50 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-500"></div>
+                                    </div>
+                                    <span class="ms-3 text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors select-none">Kredi Kartı Satışı</span>
                                 </label>
                             </div>
                         </div>
 
-                        <div class="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700">
+                        <!-- Taksit Seçenekleri Alanı -->
+                        <div class="p-5 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800/60 dark:to-gray-800/30 rounded-2xl border border-gray-100 dark:border-gray-700/50 shadow-inner">
                             <div id="normalSatisRow" class="transition-height">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vade / Taksit Seçeneği</label>
-                                <select id="satis" class="block w-full py-2.5 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
-                                    </select>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Vade / Taksit Seçeneği</label>
+                                <select id="satis" class="block w-full py-3 px-4 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 sm:text-sm font-medium appearance-none cursor-pointer"></select>
                             </div>
 
                             <div id="krediSatisRow" class="collapsed transition-height">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kredi Kartı Taksit Seçeneği</label>
-                                <select id="krediKart" class="block w-full py-2.5 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
-                                    </select>
+                                <label class="block text-sm font-semibold text-indigo-700 dark:text-indigo-300 mb-1.5 ml-1">Kredi Kartı Taksit Seçeneği</label>
+                                <select id="krediKart" class="block w-full py-3 px-4 border border-indigo-200 dark:border-indigo-500/30 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 sm:text-sm font-medium appearance-none cursor-pointer"></select>
                             </div>
                         </div>
 
-                        <div class="space-y-4">
+                        <!-- Tutar Girişleri -->
+                        <div class="space-y-5">
                             <div class="relative">
-                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Toplam Satış Tutarı</label>
-                                <div class="relative rounded-md shadow-sm">
-                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                        <span class="text-gray-500 sm:text-sm">₺</span>
+                                <label class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 ml-1">Katalog Satış Fiyatı</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                        <span class="text-gray-400 dark:text-gray-500 text-lg font-medium">₺</span>
                                     </div>
-                                    <input type="text" id="toplamSatis" disabled class="block w-full rounded-lg border-0 py-3 pl-8 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 bg-gray-50 dark:bg-gray-600 dark:text-white dark:ring-gray-600 sm:text-lg font-bold tracking-wider" placeholder="0.00">
+                                    <input type="text" id="toplamSatis" disabled class="block w-full rounded-2xl border-0 py-4 pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-200 dark:ring-gray-700 bg-gray-50 dark:bg-gray-900 dark:text-white sm:text-xl font-black tracking-wider shadow-inner" placeholder="0.00">
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="cashInputs">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="cashInputs">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nakit Tutar</label>
-                                    <div class="relative rounded-md shadow-sm">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <span class="text-gray-500 sm:text-sm">₺</span>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Peşinat / Nakit Tutar</label>
+                                    <div class="relative group">
+                                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                            <span class="text-gray-400 group-focus-within:text-blue-500 font-medium transition-colors">₺</span>
                                         </div>
-                                        <input type="number" id="nakit" class="block w-full rounded-lg border-0 py-2.5 pl-8 pr-4 text-gray-900 dark:text-white dark:bg-gray-700 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm" placeholder="0">
+                                        <input type="number" id="nakit" class="block w-full rounded-xl border-0 py-3 pl-10 pr-4 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-200 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm font-medium shadow-sm transition-shadow" placeholder="0">
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Senet Tutarı</label>
-                                    <div class="relative rounded-md shadow-sm">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <span class="text-gray-500 sm:text-sm">₺</span>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Kalan Senet Tutarı</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                            <span class="text-gray-400 dark:text-gray-500 font-medium">₺</span>
                                         </div>
-                                        <input type="text" id="senet" disabled class="block w-full rounded-lg border-0 py-2.5 pl-8 pr-4 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 ring-1 ring-inset ring-gray-200 dark:ring-gray-700 sm:text-sm font-medium" placeholder="0.00">
+                                        <input type="text" id="senet" disabled class="block w-full rounded-xl border-0 py-3 pl-10 pr-4 text-gray-500 dark:text-gray-400 bg-gray-50/80 dark:bg-gray-900/50 ring-1 ring-inset ring-gray-200 dark:ring-gray-700 sm:text-sm font-bold shadow-inner" placeholder="0.00">
                                     </div>
                                 </div>
                             </div>
 
                             <div id="hesabaInputRow" class="collapsed transition-height">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hesaba Düşen Tutar</label>
-                                <div class="relative rounded-md shadow-sm">
-                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                        <span class="text-gray-500 sm:text-sm">₺</span>
+                                <label class="block text-sm font-bold text-indigo-700 dark:text-indigo-400 mb-1.5 ml-1">Hesaba Düşen / Pos Tutarı</label>
+                                <div class="relative group">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                        <span class="text-indigo-400 group-focus-within:text-indigo-600 font-medium transition-colors">₺</span>
                                     </div>
-                                    <input type="number" id="hesabaDusen" class="block w-full rounded-lg border-0 py-2.5 pl-8 pr-4 text-gray-900 dark:text-white dark:bg-gray-700 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm" placeholder="Tutarı giriniz">
+                                    <input type="number" id="hesabaDusen" class="block w-full rounded-xl border-0 py-3 pl-10 pr-4 text-gray-900 dark:text-white bg-indigo-50/30 dark:bg-indigo-900/10 ring-1 ring-inset ring-indigo-200 dark:ring-indigo-700 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm font-bold shadow-sm transition-shadow" placeholder="Net çekim tutarını giriniz">
                                 </div>
-                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">POS cihazından geçen veya bankaya yatan net tutar.</p>
+                                <p class="mt-2 ml-1 text-xs text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5"><i class="fa-solid fa-circle-info text-indigo-400"></i> Banka kesintisi yapıldıktan sonraki net rakam.</p>
                             </div>
                         </div>
 
-                        <div class="flex gap-3 pt-4">
-                            <button id="btnTemizle" class="flex-1 py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
-                                <i class="fa-solid fa-rotate-left mr-2"></i> Temizle
+                        <!-- Butonlar -->
+                        <div class="flex gap-4 pt-4 mt-auto">
+                            <button id="btnTemizle" class="flex-1 py-4 px-4 rounded-2xl text-sm font-bold text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white shadow-sm transition-all focus:ring-2 focus:ring-gray-200">
+                                <i class="fa-solid fa-rotate-left mr-1.5 opacity-70"></i> Temizle
                             </button>
-                            <button id="btnHesapla" class="flex-[2] py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all transform hover:scale-[1.02]">
-                                <i class="fa-solid fa-calculator mr-2"></i> HESAPLA
+                            <button id="btnHesapla" class="flex-[2] py-4 px-4 rounded-2xl shadow-[0_8px_20px_-4px_rgba(37,99,235,0.4)] text-sm font-extrabold text-white bg-gradient-to-r from-primary-600 to-blue-500 hover:from-primary-500 hover:to-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all transform hover:-translate-y-1 active:translate-y-0 active:shadow-sm">
+                                <i class="fa-solid fa-bolt mr-1.5"></i> PRİMİ HESAPLA
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Sağ Taraf (Sonuçlar) -->
-                <div class="bg-gray-50 dark:bg-gray-900/50 p-6 sm:p-8 flex flex-col justify-center relative">
-                    <div id="resultPlaceholder" class="text-center text-gray-400 dark:text-gray-500 py-12">
-                        <i class="fa-solid fa-chart-pie text-6xl mb-4 opacity-20"></i>
-                        <p class="text-lg font-medium">Sonuçlar burada görünecek</p>
-                        <p class="text-sm">Lütfen soldaki formu doldurup "Hesapla" butonuna basın.</p>
+                <!-- Sağ Taraf (Sonuçlar - 5 Kolon) -->
+                <div class="lg:col-span-5 bg-gradient-to-b from-gray-50/50 to-gray-100/50 dark:from-gray-800/40 dark:to-gray-900/40 p-6 sm:p-10 flex flex-col justify-center relative">
+                    
+                    <div id="resultPlaceholder" class="text-center text-gray-400 dark:text-gray-500 py-12 flex flex-col items-center justify-center h-full">
+                        <div class="w-24 h-24 mb-6 rounded-full bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center animate-pulse-slow border border-gray-100 dark:border-gray-700">
+                            <i class="fa-solid fa-chart-pie text-4xl text-gray-300 dark:text-gray-600"></i>
+                        </div>
+                        <p class="text-lg font-bold text-gray-600 dark:text-gray-400">Sonuç Bekleniyor</p>
+                        <p class="text-sm mt-2 max-w-[200px] leading-relaxed">Formu doldurup hesapla butonuna tıklayın.</p>
                     </div>
 
-                    <div id="sonucLayout" class="hidden space-y-6 animate-fade-in flex-grow">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Hesap Özeti</h3>
+                    <div id="sonucLayout" class="hidden flex-col h-full animate-fade-in-up">
+                        <div class="flex items-center gap-3 mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+                            <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <h3 class="text-xl font-extrabold text-gray-900 dark:text-white">Hesap Özeti</h3>
+                        </div>
                         
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
-                                <span class="text-sm text-gray-500 dark:text-gray-400">KDV Hariç Tutar</span>
-                                <span id="resKdvHaric" class="font-semibold text-gray-900 dark:text-white">₺0.00</span>
+                        <div class="space-y-4 flex-grow">
+                            <!-- KDV Hariç Kartı -->
+                            <div class="flex justify-between items-center p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                                    <span class="text-sm font-semibold text-gray-500 dark:text-gray-400">KDV Hariç Matrah</span>
+                                </div>
+                                <span id="resKdvHaric" class="font-bold text-gray-900 dark:text-white">₺0.00</span>
                             </div>
                             
-                            <div id="rowNakitPrim" class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 border-l-4 border-l-blue-400">
-                                <div class="flex flex-col">
-                                    <span class="text-sm text-gray-600 dark:text-gray-300 font-medium">Nakit Primi</span>
-                                    <span id="labelNakitOran" class="text-xs text-gray-400">%0</span>
-                                </div>
-                                <span id="resNakitPrim" class="font-bold text-blue-600 dark:text-blue-400">₺0.00</span>
-                            </div>
-
-                            <div id="rowSenetPrim" class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 border-l-4 border-l-purple-400">
-                                <div class="flex flex-col">
-                                    <span class="text-sm text-gray-600 dark:text-gray-300 font-medium">Senet Primi</span>
-                                    <span id="labelSenetOran" class="text-xs text-gray-400">%0</span>
-                                </div>
-                                <span id="resSenetPrim" class="font-bold text-purple-600 dark:text-purple-400">₺0.00</span>
-                            </div>
-                        </div>
-
-                        <div class="mt-8 pt-6 border-t border-dashed border-gray-300 dark:border-gray-700">
-                            <div class="flex justify-between items-end">
-                                <span class="text-lg font-bold text-gray-600 dark:text-gray-400">TOPLAM PRİM</span>
-                                <span id="resToplamPrim" class="text-3xl font-extrabold text-green-600 dark:text-green-400 tracking-tight">₺0.00</span>
-                            </div>
-                        </div>
-
-                         <div class="mt-4">
-                            <button id="toggleDetailsBtn" class="flex items-center text-sm text-primary-600 dark:text-primary-400 font-medium hover:underline focus:outline-none">
-                                <i id="detailArrow" class="fa-solid fa-chevron-down mr-2 text-xs transition-transform"></i>
-                                Nasıl Hesaplandı? (Detayları Göster)
-                            </button>
-                            <div id="detailContent" class="collapsed transition-height bg-gray-100 dark:bg-gray-800 mt-2 rounded-lg border border-gray-200 dark:border-gray-700">
-                                <div class="p-4 space-y-3 text-sm text-gray-700 dark:text-gray-300 font-mono" id="detailSteps">
+                            <!-- Nakit Prim Kartı -->
+                            <div id="rowNakitPrim" class="flex justify-between items-center p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group">
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"></div>
+                                <div class="flex flex-col pl-2">
+                                    <span class="text-sm font-bold text-gray-700 dark:text-gray-200">Nakit Primi</span>
+                                    <div class="flex items-center gap-1.5 mt-0.5">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" id="labelNakitOran">%0</span>
+                                        <span class="text-[10px] text-gray-400 uppercase tracking-wider">Çarpan</span>
                                     </div>
+                                </div>
+                                <span id="resNakitPrim" class="text-lg font-black text-blue-600 dark:text-blue-400">₺0.00</span>
+                            </div>
+
+                            <!-- Senet Prim Kartı -->
+                            <div id="rowSenetPrim" class="flex justify-between items-center p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group">
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-purple-500"></div>
+                                <div class="flex flex-col pl-2">
+                                    <span class="text-sm font-bold text-gray-700 dark:text-gray-200">Senet Primi</span>
+                                    <div class="flex items-center gap-1.5 mt-0.5">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400" id="labelSenetOran">%0</span>
+                                        <span class="text-[10px] text-gray-400 uppercase tracking-wider">Çarpan</span>
+                                    </div>
+                                </div>
+                                <span id="resSenetPrim" class="text-lg font-black text-purple-600 dark:text-purple-400">₺0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Toplam Sonuç Alanı -->
+                        <div class="mt-8 mb-6 p-6 bg-white dark:bg-gray-800 rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(16,185,129,0.2)] dark:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.1)] border border-emerald-100 dark:border-emerald-900/30 relative overflow-hidden text-center">
+                            <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 dark:bg-emerald-900/20 rounded-full opacity-50 pointer-events-none"></div>
+                            <span class="block text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Kazanılan Toplam Prim</span>
+                            <span id="resToplamPrim" class="block text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400 tracking-tight drop-shadow-sm pb-1">₺0.00</span>
+                        </div>
+
+                         <!-- Detaylar Akordeon -->
+                         <div class="mt-auto">
+                            <button id="toggleDetailsBtn" class="flex items-center justify-center w-full py-2.5 text-sm text-gray-500 dark:text-gray-400 font-semibold hover:text-primary-600 dark:hover:text-primary-400 hover:bg-white dark:hover:bg-gray-800 rounded-xl transition-all focus:outline-none">
+                                <span>Hesaplama Detayları</span>
+                                <i id="detailArrow" class="fa-solid fa-chevron-down ml-2 text-[10px] transition-transform"></i>
+                            </button>
+                            <div id="detailContent" class="collapsed transition-height bg-white/60 dark:bg-gray-800/60 mt-2 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-inner backdrop-blur-sm">
+                                <div class="p-5 space-y-3 text-sm text-gray-600 dark:text-gray-300 font-mono leading-relaxed" id="detailSteps"></div>
                             </div>
                         </div>
                         
-                        <!-- Listeye Ekle Butonu ve İsim Girişi -->
-                        <div id="listeEkleGrup" class="hidden mt-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
-                            <label for="satisIsmi" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Müşteri / Satış Adı (İsteğe Bağlı)</label>
-                            <input type="text" id="satisIsmi" class="block w-full py-2 px-3 mb-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm text-gray-900 dark:text-white" placeholder="Örn: Ahmet Yılmaz">
-                            <button id="btnListeyeEkle" type="button" class="w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:scale-[1.02] flex justify-center items-center gap-2">
-                                <i class="fa-solid fa-plus-circle"></i> Satışı Listeye Ekle
+                        <!-- Listeye Ekle Butonu -->
+                        <div id="listeEkleGrup" class="hidden mt-6 bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 animate-fade-in-up">
+                            <label for="satisIsmi" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Müşteri / Not (Opsiyonel)</label>
+                            <input type="text" id="satisIsmi" class="block w-full py-2.5 px-4 mb-4 border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm text-gray-900 dark:text-white font-medium" placeholder="Örn: Ahmet Yılmaz">
+                            <button id="btnListeyeEkle" type="button" class="w-full py-3.5 px-4 rounded-xl shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] text-sm font-bold text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                                <i class="fa-solid fa-plus-circle"></i> Tabloya Kaydet
                             </button>
                         </div>
 
                     </div>
                     
                     <div class="absolute bottom-4 right-6 text-right">
-                        <span class="text-xs font-bold text-gray-300 dark:text-gray-700 select-none">by_Oğuz</span>
+                        <span class="text-[10px] font-bold text-gray-300 dark:text-gray-700 select-none uppercase tracking-widest">by_Oğuz</span>
                     </div>
                 </div>
 
-                <!-- Alt Taraf (Prim Özeti Tablosu) -->
-                <div class="lg:col-span-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 p-6 sm:p-8">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center">
-                            <i class="fa-solid fa-list-check text-primary-500 mr-2"></i> Prim Özeti Tablosu
+                <!-- Alt Taraf (Prim Özeti Tablosu - 12 Kolon) -->
+                <div class="lg:col-span-12 border-t border-gray-200/60 dark:border-gray-700/50 bg-white/40 dark:bg-gray-900/30 p-6 sm:p-10 backdrop-blur-sm">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                        <h3 class="text-xl font-extrabold text-gray-800 dark:text-white flex items-center">
+                            <div class="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mr-3">
+                                <i class="fa-solid fa-list-check"></i>
+                            </div>
+                            Gün Sonu Prim Özeti
                         </h3>
-                        <div class="flex items-center gap-2">
-                            <button id="btnExportPDF" type="button" onclick="exportToPDF()" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors hidden px-3 py-1.5 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">
-                                <i class="fa-solid fa-file-pdf mr-1"></i> PDF İndir
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <button id="btnExportPDF" type="button" onclick="exportToPDF()" class="flex-1 sm:flex-none justify-center flex items-center gap-2 text-sm text-indigo-600 hover:text-white dark:text-indigo-400 font-bold transition-all hidden px-4 py-2 rounded-xl border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-600 dark:hover:bg-indigo-500">
+                                <i class="fa-solid fa-file-pdf"></i> PDF İndir
                             </button>
-                            <button id="btnClearHistory" type="button" onclick="clearAllHistory()" class="text-sm text-red-500 hover:text-red-700 font-medium transition-colors hidden px-3 py-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
-                                <i class="fa-solid fa-trash-can mr-1"></i> Tümünü Sil
+                            <button id="btnClearHistory" type="button" onclick="clearAllHistory()" class="flex-1 sm:flex-none justify-center flex items-center gap-2 text-sm text-red-500 hover:text-white dark:text-red-400 font-bold transition-all hidden px-4 py-2 rounded-xl border border-red-200 dark:border-red-800/50 hover:bg-red-500">
+                                <i class="fa-solid fa-trash-can"></i> Temizle
                             </button>
                         </div>
                     </div>
                     
-                    <!-- Bu kapsayıcı (pdfContentArea) PDF'e dönüştürülecek alan -->
-                    <div id="pdfContentArea" class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-4 sm:p-0 sm:border-0 sm:bg-transparent dark:sm:bg-transparent">
-                        <!-- Yalnızca PDF'de görünecek olan özel başlık alanı -->
-                        <div id="pdfHeader" class="hidden text-center mb-6 pt-4">
+                    <!-- PDF Alanı -->
+                    <div id="pdfContentArea" class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-1">
+                        <div id="pdfHeader" class="hidden text-center mb-6 pt-6">
                             <h2 class="text-2xl font-bold text-gray-800 mb-1">Satış ve Prim Özeti Tablosu</h2>
                             <p class="text-gray-500 text-sm" id="pdfDateText"></p>
                         </div>
 
-                        <div class="overflow-x-auto sm:rounded-lg sm:border sm:border-gray-200 dark:sm:border-gray-700 sm:shadow-sm">
-                            <table class="w-full text-sm text-left text-gray-600 dark:text-gray-400">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
+                        <div class="overflow-x-auto rounded-xl">
+                            <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
+                                <thead class="text-xs text-gray-500 dark:text-gray-400 uppercase bg-gray-50/80 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700 font-bold">
                                     <tr>
-                                        <th scope="col" class="px-4 py-3">Ürün</th>
-                                        <th scope="col" class="px-4 py-3">Satış Tipi</th>
-                                        <th scope="col" class="px-4 py-3 text-right">Satış Tutarı</th>
-                                        <th scope="col" class="px-4 py-3 text-right">Prim Tutarı</th>
-                                        <!-- PDF'de bu sütunu yoksay -->
-                                        <th scope="col" class="px-4 py-3 text-center w-16" data-html2canvas-ignore="true">Sil</th>
+                                        <th scope="col" class="px-5 py-4 rounded-tl-xl">Müşteri / Ürün</th>
+                                        <th scope="col" class="px-5 py-4">Satış Tipi</th>
+                                        <th scope="col" class="px-5 py-4 text-right">Satış Tutarı</th>
+                                        <th scope="col" class="px-5 py-4 text-right">Prim Tutarı</th>
+                                        <th scope="col" class="px-5 py-4 text-center w-16 rounded-tr-xl" data-html2canvas-ignore="true">Sil</th>
                                     </tr>
                                 </thead>
-                                <tbody id="historyTableBody">
-                                    <!-- Dinamik Kayıtlar Buraya Gelecek -->
+                                <tbody id="historyTableBody" class="divide-y divide-gray-100 dark:divide-gray-700/50">
+                                    <!-- Dinamik Kayıtlar -->
                                 </tbody>
                                 <tfoot>
-                                    <tr class="font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700/80 border-t border-gray-200 dark:border-gray-600">
-                                        <td colspan="3" class="px-4 py-4 text-right">GENEL TOPLAM PRİM:</td>
-                                        <td class="px-4 py-4 text-right text-lg text-emerald-600 dark:text-emerald-400" id="historyGrandTotal">₺0.00</td>
-                                        <!-- PDF'de bu sütunu yoksay -->
-                                        <td data-html2canvas-ignore="true"></td>
+                                    <tr class="bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-800/80 border-t-2 border-gray-200 dark:border-gray-600">
+                                        <td colspan="3" class="px-5 py-5 text-right font-extrabold text-gray-900 dark:text-white uppercase tracking-wider text-xs sm:text-sm">GENEL TOPLAM PRİM:</td>
+                                        <td class="px-5 py-5 text-right text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-500" id="historyGrandTotal">₺0.00</td>
+                                        <td data-html2canvas-ignore="true" class="rounded-br-xl"></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -427,35 +530,24 @@
     </main>
 
     <script>
-        // --- PWA SERVICE WORKER KAYDI (GÜNCELLENMİŞ VERSİYON) ---
+        // --- PWA SERVICE WORKER ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
                     .then(reg => {
-                        console.log('SW Başarılı:', reg);
-                        
-                        // Güncelleme kontrol mekanizması eklendi
                         reg.addEventListener('updatefound', () => {
                             const newWorker = reg.installing;
                             newWorker.addEventListener('statechange', () => {
-                                // Yeni sürüm yüklendiğinde ve eski sürümün yerini almaya hazır olduğunda
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // Ekrana bildirim göster
                                     document.getElementById('updateNotification').style.display = 'flex';
                                 }
                             });
                         });
-                    })
-                    .catch(err => console.log('SW Hatası:', err));
+                    }).catch(err => console.log('SW Hatası:', err));
             });
-            
-            // Eğer yeni bir service worker görevi devralırsa sayfayı otomatik yenile
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (!refreshing) {
-                    window.location.reload();
-                    refreshing = true;
-                }
+                if (!refreshing) { window.location.reload(); refreshing = true; }
             });
         }
 
@@ -488,478 +580,283 @@
             "Klima-45": { "PEŞİN":109000, "1+1":113400,"1+4":130800,"1+9":157000,"1+12":177400,"K.KARTI TEK ÇEKİM":113400,"K.KARTI 9 TAKSİT":130800 }
         };
 
-        let satisMap = satisMapYeni; // Varsayılan olarak yeni fiyatları kullan
+        let satisMap = satisMapYeni;
 
-        // --- HISTORY STATE ---
+        // --- STATE & DOM ---
         let savedCalculations = JSON.parse(localStorage.getItem('primHistory')) || [];
-        let currentCalcDetails = null; // En son yapılan hesaplamayı tutar
+        let currentCalcDetails = null;
 
-        // --- DOM ELEMENTS ---
-        const loginCard = document.getElementById('loginCard');
-        const appCard = document.getElementById('appCard');
-        const loginForm = document.getElementById('loginForm');
-        const themeToggle = document.getElementById('themeToggle');
-        
-        const urunSelect = document.getElementById('urun');
-        const satisSelect = document.getElementById('satis');
-        const krediSelect = document.getElementById('krediKart');
-        const checkKredi = document.getElementById('checkKrediKart');
-        
-        const normalSatisRow = document.getElementById('normalSatisRow');
-        const krediSatisRow = document.getElementById('krediSatisRow');
-        const hesabaInputRow = document.getElementById('hesabaInputRow');
-        const cashInputs = document.getElementById('cashInputs');
-        
-        const toplamInput = document.getElementById('toplamSatis');
-        const nakitInput = document.getElementById('nakit');
-        const senetInput = document.getElementById('senet');
-        const hesabaInput = document.getElementById('hesabaDusen');
-        
-        const resultPlaceholder = document.getElementById('resultPlaceholder');
-        const sonucLayout = document.getElementById('sonucLayout');
+        const elements = {
+            loginCard: document.getElementById('loginCard'),
+            appCard: document.getElementById('appCard'),
+            loginForm: document.getElementById('loginForm'),
+            themeToggle: document.getElementById('themeToggle'),
+            urunSelect: document.getElementById('urun'),
+            satisSelect: document.getElementById('satis'),
+            krediSelect: document.getElementById('krediKart'),
+            checkKredi: document.getElementById('checkKrediKart'),
+            normalSatisRow: document.getElementById('normalSatisRow'),
+            krediSatisRow: document.getElementById('krediSatisRow'),
+            hesabaInputRow: document.getElementById('hesabaInputRow'),
+            cashInputs: document.getElementById('cashInputs'),
+            toplamInput: document.getElementById('toplamSatis'),
+            nakitInput: document.getElementById('nakit'),
+            senetInput: document.getElementById('senet'),
+            hesabaInput: document.getElementById('hesabaDusen'),
+            resultPlaceholder: document.getElementById('resultPlaceholder'),
+            sonucLayout: document.getElementById('sonucLayout'),
+            listeEkleGrup: document.getElementById('listeEkleGrup'),
+            satisIsmiInput: document.getElementById('satisIsmi'),
+            btnListeyeEkle: document.getElementById('btnListeyeEkle'),
+            toggleDetailsBtn: document.getElementById('toggleDetailsBtn'),
+            detailContent: document.getElementById('detailContent'),
+            detailSteps: document.getElementById('detailSteps'),
+            detailArrow: document.getElementById('detailArrow')
+        };
 
-        const listeEkleGrup = document.getElementById('listeEkleGrup');
-        const satisIsmiInput = document.getElementById('satisIsmi');
-        const btnListeyeEkle = document.getElementById('btnListeyeEkle');
-
-        // Detail Elements
-        const toggleDetailsBtn = document.getElementById('toggleDetailsBtn');
-        const detailContent = document.getElementById('detailContent');
-        const detailSteps = document.getElementById('detailSteps');
-        const detailArrow = document.getElementById('detailArrow');
-
-        // --- AUTH LOGIC ---
-        // Check local storage on load
+        // --- INIT ---
         window.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('savedUser');
-            if(savedUser === 'ihlas') {
+            if(localStorage.getItem('savedUser') === 'ihlas') {
                 document.getElementById('username').value = 'ihlas';
                 document.getElementById('password').value = '1234';
                 document.getElementById('remember-me').checked = true;
             }
-            
-            // Theme Check
             if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
             }
-
-            // Tabloyu yükle
             renderHistory();
         });
 
-        loginForm.addEventListener('submit', (e) => {
+        // --- AUTH ---
+        elements.loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const u = document.getElementById('username').value.trim();
             const p = document.getElementById('password').value.trim();
-            const remember = document.getElementById('remember-me').checked;
-
             if (u === 'ihlas' && p === '1234') {
-                if(remember) { localStorage.setItem('savedUser', u); } 
-                else { localStorage.removeItem('savedUser'); }
-                
-                loginCard.classList.add('opacity-0', 'scale-95');
+                document.getElementById('remember-me').checked ? localStorage.setItem('savedUser', u) : localStorage.removeItem('savedUser');
+                elements.loginCard.classList.add('opacity-0', 'scale-95');
                 setTimeout(() => {
-                    loginCard.classList.add('hidden');
-                    appCard.classList.remove('hidden');
-                    setTimeout(() => appCard.classList.remove('opacity-0', 'scale-95'), 50);
-                }, 300);
+                    elements.loginCard.classList.add('hidden');
+                    elements.appCard.classList.remove('hidden');
+                }, 400);
             } else {
-                loginCard.classList.add('animate-pulse');
-                setTimeout(() => loginCard.classList.remove('animate-pulse'), 500);
+                elements.loginCard.classList.add('animate-pulse');
+                setTimeout(() => elements.loginCard.classList.remove('animate-pulse'), 500);
                 alert("Hatalı Kullanıcı Adı veya Şifre!");
             }
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            appCard.classList.add('hidden');
-            loginCard.classList.remove('hidden', 'opacity-0', 'scale-95');
+            elements.appCard.classList.add('hidden');
+            elements.loginCard.classList.remove('hidden', 'opacity-0', 'scale-95');
             document.getElementById('btnTemizle').click();
         });
 
-        // --- THEME LOGIC ---
-        themeToggle.addEventListener('click', () => {
+        // --- THEME ---
+        elements.themeToggle.addEventListener('click', () => {
             document.documentElement.classList.toggle('dark');
-            if(document.documentElement.classList.contains('dark')){
-                localStorage.setItem('theme', 'dark');
-            } else {
-                localStorage.setItem('theme', 'light');
-            }
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
         });
 
         // --- APP LOGIC ---
-        
         function populateUrun() {
-            urunSelect.innerHTML = "";
-            Object.keys(satisMap).forEach(u => {
-                const opt = document.createElement("option");
-                opt.value = u;
-                opt.text = u;
-                urunSelect.add(opt);
-            });
+            elements.urunSelect.innerHTML = "";
+            Object.keys(satisMap).forEach(u => elements.urunSelect.add(new Option(u, u)));
         }
 
         function updateSatis() {
-            const urun = urunSelect.value;
-            satisSelect.innerHTML = "";
-            Object.keys(satisMap[urun]).filter(k => !k.includes("K.KARTI")).forEach(k => {
-                const opt = document.createElement("option");
-                opt.value = k;
-                opt.text = k;
-                satisSelect.add(opt);
-            });
-            if (!checkKredi.checked) updateToplam();
+            elements.satisSelect.innerHTML = "";
+            Object.keys(satisMap[elements.urunSelect.value]).filter(k => !k.includes("K.KARTI")).forEach(k => elements.satisSelect.add(new Option(k, k)));
+            if (!elements.checkKredi.checked) updateToplam();
         }
 
         function updateKredi() {
-            const urun = urunSelect.value;
-            krediSelect.innerHTML = "";
-            Object.keys(satisMap[urun]).filter(k => k.includes("K.KARTI")).forEach(k => {
-                const opt = document.createElement("option");
-                opt.value = k;
-                opt.text = k;
-                krediSelect.add(opt);
-            });
-            if (checkKredi.checked) updateToplam();
+            elements.krediSelect.innerHTML = "";
+            Object.keys(satisMap[elements.urunSelect.value]).filter(k => k.includes("K.KARTI")).forEach(k => elements.krediSelect.add(new Option(k, k)));
+            if (elements.checkKredi.checked) updateToplam();
         }
 
         function updateToplam() {
-            const urun = urunSelect.value;
-            let val = 0;
-            if (checkKredi.checked) {
-                const k = krediSelect.value;
-                val = satisMap[urun][k] || 0;
-            } else {
-                const s = satisSelect.value;
-                val = satisMap[urun][s] || 0;
-            }
-            toplamInput.value = formatCurrency(val);
+            const urun = elements.urunSelect.value;
+            const val = elements.checkKredi.checked ? satisMap[urun][elements.krediSelect.value] : satisMap[urun][elements.satisSelect.value];
+            elements.toplamInput.value = formatCurrency(val || 0);
             
-            if (satisSelect.value === "PEŞİN" && !checkKredi.checked) {
-                nakitInput.value = val;
-                nakitInput.disabled = true;
-            } else if (!checkKredi.checked) {
-                if(nakitInput.disabled) {
-                    nakitInput.disabled = false;
-                    nakitInput.value = ""; 
-                }
+            if (elements.satisSelect.value === "PEŞİN" && !elements.checkKredi.checked) {
+                elements.nakitInput.value = val;
+                elements.nakitInput.disabled = true;
+            } else if (!elements.checkKredi.checked && elements.nakitInput.disabled) {
+                elements.nakitInput.disabled = false;
+                elements.nakitInput.value = ""; 
             }
-
             calculateSenet();
         }
 
         function calculateSenet() {
-            if (checkKredi.checked) return;
-            
-            let rawToplam = toplamInput.value;
-            rawToplam = rawToplam.replace(/\./g, '');
-            rawToplam = rawToplam.replace(',', '.'); 
-            
-            const toplam = parseFloat(rawToplam) || 0;
-            const nakit = parseFloat(nakitInput.value) || 0;
-            const senet = Math.max(toplam - nakit, 0);
-            senetInput.value = formatCurrency(senet);
+            if (elements.checkKredi.checked) return;
+            const toplam = parseFloat(elements.toplamInput.value.replace(/\./g, '').replace(',', '.')) || 0;
+            const nakit = parseFloat(elements.nakitInput.value) || 0;
+            elements.senetInput.value = formatCurrency(Math.max(toplam - nakit, 0));
         }
 
         function formatCurrency(num) {
             return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
         }
 
-        toggleDetailsBtn.addEventListener('click', () => {
-            if (detailContent.classList.contains('collapsed')) {
-                detailContent.classList.remove('collapsed');
-                detailArrow.classList.add('rotate-180-cw');
-            } else {
-                detailContent.classList.add('collapsed');
-                detailArrow.classList.remove('rotate-180-cw');
-            }
+        // --- EVENT LISTENERS ---
+        elements.toggleDetailsBtn.addEventListener('click', () => {
+            elements.detailContent.classList.toggle('collapsed');
+            elements.detailArrow.classList.toggle('rotate-180-cw');
         });
 
         document.querySelectorAll('input[name="priceList"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
                 satisMap = e.target.value === 'eski' ? satisMapEski : satisMapYeni;
-                
-                const currUrun = urunSelect.value;
-                const currSatis = satisSelect.value;
-                const currKredi = krediSelect.value;
-                
+                const [cU, cS, cK] = [elements.urunSelect.value, elements.satisSelect.value, elements.krediSelect.value];
                 populateUrun();
-                if(satisMap[currUrun]) urunSelect.value = currUrun;
-                
-                updateSatis();
-                if(Array.from(satisSelect.options).some(o => o.value === currSatis)) satisSelect.value = currSatis;
-                
-                updateKredi();
-                if(Array.from(krediSelect.options).some(o => o.value === currKredi)) krediSelect.value = currKredi;
-                
+                if(satisMap[cU]) elements.urunSelect.value = cU;
+                updateSatis(); if(Array.from(elements.satisSelect.options).some(o => o.value === cS)) elements.satisSelect.value = cS;
+                updateKredi(); if(Array.from(elements.krediSelect.options).some(o => o.value === cK)) elements.krediSelect.value = cK;
                 updateToplam();
             });
         });
 
-        urunSelect.addEventListener("change", () => {
-            updateSatis();
-            updateKredi();
-        });
+        elements.urunSelect.addEventListener("change", () => { updateSatis(); updateKredi(); });
+        elements.satisSelect.addEventListener("change", updateToplam);
+        elements.krediSelect.addEventListener("change", updateToplam);
+        elements.nakitInput.addEventListener("input", calculateSenet);
 
-        satisSelect.addEventListener("change", updateToplam);
-        krediSelect.addEventListener("change", updateToplam);
-        
-        nakitInput.addEventListener("input", calculateSenet);
-
-        checkKredi.addEventListener("change", () => {
-            const isCredit = checkKredi.checked;
+        elements.checkKredi.addEventListener("change", () => {
+            const isC = elements.checkKredi.checked;
+            elements.normalSatisRow.classList.toggle('collapsed', isC);
+            elements.cashInputs.classList.toggle('opacity-30', isC);
+            elements.cashInputs.classList.toggle('pointer-events-none', isC);
+            elements.krediSatisRow.classList.toggle('collapsed', !isC);
+            elements.hesabaInputRow.classList.toggle('collapsed', !isC);
             
-            if (isCredit) {
-                normalSatisRow.classList.add('collapsed');
-                cashInputs.classList.add('opacity-50', 'pointer-events-none'); 
-                
-                krediSatisRow.classList.remove('collapsed');
-                hesabaInputRow.classList.remove('collapsed');
-                
-                nakitInput.disabled = true;
-                nakitInput.value = '';
-                senetInput.value = '';
+            if (isC) {
+                elements.nakitInput.disabled = true; elements.nakitInput.value = ''; elements.senetInput.value = '';
             } else {
-                krediSatisRow.classList.add('collapsed');
-                hesabaInputRow.classList.add('collapsed');
-                
-                normalSatisRow.classList.remove('collapsed');
-                cashInputs.classList.remove('opacity-50', 'pointer-events-none');
-                
-                if (satisSelect.value !== "PEŞİN") {
-                    nakitInput.disabled = false;
-                } else {
-                    let rawVal = toplamInput.value.replace(/\./g, '').replace(',', '.');
-                    nakitInput.value = parseFloat(rawVal) || 0;
-                    nakitInput.disabled = true;
-                }
+                elements.satisSelect.value !== "PEŞİN" ? elements.nakitInput.disabled = false : (elements.nakitInput.value = parseFloat(elements.toplamInput.value.replace(/\./g, '').replace(',', '.')) || 0, elements.nakitInput.disabled = true);
             }
-            updateToplam();
-            resetResultUI();
+            updateToplam(); resetResultUI();
         });
 
         document.getElementById("btnTemizle").addEventListener("click", () => {
-            nakitInput.value = "";
-            senetInput.value = "";
-            hesabaInput.value = "";
-            checkKredi.checked = false;
-            checkKredi.dispatchEvent(new Event('change'));
-            urunSelect.selectedIndex = 0;
-            updateSatis();
-            updateKredi();
-            resetResultUI();
+            elements.nakitInput.value = ""; elements.senetInput.value = ""; elements.hesabaInput.value = "";
+            elements.checkKredi.checked = false; elements.checkKredi.dispatchEvent(new Event('change'));
+            elements.urunSelect.selectedIndex = 0; updateSatis(); updateKredi(); resetResultUI();
         });
 
         function resetResultUI() {
-            resultPlaceholder.classList.remove('hidden');
-            sonucLayout.classList.add('hidden');
-            detailContent.classList.add('collapsed');
-            detailArrow.classList.remove('rotate-180-cw');
-            
+            elements.resultPlaceholder.classList.remove('hidden');
+            elements.sonucLayout.classList.add('hidden');
+            elements.detailContent.classList.add('collapsed');
+            elements.detailArrow.classList.remove('rotate-180-cw');
             currentCalcDetails = null;
-            listeEkleGrup.classList.add('hidden');
+            elements.listeEkleGrup.classList.add('hidden');
         }
 
-        // --- CALCULATION LOGIC ---
+        // --- CALCULATE ---
         document.getElementById("btnHesapla").addEventListener("click", () => {
-            let toplam = 0, nakit = 0, senet = 0;
-            let nakitOran = 0, senetOran = 0;
-            const kdvOran = 1.20;
-            let detailHtml = ""; 
+            elements.resultPlaceholder.classList.add('hidden');
+            elements.sonucLayout.classList.remove('hidden');
+            elements.sonucLayout.classList.add('flex');
             
-            resultPlaceholder.classList.add('hidden');
-            sonucLayout.classList.remove('hidden');
-            detailSteps.innerHTML = "";
+            const kdvOran = 1.20;
+            const secilenUrun = elements.urunSelect.value;
+            let hesaplananToplamPrim = 0, satisTutari = parseFloat(elements.toplamInput.value.replace(/\./g, '').replace(',', '.')) || 0, satisAciklama = "", detailHtml = "";
 
-            const rowNakit = document.getElementById('rowNakitPrim');
-            const rowSenet = document.getElementById('rowSenetPrim');
-
-            let hesaplananToplamPrim = 0;
-            const secilenUrun = urunSelect.value;
-            let satisTutari = 0;
-            let satisAciklama = "";
-
-            // Toplam girdi alanından ham rakamı alma
-            let rawToplamStr = toplamInput.value.replace(/\./g, '').replace(',', '.');
-            let rawToplamNum = parseFloat(rawToplamStr) || 0;
-
-            if (checkKredi.checked) {
-                const hesaba = parseFloat(hesabaInput.value) || 0;
+            if (elements.checkKredi.checked) {
+                const hesaba = parseFloat(elements.hesabaInput.value) || 0;
                 const kdvHaric = hesaba / kdvOran;
-                let oran = 21; 
-                
+                let oran = 21;
                 if (secilenUrun === "RO - Platinum" || secilenUrun === "RO - Silver") oran = 13;
-                else if (secilenUrun.includes("Klima")) oran = 11; // <-- KLİMA MODELLERİ İÇİN DİNAMİK KONTROL
+                else if (secilenUrun.includes("Klima")) oran = 11;
 
-                const prim = kdvHaric * (oran / 100);
-                hesaplananToplamPrim = prim;
-                satisTutari = rawToplamNum; // Katalog satış fiyatı kaydedilsin
-                satisAciklama = `K.Kartı (${krediSelect.value.replace('K.KARTI ', '')})`;
+                hesaplananToplamPrim = kdvHaric * (oran / 100);
+                satisAciklama = `K.Kartı (${elements.krediSelect.value.replace('K.KARTI ', '')})`;
 
                 document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(kdvHaric)}`;
-                
-                rowNakit.classList.remove('hidden');
-                rowSenet.classList.add('hidden'); 
-                rowNakit.querySelector('.flex-col span').innerText = "Kredi Kartı Primi";
+                document.getElementById('rowNakitPrim').classList.remove('hidden');
+                document.getElementById('rowSenetPrim').classList.add('hidden');
+                document.querySelector('#rowNakitPrim span.font-bold').innerText = "Kredi Kartı Primi";
                 document.getElementById('labelNakitOran').innerText = `%${oran}`;
-                document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(prim)}`;
+                document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(hesaplananToplamPrim)}`;
 
-                detailHtml += `
-                    <div class="border-b border-gray-300 dark:border-gray-600 pb-2 mb-2 font-bold text-primary-600">Kredi Kartı Hesaplaması</div>
-                    <div class="flex justify-between">
-                        <span>Hesaba Düşen:</span>
-                        <span>₺${formatCurrency(hesaba)}</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-500">
-                        <span>(KDV Hariç: ${formatCurrency(hesaba)} ÷ 1.20)</span>
-                        <span>= ₺${formatCurrency(kdvHaric)}</span>
-                    </div>
-                    <div class="flex justify-between mt-1 pt-1 border-t border-gray-200 dark:border-gray-700">
-                        <span>Prim (%${oran}):</span>
-                        <span>₺${formatCurrency(kdvHaric)} x 0.${oran} = <strong>₺${formatCurrency(prim)}</strong></span>
-                    </div>
-                `;
-
+                detailHtml += `<div class="text-indigo-600 font-bold mb-1 border-b pb-1 border-indigo-100">Kredi Kartı</div><div class="flex justify-between"><span>Hesaba Düşen:</span><span>₺${formatCurrency(hesaba)}</span></div><div class="flex justify-between text-xs text-gray-500"><span>(KDV Hariç)</span><span>= ₺${formatCurrency(kdvHaric)}</span></div><div class="flex justify-between mt-1 pt-1 border-t border-gray-100"><span>Prim (%${oran}):</span><span class="font-bold">₺${formatCurrency(hesaplananToplamPrim)}</span></div>`;
             } else {
-                rowNakit.classList.remove('hidden');
-                const satisKey = satisSelect.value;
+                const satisKey = elements.satisSelect.value;
                 satisAciklama = satisKey;
-                satisTutari = rawToplamNum;
-
                 const mapVal = satisMap[secilenUrun][satisKey] || 0;
-                nakit = parseFloat(nakitInput.value) || 0;
-                senet = Math.max(mapVal - nakit, 0);
+                const nakit = parseFloat(elements.nakitInput.value) || 0;
+                const senet = Math.max(mapVal - nakit, 0);
+                const nakitKdv = nakit / kdvOran, senetKdv = senet / kdvOran;
+                let nakitOran = 0, senetOran = 0, satisNum = parseInt(satisKey.split("+")[1]) || 0;
 
-                const nakitKdv = nakit / kdvOran;
-                const senetKdv = senet / kdvOran;
-
-                let satisNum = parseInt(satisKey.split("+")[1]) || 0;
-                
                 if (satisKey === "PEŞİN") {
-                    senetOran = 0;
-                    rowSenet.classList.add('hidden');
-
+                    document.getElementById('rowSenetPrim').classList.add('hidden');
                     if (["TR", "RO - Unique", "RO - Unique M5", "RO - Diamond"].includes(secilenUrun)) nakitOran = 21;
                     else if (["RO - Platinum", "RO - Silver"].includes(secilenUrun)) nakitOran = 13;
-                    else if (secilenUrun.includes("Klima")) nakitOran = 11; // <-- KLİMA MODELLERİ İÇİN DİNAMİK KONTROL
-                    else nakitOran = 0;
+                    else if (secilenUrun.includes("Klima")) nakitOran = 11;
                 } else {
-                    rowSenet.classList.remove('hidden');
-                    if (secilenUrun === "TR") [nakitOran, senetOran] = (satisNum > 12) ? [21, 11] : [21, 17];
-                    else if (["RO - Unique", "RO - Unique M5", "RO - Diamond"].includes(secilenUrun)) [nakitOran, senetOran] = (satisNum > 7) ? [21, 11] : [21, 17];
+                    document.getElementById('rowSenetPrim').classList.remove('hidden');
+                    if (secilenUrun === "TR") [nakitOran, senetOran] = satisNum > 12 ? [21, 11] : [21, 17];
+                    else if (["RO - Unique", "RO - Unique M5", "RO - Diamond"].includes(secilenUrun)) [nakitOran, senetOran] = satisNum > 7 ? [21, 11] : [21, 17];
                     else if (["RO - Platinum", "RO - Silver"].includes(secilenUrun)) [nakitOran, senetOran] = [13, 11];
-                    else if (secilenUrun.includes("Klima")) [nakitOran, senetOran] = [11, 9]; // <-- KLİMA MODELLERİ İÇİN DİNAMİK KONTROL
-                    else [nakitOran, senetOran] = [0, 0];
+                    else if (secilenUrun.includes("Klima")) [nakitOran, senetOran] = [11, 9];
                 }
 
-                const nakitPrim = nakitKdv * nakitOran / 100;
-                const senetPrim = senetKdv * senetOran / 100;
+                const nakitPrim = nakitKdv * nakitOran / 100, senetPrim = senetKdv * senetOran / 100;
                 hesaplananToplamPrim = nakitPrim + senetPrim;
 
-                const totalKdvHaric = nakitKdv + senetKdv;
-                document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(totalKdvHaric)}`;
-
-                rowNakit.querySelector('.flex-col span').innerText = "Nakit Primi";
+                document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(nakitKdv + senetKdv)}`;
+                document.getElementById('rowNakitPrim').classList.remove('hidden');
+                document.querySelector('#rowNakitPrim span.font-bold').innerText = "Nakit Primi";
                 document.getElementById('labelNakitOran').innerText = `%${nakitOran}`;
                 document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(nakitPrim)}`;
 
                 if (satisKey !== "PEŞİN") {
-                    rowSenet.querySelector('.flex-col span').innerText = "Senet Primi";
+                    document.querySelector('#rowSenetPrim span.font-bold').innerText = "Senet Primi";
                     document.getElementById('labelSenetOran').innerText = `%${senetOran}`;
                     document.getElementById('resSenetPrim').innerText = `₺${formatCurrency(senetPrim)}`;
                 }
 
-                if(nakit > 0) {
-                     detailHtml += `
-                        <div class="border-b border-gray-300 dark:border-gray-600 pb-2 mb-2 font-bold text-blue-600">Nakit Kısmı Hesaplaması ${satisKey === "PEŞİN" ? "(PEŞİN)" : ""}</div>
-                        <div class="flex justify-between">
-                            <span>Nakit Girişi:</span>
-                            <span>₺${formatCurrency(nakit)}</span>
-                        </div>
-                         <div class="flex justify-between text-xs text-gray-500">
-                            <span>(KDV Hariç: ${formatCurrency(nakit)} ÷ 1.20)</span>
-                            <span>= ₺${formatCurrency(nakitKdv)}</span>
-                        </div>
-                        <div class="flex justify-between mt-1">
-                            <span>Prim (%${nakitOran}):</span>
-                            <span>₺${formatCurrency(nakitKdv)} x 0.${nakitOran} = <strong>₺${formatCurrency(nakitPrim)}</strong></span>
-                        </div>
-                    `;
-                }
-
-                if(senet > 0 && satisKey !== "PEŞİN") {
-                     if (nakit > 0) detailHtml += `<div class="my-3 border-t border-dashed border-gray-300 dark:border-gray-600"></div>`;
-                     detailHtml += `
-                        <div class="border-b border-gray-300 dark:border-gray-600 pb-2 mb-2 font-bold text-purple-600">Senet Kısmı Hesaplaması</div>
-                        <div class="flex justify-between">
-                            <span>Senet Tutarı:</span>
-                            <span>₺${formatCurrency(senet)}</span>
-                        </div>
-                         <div class="flex justify-between text-xs text-gray-500">
-                            <span>(KDV Hariç: ${formatCurrency(senet)} ÷ 1.20)</span>
-                            <span>= ₺${formatCurrency(senetKdv)}</span>
-                        </div>
-                        <div class="flex justify-between mt-1">
-                            <span>Prim (%${senetOran}):</span>
-                            <span>₺${formatCurrency(senetKdv)} x 0.${senetOran} = <strong>₺${formatCurrency(senetPrim)}</strong></span>
-                        </div>
-                    `;
-                }
+                if(nakit > 0) detailHtml += `<div class="text-blue-600 font-bold mb-1 border-b pb-1 border-blue-100">Nakit (${satisKey === "PEŞİN" ? "Tamamı" : "Peşinat"})</div><div class="flex justify-between"><span>Tutar:</span><span>₺${formatCurrency(nakit)}</span></div><div class="flex justify-between text-xs text-gray-500"><span>(KDV Hariç)</span><span>= ₺${formatCurrency(nakitKdv)}</span></div><div class="flex justify-between mt-1 pt-1 border-t border-gray-100"><span>Prim (%${nakitOran}):</span><span class="font-bold">₺${formatCurrency(nakitPrim)}</span></div>`;
+                if(senet > 0 && satisKey !== "PEŞİN") detailHtml += `<div class="mt-3 text-purple-600 font-bold mb-1 border-b pb-1 border-purple-100">Senet Bölümü</div><div class="flex justify-between"><span>Tutar:</span><span>₺${formatCurrency(senet)}</span></div><div class="flex justify-between text-xs text-gray-500"><span>(KDV Hariç)</span><span>= ₺${formatCurrency(senetKdv)}</span></div><div class="flex justify-between mt-1 pt-1 border-t border-gray-100"><span>Prim (%${senetOran}):</span><span class="font-bold">₺${formatCurrency(senetPrim)}</span></div>`;
             }
             
             document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(hesaplananToplamPrim)}`;
-            detailSteps.innerHTML = detailHtml;
+            elements.detailSteps.innerHTML = detailHtml;
 
-            // --- Geçiçi Kayıt İçin Hazırla ---
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-            
             currentCalcDetails = {
-                id: Date.now(),
-                urun: secilenUrun,
-                satisTipi: satisAciklama,
-                satisTutari: satisTutari,
-                primTutari: hesaplananToplamPrim,
-                tarih: timeString
+                id: Date.now(), urun: secilenUrun, satisTipi: satisAciklama, satisTutari: satisTutari, primTutari: hesaplananToplamPrim,
+                tarih: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
             };
 
-            // Butonu Göster ve İsim alanını temizle
-            satisIsmiInput.value = "";
-            listeEkleGrup.classList.remove('hidden');
-            btnListeyeEkle.innerHTML = '<i class="fa-solid fa-plus-circle"></i> Satışı Listeye Ekle';
-            btnListeyeEkle.classList.remove('bg-gray-500', 'hover:bg-gray-600');
-            btnListeyeEkle.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
-            btnListeyeEkle.disabled = false;
+            elements.satisIsmiInput.value = "";
+            elements.listeEkleGrup.classList.remove('hidden');
+            elements.btnListeyeEkle.innerHTML = '<i class="fa-solid fa-plus-circle"></i> Tabloya Kaydet';
+            elements.btnListeyeEkle.className = "w-full py-3.5 px-4 rounded-xl shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] text-sm font-bold text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:-translate-y-0.5 flex justify-center items-center gap-2";
+            elements.btnListeyeEkle.disabled = false;
         });
 
-        // --- HISTORY KAYIT VE LİSTELEME İŞLEMLERİ ---
-
-        btnListeyeEkle.addEventListener('click', () => {
+        // --- HISTORY ---
+        elements.btnListeyeEkle.addEventListener('click', () => {
             if (currentCalcDetails) {
-                // İsmi al ve detaya ekle
-                const isim = satisIsmiInput.value.trim();
-                currentCalcDetails.isim = isim || "İsimsiz Satış";
-
+                currentCalcDetails.isim = elements.satisIsmiInput.value.trim() || "İsimsiz Müşteri";
                 savedCalculations.push(currentCalcDetails);
                 localStorage.setItem('primHistory', JSON.stringify(savedCalculations));
                 renderHistory();
 
-                // UI Feedback (Kısa süreliğine eklendi bildirimi)
-                btnListeyeEkle.innerHTML = '<i class="fa-solid fa-check-circle"></i> Eklendi!';
-                btnListeyeEkle.classList.replace('bg-emerald-600', 'bg-gray-500');
-                btnListeyeEkle.classList.replace('hover:bg-emerald-700', 'hover:bg-gray-600');
-                btnListeyeEkle.disabled = true;
-
-                setTimeout(() => {
-                    listeEkleGrup.classList.add('hidden');
-                }, 1500);
+                elements.btnListeyeEkle.innerHTML = '<i class="fa-solid fa-check-circle"></i> Başarıyla Eklendi!';
+                elements.btnListeyeEkle.className = "w-full py-3.5 px-4 rounded-xl shadow-none text-sm font-bold text-white bg-gray-400 cursor-not-allowed transition-all flex justify-center items-center gap-2";
+                elements.btnListeyeEkle.disabled = true;
+                setTimeout(() => elements.listeEkleGrup.classList.add('hidden'), 1500);
             }
         });
 
         function renderHistory() {
             const tbody = document.getElementById('historyTableBody');
-            const totalEl = document.getElementById('historyGrandTotal');
             const btnClear = document.getElementById('btnClearHistory');
             const btnPdf = document.getElementById('btnExportPDF');
             
@@ -967,51 +864,40 @@
             let grandTotal = 0;
 
             if (savedCalculations.length === 0) {
-                tbody.innerHTML = `
-                    <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-                        <td colspan="5" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                            <i class="fa-solid fa-clipboard-list text-3xl mb-2 opacity-30 block"></i>
-                            Henüz kaydedilmiş bir hesaplama bulunmuyor.
-                        </td>
-                    </tr>
-                `;
-                totalEl.innerText = `₺0.00`;
-                btnClear.classList.add('hidden');
-                btnPdf.classList.add('hidden');
+                tbody.innerHTML = `<tr><td colspan="5" class="px-5 py-12 text-center text-gray-400 dark:text-gray-500 bg-gray-50/50 dark:bg-gray-800/20"><i class="fa-solid fa-folder-open text-4xl mb-3 opacity-30 block"></i>Henüz kaydedilmiş bir işlem yok.</td></tr>`;
+                document.getElementById('historyGrandTotal').innerText = `₺0.00`;
+                btnClear.classList.add('hidden'); btnPdf.classList.add('hidden');
                 return;
             }
 
-            btnClear.classList.remove('hidden');
-            btnPdf.classList.remove('hidden');
+            btnClear.classList.remove('hidden'); btnPdf.classList.remove('hidden');
 
             savedCalculations.forEach((item, index) => {
                 grandTotal += item.primTutari;
-                
-                const tr = document.createElement('tr');
-                tr.className = "bg-white dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors";
-                tr.innerHTML = `
-                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
-                        <div class="font-bold text-primary-600 dark:text-primary-400 mb-0.5">${item.isim || "İsimsiz Satış"}</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400">${item.urun}</div>
-                        <div class="text-[10px] text-gray-400 font-normal mt-0.5"><i class="fa-regular fa-clock"></i> ${item.tarih}</div>
-                    </td>
-                    <td class="px-4 py-3 align-middle text-sm">${item.satisTipi}</td>
-                    <td class="px-4 py-3 align-middle text-right text-sm">₺${formatCurrency(item.satisTutari)}</td>
-                    <td class="px-4 py-3 align-middle text-right font-bold text-emerald-600 dark:text-emerald-400">₺${formatCurrency(item.primTutari)}</td>
-                    <td class="px-4 py-3 align-middle text-center" data-html2canvas-ignore="true">
-                        <button type="button" onclick="deleteHistoryItem(${index})" title="Bu satışı sil" class="text-red-500 hover:text-red-700 focus:outline-none p-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/80 transition-colors group">
+                        <td class="px-5 py-4">
+                            <div class="font-extrabold text-gray-900 dark:text-white mb-0.5">${item.isim}</div>
+                            <div class="text-xs font-semibold text-primary-600 dark:text-primary-400">${item.urun}</div>
+                            <div class="text-[10px] text-gray-400 mt-1"><i class="fa-regular fa-clock"></i> ${item.tarih}</div>
+                        </td>
+                        <td class="px-5 py-4 align-middle text-sm font-medium text-gray-600 dark:text-gray-300">
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-xs">${item.satisTipi}</span>
+                        </td>
+                        <td class="px-5 py-4 align-middle text-right font-medium">₺${formatCurrency(item.satisTutari)}</td>
+                        <td class="px-5 py-4 align-middle text-right font-bold text-emerald-600 dark:text-emerald-400 text-base">₺${formatCurrency(item.primTutari)}</td>
+                        <td class="px-5 py-4 align-middle text-center" data-html2canvas-ignore="true">
+                            <button type="button" onclick="deleteHistoryItem(${index})" class="text-gray-400 hover:text-red-500 focus:outline-none p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
             });
-
-            totalEl.innerText = `₺${formatCurrency(grandTotal)}`;
+            document.getElementById('historyGrandTotal').innerText = `₺${formatCurrency(grandTotal)}`;
         }
 
         window.deleteHistoryItem = function(index) {
-            if(confirm('Bu kaydı silmek istediğinize emin misiniz?')) {
+            if(confirm('Kayıt silinecek, onaylıyor musunuz?')) {
                 savedCalculations.splice(index, 1);
                 localStorage.setItem('primHistory', JSON.stringify(savedCalculations));
                 renderHistory();
@@ -1019,90 +905,42 @@
         }
 
         window.clearAllHistory = function() {
-            if(confirm('Tüm geçmiş kayıtları silmek istediğinize emin misiniz? Bu işlem geri alınamaz ve tüm gün sonu tablonuz temizlenir.')) {
-                savedCalculations = [];
-                localStorage.removeItem('primHistory');
-                renderHistory();
+            if(confirm('Tüm geçmişi kalıcı olarak silmek istediğinize emin misiniz?')) {
+                savedCalculations = []; localStorage.removeItem('primHistory'); renderHistory();
             }
         };
 
-        // --- PDF EXPORT LOGIC ---
+        // --- PDF EXPORT ---
         window.exportToPDF = function() {
             if (savedCalculations.length === 0) return;
+            const originalScroll = window.scrollY; window.scrollTo(0, 0);
 
-            // 1. ÇÖZÜM: Sayfa kaydırma (scroll) kaynaklı boş/siyah çıkma hatasını önlemek için en üste çık
-            const originalScroll = window.scrollY;
-            window.scrollTo(0, 0);
-
-            // 2. ÇÖZÜM: GEÇİCİ STİL. Tüm animasyonları durdur, arka planı bembeyaz yap ve metinleri PDF'te kesin görünür yap.
             const style = document.createElement('style');
             style.id = 'pdf-export-style';
-            style.innerHTML = `
-                * { transition: none !important; }
-                #pdfContentArea, #pdfContentArea table, #pdfContentArea tr, #pdfContentArea th, #pdfContentArea td {
-                    background-color: #ffffff !important;
-                }
-                #pdfContentArea {
-                    color: #111827 !important; /* Zorunlu koyu metin */
-                }
-                #pdfContentArea .dark\\:text-white, #pdfContentArea .text-gray-400, #pdfContentArea .dark\\:text-gray-400 {
-                    color: #4b5563 !important; /* Beyazda kaybolan gri/beyaz metinleri sabitle */
-                }
-            `;
+            style.innerHTML = `* { transition: none !important; } #pdfContentArea, #pdfContentArea table, #pdfContentArea tr, #pdfContentArea th, #pdfContentArea td { background-color: #ffffff !important; color: #111827 !important; } #pdfContentArea .text-transparent { color: #10b981 !important; -webkit-text-fill-color: #10b981 !important; }`;
             document.head.appendChild(style);
 
-            // Karanlık Mod'u algıla ve geçici olarak kapat
-            const isDarkMode = document.documentElement.classList.contains('dark');
-            if(isDarkMode) document.documentElement.classList.remove('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            if(isDark) document.documentElement.classList.remove('dark');
 
-            // PDF üzerinde görünecek dinamik başlığı ayarla ve görünür yap
             const pdfHeader = document.getElementById('pdfHeader');
-            document.getElementById('pdfDateText').innerText = new Date().toLocaleDateString('tr-TR') + ' Tarihli Satışlar';
+            document.getElementById('pdfDateText').innerText = new Date().toLocaleDateString('tr-TR') + ' İşlem Özeti';
             pdfHeader.classList.remove('hidden');
 
             const element = document.getElementById('pdfContentArea');
-            const tableWrapper = element.querySelector('.overflow-x-auto');
-            
-            // Tablonun PDF'te kırpılmasını engeller
-            if (tableWrapper) tableWrapper.classList.remove('overflow-x-auto');
+            const opt = { margin: 10, filename: `Prim_${new Date().toLocaleDateString('tr-TR')}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
 
-            // PDF Ayarları
-            const opt = {
-              margin:       10,
-              filename:     `Prim_Ozeti_${new Date().toLocaleDateString('tr-TR')}.pdf`,
-              image:        { type: 'jpeg', quality: 0.98 },
-              html2canvas:  { 
-                  scale: 2, 
-                  useCORS: true, 
-                  logging: false,
-                  scrollY: 0 // Scroll hatasını çözen ana parametre
-              },
-              jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            // DOM'un güncellenmesi ve renklerin oturması için bekleme süresini 400ms yapıyoruz
             setTimeout(() => {
                 html2pdf().set(opt).from(element).save().then(() => {
-                    // İşlem bittikten sonra sayfa ayarlarını eski haline getir
                     pdfHeader.classList.add('hidden');
-                    if (tableWrapper) tableWrapper.classList.add('overflow-x-auto');
-                    if(isDarkMode) document.documentElement.classList.add('dark');
-                    
-                    const addedStyle = document.getElementById('pdf-export-style');
-                    if(addedStyle) addedStyle.remove();
-                    
-                    // İşlem bitince ekranı eski kaldığı yere geri kaydır
+                    if(isDark) document.documentElement.classList.add('dark');
+                    document.getElementById('pdf-export-style').remove();
                     window.scrollTo(0, originalScroll);
                 });
             }, 400);
         };
 
-        // Uygulama ilk açıldığında fiyatların anında dolması için:
-        populateUrun();
-        updateSatis();
-        updateKredi();
-        updateToplam();
-
+        populateUrun(); updateSatis(); updateKredi(); updateToplam();
     </script>
 </body>
 </html>
