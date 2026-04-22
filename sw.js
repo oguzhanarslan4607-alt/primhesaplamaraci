@@ -1,5 +1,6 @@
-// Uygulamanızın versiyonu. Her güncellemede bu rakamı değiştirin! (Örn: v1.2, v1.3, v2.0)
-const CACHE_NAME = 'primpro-store-v1.3'; 
+// Uygulamanızın versiyonu. Gelişmiş arayüz güncellemesi için v2.0 yapıldı.
+// Her yeni HTML/JS/CSS değişikliğinde bu rakamı değiştirin! (Örn: v2.1, v2.2)
+const CACHE_NAME = 'primpro-store-v2.0'; 
 
 const ASSETS_TO_CACHE = [
   '/',
@@ -14,6 +15,7 @@ self.addEventListener('install', (e) => {
   self.skipWaiting(); // Yeni versiyonu beklemeden hemen kurmaya başla
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      console.log('Önbelleğe alınıyor: ', CACHE_NAME);
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
@@ -40,6 +42,7 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(
     caches.match(e.request).then((response) => {
        // Önce cihazdaki kayıtlı dosyaya bak, yoksa internetten indir
+       // Hata durumunda (çevrimdışıysa ve dosya cache'de yoksa) index.html'e düş
        return response || fetch(e.request).catch(() => caches.match('/index.html'));
     })
   );
