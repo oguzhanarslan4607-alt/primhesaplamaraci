@@ -282,13 +282,13 @@
                                 <label class="relative flex-1 text-center cursor-pointer">
                                     <input type="radio" name="priceList" value="yeni" class="peer sr-only">
                                     <div class="py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-primary-600 dark:peer-checked:text-primary-400 peer-checked:shadow-sm">
-                                        2 Haziran Listesi
+                                        Yeni Fiyat Listesi
                                     </div>
                                 </label>
                                 <label class="relative flex-1 text-center cursor-pointer">
                                     <input type="radio" name="priceList" value="eski" class="peer sr-only">
                                     <div class="py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
-                                        Mevcut Liste
+                                        Eski Fiyat Listesi
                                     </div>
                                 </label>
                                 <label class="relative flex-1 text-center cursor-pointer">
@@ -968,11 +968,11 @@
         const gecisTarihi = new Date('2026-06-02T00:00:00'); // 2 Haziran 2026 Gece 00:00
         
         if (bugun >= gecisTarihi) {
-            // Tarih geldiyse doğrudan 2 Haziran Listesini aç
+            // Tarih geldiyse doğrudan Yeni Fiyat Listesini aç
             document.querySelector('input[value="yeni"]').checked = true;
             satisMap = satisMapYeni;
         } else {
-            // Tarih henüz gelmediyse Mevcut (1 Haziran'a kadar geçerli olan) listeyi aç
+            // Tarih henüz gelmediyse Eski Fiyat Listesini (1 Haziran'a kadar geçerli olan) aç
             document.querySelector('input[value="eski"]').checked = true;
             satisMap = satisMapEski;
         }
