@@ -276,19 +276,25 @@
                     <div class="space-y-7 flex-grow">
                         
                         <!-- Fiyat Listesi Seçimi -->
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-white dark:bg-gray-800/80 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm gap-3">
-                            <label class="text-sm font-bold text-gray-700 dark:text-gray-300">Fiyat Listesi:</label>
-                            <div class="flex items-center p-1 bg-gray-100 dark:bg-gray-900 rounded-xl">
+                        <div class="flex flex-col lg:flex-row lg:items-center justify-between bg-white dark:bg-gray-800/80 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm gap-3">
+                            <label class="text-sm font-bold text-gray-700 dark:text-gray-300 whitespace-nowrap">Fiyat Listesi:</label>
+                            <div class="flex items-center p-1 bg-gray-100 dark:bg-gray-900 rounded-xl w-full lg:w-auto">
                                 <label class="relative flex-1 text-center cursor-pointer">
-                                    <input type="radio" name="priceList" value="yeni" checked class="peer sr-only">
-                                    <div class="py-1.5 px-4 rounded-lg text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-primary-600 dark:peer-checked:text-primary-400 peer-checked:shadow-sm">
-                                        Yeni Liste
+                                    <input type="radio" name="priceList" value="yeni" class="peer sr-only">
+                                    <div class="py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-primary-600 dark:peer-checked:text-primary-400 peer-checked:shadow-sm">
+                                        2 Haziran Listesi
                                     </div>
                                 </label>
                                 <label class="relative flex-1 text-center cursor-pointer">
                                     <input type="radio" name="priceList" value="eski" class="peer sr-only">
-                                    <div class="py-1.5 px-4 rounded-lg text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
-                                        Eski Liste
+                                    <div class="py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
+                                        Mevcut Liste
+                                    </div>
+                                </label>
+                                <label class="relative flex-1 text-center cursor-pointer">
+                                    <input type="radio" name="priceList" value="dahaEski" class="peer sr-only">
+                                    <div class="py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
+                                        Önceki Liste
                                     </div>
                                 </label>
                             </div>
@@ -552,7 +558,7 @@
         }
 
         // --- DATA & CONFIG ---
-        const satisMapEski = {
+        const satisMapDahaEski = {
             "TR": { "PEŞİN":65000, "1+1":68000, "1+5":80000, "1+8":85000, "1+12":90000, "1+15":95000, "1+18":100000, "1+21":105000, "1+24":110000, "K.KARTI TEK ÇEKİM":65000, "K.KARTI 2 TAKSİT":68000, "K.KARTI 5 TAKSİT":75000, "K.KARTI 9 TAKSİT":80000 },
             "RO - Unique": { "PEŞİN":25000, "1+1":26000,"1+4":28000,"1+7":31000,"1+12":32000,"1+15":34000,"1+18":36000,"1+21":38000,"K.KARTI TEK ÇEKİM":25000,"K.KARTI 2 TAKSİT":26000,"K.KARTI 5 TAKSİT":28000,"K.KARTI 9 TAKSİT":31000 },
             "RO - Unique M5": { "PEŞİN":25500, "1+1":26500,"1+4":29000,"1+7":32000,"1+12":33000,"1+15":35000,"1+18":37000,"1+21":39000,"K.KARTI TEK ÇEKİM":25500,"K.KARTI 2 TAKSİT":26500,"K.KARTI 5 TAKSİT":29000,"K.KARTI 9 TAKSİT":32000 },
@@ -566,7 +572,7 @@
             "Klima-45": { "PEŞİN":109000, "1+1":113400,"1+4":130800,"1+9":157000,"1+12":177400,"K.KARTI TEK ÇEKİM":113400,"K.KARTI 9 TAKSİT":130800 }
         };
 
-        const satisMapYeni = {
+        const satisMapEski = {
             "TR": { "PEŞİN":65000, "1+1":70000, "1+5":80000, "1+8":85000, "1+12":90000, "1+15":95000, "1+18":100000, "1+21":105000, "1+24":110000, "K.KARTI TEK ÇEKİM":65000, "K.KARTI 5 TAKSİT":70000, "K.KARTI 9 TAKSİT":75000 },
             "RO - Unique": { "PEŞİN":25000, "1+1":26000,"1+4":28000,"1+7":31000,"1+12":32000,"1+15":34000,"1+18":36000,"1+21":38000,"K.KARTI TEK ÇEKİM":25000,"K.KARTI 2 TAKSİT":26000,"K.KARTI 5 TAKSİT":27000,"K.KARTI 9 TAKSİT":29000 },
             "RO - Unique M5": { "PEŞİN":25500, "1+1":26500,"1+4":29000,"1+7":32000,"1+12":33000,"1+15":35000,"1+18":37000,"1+21":39000,"K.KARTI TEK ÇEKİM":25500,"K.KARTI 2 TAKSİT":26500,"K.KARTI 5 TAKSİT":28000,"K.KARTI 9 TAKSİT":30000 },
@@ -580,7 +586,21 @@
             "Klima-45": { "PEŞİN":109000, "1+1":113400,"1+4":130800,"1+9":157000,"1+12":177400,"K.KARTI TEK ÇEKİM":113400,"K.KARTI 9 TAKSİT":130800 }
         };
 
-        let satisMap = satisMapYeni;
+        const satisMapYeni = {
+            "TR": { "PEŞİN":70000, "1+1":75000, "1+5":78000, "1+8":90000, "1+12":95000, "1+15":100000, "1+18":105000, "1+21":110000, "1+24":115000, "K.KARTI TEK ÇEKİM":70000, "K.KARTI 5 TAKSİT":75000, "K.KARTI 9 TAKSİT":80000 },
+            "RO - Unique": { "PEŞİN":28000, "1+1":29000,"1+4":32000,"1+7":34000,"1+12":38000,"1+15":40000,"1+18":42000,"1+21":46000,"K.KARTI TEK ÇEKİM":28000,"K.KARTI 2 TAKSİT":29000,"K.KARTI 5 TAKSİT":30000,"K.KARTI 9 TAKSİT":32000 },
+            "RO - Unique M5": { "PEŞİN":28500, "1+1":29500,"1+4":33000,"1+7":35000,"1+12":39000,"1+15":41000,"1+18":43000,"1+21":47000,"K.KARTI TEK ÇEKİM":28500,"K.KARTI 2 TAKSİT":29500,"K.KARTI 5 TAKSİT":31000,"K.KARTI 9 TAKSİT":33000 },
+            "RO - Platinum": { "PEŞİN":17000, "1+1":18000,"1+4":20000,"1+7":22000,"1+12":24000,"1+15":26000,"K.KARTI TEK ÇEKİM":17000,"K.KARTI 2 TAKSİT":18000,"K.KARTI 9 TAKSİT":21000 },
+            "RO - Silver": { "PEŞİN":7200, "1+1":7500,"1+4":8200,"1+7":8700,"1+12":9500,"1+15":10500,"K.KARTI TEK ÇEKİM":7200,"K.KARTI 2 TAKSİT":7500,"K.KARTI 9 TAKSİT":8600 },
+            "RO - Diamond": { "PEŞİN":29000, "1+1":30000,"1+4":34000,"1+7":36000,"1+12":38000,"1+15":40000,"1+18":44000,"1+21":48000,"K.KARTI TEK ÇEKİM":29000,"K.KARTI 2 TAKSİT":30000,"K.KARTI 6 TAKSİT":33000,"K.KARTI 9 TAKSİT":35000 },
+            "Klima-12": { "PEŞİN":29900, "1+1":31000,"1+4":35900,"1+9":43000,"1+12":48600,"K.KARTI TEK ÇEKİM":31000,"K.KARTI 9 TAKSİT":35900 },
+            "Klima-18": { "PEŞİN":40900, "1+1":42500,"1+4":49000,"1+9":58900,"K.KARTI TEK ÇEKİM":42500,"K.KARTI 9 TAKSİT":49000 },
+            "Klima-24 Ayaklı": { "PEŞİN":56900, "1+1":59200,"1+4":68300,"1+9":81900,"1+12":92500,"K.KARTI TEK ÇEKİM":59200,"K.KARTI 9 TAKSİT":68300 },
+            "Klima-24 Split": { "PEŞİN":48900, "1+1":50800,"1+4":58700,"1+9":70400,"1+12":79500,"K.KARTI TEK ÇEKİM":50800,"K.KARTI 9 TAKSİT":58700 },
+            "Klima-45": { "PEŞİN":109000, "1+1":113400,"1+4":130800,"1+9":157000,"1+12":177400,"K.KARTI TEK ÇEKİM":113400,"K.KARTI 9 TAKSİT":130800 }
+        };
+
+        let satisMap;
 
         // --- STATE & DOM ---
         let savedCalculations = JSON.parse(localStorage.getItem('primHistory')) || [];
@@ -710,7 +730,10 @@
 
         document.querySelectorAll('input[name="priceList"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
-                satisMap = e.target.value === 'eski' ? satisMapEski : satisMapYeni;
+                if (e.target.value === 'dahaEski') satisMap = satisMapDahaEski;
+                else if (e.target.value === 'eski') satisMap = satisMapEski;
+                else satisMap = satisMapYeni;
+                
                 const [cU, cS, cK] = [elements.urunSelect.value, elements.satisSelect.value, elements.krediSelect.value];
                 populateUrun();
                 if(satisMap[cU]) elements.urunSelect.value = cU;
@@ -939,6 +962,20 @@
                 });
             }, 400);
         };
+
+        // --- TARİH KONTROLÜ VE BAŞLANGIÇ YÜKLEMESİ ---
+        const bugun = new Date();
+        const gecisTarihi = new Date('2026-06-02T00:00:00'); // 2 Haziran 2026 Gece 00:00
+        
+        if (bugun >= gecisTarihi) {
+            // Tarih geldiyse doğrudan 2 Haziran Listesini aç
+            document.querySelector('input[value="yeni"]').checked = true;
+            satisMap = satisMapYeni;
+        } else {
+            // Tarih henüz gelmediyse Mevcut (1 Haziran'a kadar geçerli olan) listeyi aç
+            document.querySelector('input[value="eski"]').checked = true;
+            satisMap = satisMapEski;
+        }
 
         populateUrun(); updateSatis(); updateKredi(); updateToplam();
     </script>
