@@ -1,6 +1,6 @@
-// Uygulamanızın versiyonu. 2 Haziran Fiyat geçişleri için v3.0 yapıldı.
+// Uygulamanızın versiyonu. İsimlendirme değişiklikleri ve yeni fiyat mantığı için v3.2 yapıldı.
 // Her yeni HTML/JS/CSS değişikliğinde bu rakamı değiştirin!
-const CACHE_NAME = 'primpro-store-v3.0'; 
+const CACHE_NAME = 'primpro-store-v3.2'; 
 
 const ASSETS_TO_CACHE = [
   '/',
