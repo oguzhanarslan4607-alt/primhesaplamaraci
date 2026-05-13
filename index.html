@@ -287,8 +287,8 @@
                                 </label>
                                 <label class="relative flex-1 text-center cursor-pointer">
                                     <input type="radio" name="priceList" value="eski" class="peer sr-only">
-                                    <div class="py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
-                                        Eski Fiyat Listesi
+                                    <div id="eskiListeMetni" class="py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
+                                        Mevcut Fiyat Listesi
                                     </div>
                                 </label>
                                 <label class="relative flex-1 text-center cursor-pointer">
@@ -966,17 +966,22 @@
         // --- TARİH KONTROLÜ VE BAŞLANGIÇ YÜKLEMESİ ---
         const bugun = new Date();
         const gecisTarihi = new Date('2026-06-02T00:00:00'); // 2 Haziran 2026 Gece 00:00
+        const eskiListeMetni = document.getElementById('eskiListeMetni');
         
         if (bugun >= gecisTarihi) {
             // Tarih geldiyse doğrudan Yeni Fiyat Listesini aç
             document.querySelector('input[value="yeni"]').checked = true;
             satisMap = satisMapYeni;
+            // 2 Haziran'dan sonra bu liste artık "Eski" liste oldu.
+            if(eskiListeMetni) eskiListeMetni.innerText = "Eski Fiyat Listesi";
         } else {
             // Tarih henüz gelmediyse Eski Fiyat Listesini (1 Haziran'a kadar geçerli olan) aç
             // Personel yanlışlıkla tıklamasın diye 2 Haziran'a kadar Yeni Liste butonunu tamamen gizle
             document.getElementById('yeniListeLabel').style.display = 'none';
             document.querySelector('input[value="eski"]').checked = true;
             satisMap = satisMapEski;
+            // 2 Haziran'a kadar bu liste hala "Mevcut" listedir.
+            if(eskiListeMetni) eskiListeMetni.innerText = "Mevcut Fiyat Listesi";
         }
 
         populateUrun(); updateSatis(); updateKredi(); updateToplam();
