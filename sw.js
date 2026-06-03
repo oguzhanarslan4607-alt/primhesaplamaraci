@@ -1,6 +1,6 @@
 // Uygulamanızın versiyonu. Önbelleğin güncellenmesi için v3.8 yapıldı.
 // Her yeni HTML/JS/CSS değişikliğinde bu rakamı değiştirin!
-const CACHE_NAME = 'primpro-store-v3.8'; 
+const CACHE_NAME = 'primpro-store-v3.9';
 
 const ASSETS_TO_CACHE = [
   '/',
