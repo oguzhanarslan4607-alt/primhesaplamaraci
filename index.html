@@ -154,6 +154,20 @@
             from { transform: translateY(100px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+
+        .category-accent-klima { --accent: #0891b2; --accent-soft: rgba(8, 145, 178, 0.12); --accent-border: rgba(8, 145, 178, 0.25); }
+        .category-accent-ro { --accent: #059669; --accent-soft: rgba(5, 150, 105, 0.12); --accent-border: rgba(5, 150, 105, 0.25); }
+        .category-accent-tr { --accent: #4f46e5; --accent-soft: rgba(79, 70, 229, 0.12); --accent-border: rgba(79, 70, 229, 0.25); }
+        .category-accent-default { --accent: #64748b; --accent-soft: rgba(100, 116, 139, 0.12); --accent-border: rgba(100, 116, 139, 0.25); }
+        .accent-ring { border-color: var(--accent-border); box-shadow: 0 12px 34px -24px var(--accent); }
+        .accent-icon { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-border); }
+        .accent-text { color: var(--accent); }
+        .accent-bar { background: var(--accent); }
+        .result-pop { animation: resultPop 0.42s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes resultPop {
+            0% { transform: scale(0.97); opacity: 0.65; }
+            100% { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-300 relative overflow-x-hidden">
@@ -246,7 +260,7 @@
             </div>
         </div>
 
-        <div id="appCard" class="hidden w-full max-w-6xl glass-card rounded-[2rem] shadow-2xl overflow-hidden transition-all duration-500 border border-white/50 dark:border-gray-700/50">
+        <div id="appCard" class="hidden w-full max-w-6xl glass-card rounded-[2rem] shadow-2xl overflow-hidden transition-all duration-500 border border-white/50 dark:border-gray-700/50 category-accent-default">
             <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[650px]">
                 
                 <div class="lg:col-span-7 p-6 sm:p-10 border-b lg:border-b-0 lg:border-r border-gray-200/60 dark:border-gray-700/50 flex flex-col relative overflow-hidden">
@@ -268,24 +282,30 @@
                     <div class="space-y-7 flex-grow">
                         
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between bg-white dark:bg-gray-800/80 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm gap-3">
-                            <label class="text-sm font-bold text-gray-700 dark:text-gray-300 whitespace-nowrap">Fiyat Listesi:</label>
-                            <div class="flex items-center p-1 bg-gray-100 dark:bg-gray-900 rounded-xl w-full lg:w-auto">
+                            <div>
+                                <label class="text-sm font-bold text-gray-700 dark:text-gray-300 whitespace-nowrap">Fiyat Listesi</label>
+                                <p id="priceListHint" class="text-[11px] font-semibold text-gray-400 mt-0.5">02.06.2026 sonrası aktif liste</p>
+                            </div>
+                            <div class="flex items-stretch p-1 bg-gray-100 dark:bg-gray-900 rounded-xl w-full lg:w-auto overflow-x-auto">
                                 <label id="yeniListeLabel" class="relative flex-1 text-center cursor-pointer">
                                     <input type="radio" name="priceList" value="yeni" class="peer sr-only">
-                                    <div class="py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-primary-600 dark:peer-checked:text-primary-400 peer-checked:shadow-sm">
-                                        Yeni Fiyat Listesi
+                                    <div class="min-w-[112px] h-full py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-primary-600 dark:peer-checked:text-primary-400 peer-checked:shadow-sm">
+                                        <span class="block">Yeni Liste</span>
+                                        <span class="block text-[10px] opacity-70">Güncel</span>
                                     </div>
                                 </label>
                                 <label class="relative flex-1 text-center cursor-pointer">
                                     <input type="radio" name="priceList" value="eski" class="peer sr-only">
-                                    <div id="eskiListeMetni" class="py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
-                                        Mevcut Fiyat Listesi
+                                    <div class="min-w-[112px] h-full py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
+                                        <span id="eskiListeMetni" class="block">Mevcut Liste</span>
+                                        <span class="block text-[10px] opacity-70">Arşiv</span>
                                     </div>
                                 </label>
                                 <label class="relative flex-1 text-center cursor-pointer">
                                     <input type="radio" name="priceList" value="dahaEski" class="peer sr-only">
-                                    <div class="py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
-                                        Önceki Liste
+                                    <div class="min-w-[112px] h-full py-1.5 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-gray-700 peer-checked:text-gray-900 dark:peer-checked:text-white peer-checked:shadow-sm">
+                                        <span class="block">Önceki Liste</span>
+                                        <span class="block text-[10px] opacity-70">Eski</span>
                                     </div>
                                 </label>
                             </div>
@@ -293,9 +313,20 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Ürün Grubu</label>
-                                <select id="urun" class="block w-full py-3 px-4 border border-gray-200 dark:border-gray-600 bg-white/80 dark:bg-gray-800/80 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 sm:text-sm transition-all cursor-pointer font-medium appearance-none">
-                                </select>
+                                <div class="flex items-center justify-between mb-1.5 ml-1">
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Ürün Grubu</label>
+                                    <span id="productBadge" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-black uppercase accent-icon border">
+                                        <i id="productBadgeIcon" class="fa-solid fa-box"></i>
+                                        <span id="productBadgeText">Ürün</span>
+                                    </span>
+                                </div>
+                                <div class="relative">
+                                    <div id="productIconWrap" class="absolute inset-y-0 left-0 my-auto ml-3 w-8 h-8 rounded-lg border accent-icon flex items-center justify-center pointer-events-none">
+                                        <i id="productSelectIcon" class="fa-solid fa-box text-sm"></i>
+                                    </div>
+                                    <select id="urun" class="block w-full py-3 pl-14 pr-4 border border-gray-200 dark:border-gray-600 bg-white/80 dark:bg-gray-800/80 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 sm:text-sm transition-all cursor-pointer font-medium appearance-none accent-ring">
+                                    </select>
+                                </div>
                             </div>
                             
                             <div class="flex items-end pb-1.5">
@@ -379,19 +410,22 @@
                 <div class="lg:col-span-5 bg-gradient-to-b from-gray-50/50 to-gray-100/50 dark:from-gray-800/40 dark:to-gray-900/40 p-6 sm:p-10 flex flex-col justify-center relative">
                     
                     <div id="resultPlaceholder" class="text-center text-gray-400 dark:text-gray-500 py-12 flex flex-col items-center justify-center h-full">
-                        <div class="w-24 h-24 mb-6 rounded-full bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center animate-pulse-slow border border-gray-100 dark:border-gray-700">
-                            <i class="fa-solid fa-chart-pie text-4xl text-gray-300 dark:text-gray-600"></i>
+                        <div class="w-24 h-24 mb-6 rounded-full bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center animate-pulse-slow border accent-icon">
+                            <i class="fa-solid fa-chart-pie text-4xl"></i>
                         </div>
                         <p class="text-lg font-bold text-gray-600 dark:text-gray-400">Sonuç Bekleniyor</p>
-                        <p class="text-sm mt-2 max-w-[200px] leading-relaxed">Formu doldurup hesapla butonuna tıklayın.</p>
+                        <p class="text-sm mt-2 max-w-[230px] leading-relaxed">Ürün, liste ve ödeme tipini seçince özet burada netleşir.</p>
                     </div>
 
                     <div id="sonucLayout" class="hidden flex-col h-full animate-fade-in-up">
-                        <div class="flex items-center gap-3 mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
-                            <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
-                                <i class="fa-solid fa-check"></i>
+                        <div class="flex items-center justify-between gap-3 mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full accent-icon border flex items-center justify-center">
+                                    <i id="summaryCategoryIcon" class="fa-solid fa-check"></i>
+                                </div>
+                                <h3 class="text-xl font-extrabold text-gray-900 dark:text-white">Hesap Özeti</h3>
                             </div>
-                            <h3 class="text-xl font-extrabold text-gray-900 dark:text-white">Hesap Özeti</h3>
+                            <span id="summaryCategoryBadge" class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase accent-icon border">Ürün</span>
                         </div>
                         
                         <div class="space-y-4 flex-grow">
@@ -428,10 +462,21 @@
                             </div>
                         </div>
 
-                        <div class="mt-8 mb-6 p-6 bg-white dark:bg-gray-800 rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(16,185,129,0.2)] dark:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.1)] border border-emerald-100 dark:border-emerald-900/30 relative overflow-hidden text-center">
-                            <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 dark:bg-emerald-900/20 rounded-full opacity-50 pointer-events-none"></div>
+                        <div id="totalResultCard" class="mt-8 mb-6 p-6 bg-white dark:bg-gray-800 rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(16,185,129,0.2)] dark:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.1)] border accent-ring relative overflow-hidden text-center">
+                            <div class="absolute left-0 top-0 h-1 w-full accent-bar"></div>
+                            <div class="absolute -right-4 -top-4 w-24 h-24 rounded-full opacity-50 pointer-events-none" style="background: var(--accent-soft);"></div>
                             <span class="block text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Kazanılan Toplam Prim</span>
                             <span id="resToplamPrim" class="block text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400 tracking-tight drop-shadow-sm pb-1">₺0.00</span>
+                            <div class="grid grid-cols-2 gap-2 mt-4 text-left">
+                                <div class="rounded-xl bg-gray-50 dark:bg-gray-900/50 p-3">
+                                    <span class="block text-[10px] font-bold text-gray-400 uppercase">Aktif Liste</span>
+                                    <span id="summaryPriceList" class="block text-xs font-black text-gray-700 dark:text-gray-200 mt-1">Yeni Liste</span>
+                                </div>
+                                <div class="rounded-xl bg-gray-50 dark:bg-gray-900/50 p-3">
+                                    <span class="block text-[10px] font-bold text-gray-400 uppercase">Ödeme Tipi</span>
+                                    <span id="summarySaleType" class="block text-xs font-black text-gray-700 dark:text-gray-200 mt-1">-</span>
+                                </div>
+                            </div>
                         </div>
 
                          <div class="mt-auto">
@@ -461,12 +506,15 @@
 
                 <div class="lg:col-span-12 border-t border-gray-200/60 dark:border-gray-700/50 bg-white/40 dark:bg-gray-900/30 p-6 sm:p-10 backdrop-blur-sm">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                        <h3 class="text-xl font-extrabold text-gray-800 dark:text-white flex items-center">
+                        <div class="flex items-center">
                             <div class="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mr-3">
                                 <i class="fa-solid fa-list-check"></i>
                             </div>
-                            Gün Sonu Prim Özeti
-                        </h3>
+                            <div>
+                                <h3 class="text-xl font-extrabold text-gray-800 dark:text-white">Gün Sonu Prim Özeti</h3>
+                                <p class="text-xs font-semibold text-gray-400 mt-0.5"><span id="historyCount">0</span> kayıt listeleniyor</p>
+                            </div>
+                        </div>
                         <div class="flex items-center gap-2 w-full sm:w-auto">
                             <button id="btnExportPDF" type="button" onclick="exportToPDF()" class="flex-1 sm:flex-none justify-center flex items-center gap-2 text-sm text-indigo-600 hover:text-white dark:text-indigo-400 font-bold transition-all hidden px-4 py-2 rounded-xl border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-600 dark:hover:bg-indigo-500">
                                 <i class="fa-solid fa-file-pdf"></i> PDF İndir
@@ -478,9 +526,20 @@
                     </div>
                     
                     <div id="pdfContentArea" class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-1">
-                        <div id="pdfHeader" class="hidden text-center mb-6 pt-6">
-                            <h2 class="text-2xl font-bold text-gray-800 mb-1">Satış ve Prim Özeti Tablosu</h2>
-                            <p class="text-gray-500 text-sm" id="pdfDateText"></p>
+                        <div id="pdfHeader" class="hidden mb-6 pt-6 px-6">
+                            <div class="flex items-center justify-between border-b border-gray-200 pb-4">
+                                <div class="flex items-center gap-3">
+                                    <img src="icon-192.png" alt="PrimPro" class="w-12 h-12 rounded-xl">
+                                    <div>
+                                        <h2 class="text-2xl font-black text-gray-800 mb-0.5">Satış ve Prim Özeti</h2>
+                                        <p class="text-gray-500 text-sm" id="pdfDateText"></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-gray-400 uppercase">Toplam Prim</p>
+                                    <p id="pdfTotalText" class="text-xl font-black text-emerald-600">₺0,00</p>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="overflow-x-auto rounded-xl">
@@ -613,7 +672,17 @@
             toggleDetailsBtn: document.getElementById('toggleDetailsBtn'),
             detailContent: document.getElementById('detailContent'),
             detailSteps: document.getElementById('detailSteps'),
-            detailArrow: document.getElementById('detailArrow')
+            detailArrow: document.getElementById('detailArrow'),
+            priceListHint: document.getElementById('priceListHint'),
+            productBadge: document.getElementById('productBadge'),
+            productBadgeIcon: document.getElementById('productBadgeIcon'),
+            productBadgeText: document.getElementById('productBadgeText'),
+            productSelectIcon: document.getElementById('productSelectIcon'),
+            summaryCategoryIcon: document.getElementById('summaryCategoryIcon'),
+            summaryCategoryBadge: document.getElementById('summaryCategoryBadge'),
+            summaryPriceList: document.getElementById('summaryPriceList'),
+            summarySaleType: document.getElementById('summarySaleType'),
+            totalResultCard: document.getElementById('totalResultCard')
         };
 
         // --- INIT ---
@@ -661,9 +730,48 @@
         });
 
         // --- APP LOGIC ---
+        function getProductMeta(urun) {
+            if (urun.includes("Klima")) {
+                return { key: "klima", label: "Klima", icon: "fa-snowflake", chip: "bg-cyan-50 text-cyan-700 border-cyan-100 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800" };
+            }
+            if (urun.startsWith("RO")) {
+                return { key: "ro", label: "Su Arıtma", icon: "fa-droplet", chip: "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800" };
+            }
+            if (urun.startsWith("TR")) {
+                return { key: "tr", label: "TR", icon: "fa-shield-halved", chip: "bg-indigo-50 text-indigo-700 border-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800" };
+            }
+            return { key: "default", label: "Ürün", icon: "fa-box", chip: "bg-gray-50 text-gray-600 border-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700" };
+        }
+
+        function getPriceListLabel() {
+            const selected = document.querySelector('input[name="priceList"]:checked')?.value;
+            if (selected === "dahaEski") return "Önceki Liste";
+            if (selected === "eski") return "Eski Liste";
+            return "Yeni Liste";
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "").replace(/[&<>"']/g, char => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            }[char]));
+        }
+
+        function updateProductVisuals() {
+            const meta = getProductMeta(elements.urunSelect.value || "");
+            elements.appCard.classList.remove("category-accent-klima", "category-accent-ro", "category-accent-tr", "category-accent-default");
+            elements.appCard.classList.add(`category-accent-${meta.key}`);
+            elements.productBadgeText.innerText = meta.label;
+            [elements.productBadgeIcon, elements.productSelectIcon, elements.summaryCategoryIcon].forEach(icon => {
+                icon.className = `fa-solid ${meta.icon}`;
+            });
+            elements.summaryCategoryBadge.innerText = meta.label;
+            elements.priceListHint.innerText = `${getPriceListLabel()} aktif, ürün fiyatları buna göre yenilenir`;
+        }
+
         function populateUrun() {
             elements.urunSelect.innerHTML = "";
             Object.keys(satisMap).forEach(u => elements.urunSelect.add(new Option(u, u)));
+            updateProductVisuals();
         }
 
         function updateSatis() {
@@ -682,6 +790,7 @@
             const urun = elements.urunSelect.value;
             const val = elements.checkKredi.checked ? satisMap[urun][elements.krediSelect.value] : satisMap[urun][elements.satisSelect.value];
             elements.toplamInput.value = formatCurrency(val || 0);
+            updateProductVisuals();
             
             if (elements.satisSelect.value === "PEŞİN" && !elements.checkKredi.checked) {
                 elements.nakitInput.value = val;
@@ -721,11 +830,11 @@
                 if(satisMap[cU]) elements.urunSelect.value = cU;
                 updateSatis(); if(Array.from(elements.satisSelect.options).some(o => o.value === cS)) elements.satisSelect.value = cS;
                 updateKredi(); if(Array.from(elements.krediSelect.options).some(o => o.value === cK)) elements.krediSelect.value = cK;
-                updateToplam();
+                updateToplam(); updateProductVisuals(); resetResultUI();
             });
         });
 
-        elements.urunSelect.addEventListener("change", () => { updateSatis(); updateKredi(); });
+        elements.urunSelect.addEventListener("change", () => { updateProductVisuals(); updateSatis(); updateKredi(); resetResultUI(); });
         elements.satisSelect.addEventListener("change", updateToplam);
         elements.krediSelect.addEventListener("change", updateToplam);
         elements.nakitInput.addEventListener("input", calculateSenet);
@@ -835,10 +944,17 @@
             
             document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(hesaplananToplamPrim)}`;
             elements.detailSteps.innerHTML = detailHtml;
+            elements.summaryPriceList.innerText = getPriceListLabel();
+            elements.summarySaleType.innerText = satisAciklama;
+            elements.totalResultCard.classList.remove('result-pop');
+            void elements.totalResultCard.offsetWidth;
+            elements.totalResultCard.classList.add('result-pop');
 
             currentCalcDetails = {
                 id: Date.now(), urun: secilenUrun, satisTipi: satisAciklama, satisTutari: satisTutari, primTutari: hesaplananToplamPrim,
-                tarih: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+                tarih: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
+                tarihTam: new Date().toLocaleDateString('tr-TR'),
+                kategori: getProductMeta(secilenUrun).label
             };
 
             elements.satisIsmiInput.value = "";
@@ -867,12 +983,14 @@
             const tbody = document.getElementById('historyTableBody');
             const btnClear = document.getElementById('btnClearHistory');
             const btnPdf = document.getElementById('btnExportPDF');
-            
+            const historyCount = document.getElementById('historyCount');
+
             tbody.innerHTML = '';
             let grandTotal = 0;
+            historyCount.innerText = savedCalculations.length;
 
             if (savedCalculations.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="px-5 py-12 text-center text-gray-400 dark:text-gray-500 bg-gray-50/50 dark:bg-gray-800/20"><i class="fa-solid fa-folder-open text-4xl mb-3 opacity-30 block"></i>Henüz kaydedilmiş bir işlem yok.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="px-5 py-14 text-center text-gray-400 dark:text-gray-500 bg-gray-50/50 dark:bg-gray-800/20"><div class="mx-auto w-16 h-16 rounded-2xl bg-white dark:bg-gray-800 border border-dashed border-gray-200 dark:border-gray-700 flex items-center justify-center mb-4"><i class="fa-solid fa-receipt text-2xl opacity-40"></i></div><div class="font-extrabold text-gray-500 dark:text-gray-400">Henüz kaydedilmiş işlem yok</div><div class="text-xs mt-1">Hesapladığınız primleri tabloya eklediğinizde gün sonu özeti oluşur.</div></td></tr>`;
                 document.getElementById('historyGrandTotal').innerText = `₺0.00`;
                 btnClear.classList.add('hidden'); btnPdf.classList.add('hidden');
                 return;
@@ -882,15 +1000,25 @@
 
             savedCalculations.forEach((item, index) => {
                 grandTotal += item.primTutari;
+                const meta = getProductMeta(item.urun || "");
+                const name = escapeHtml(item.isim || "İsimsiz Müşteri");
+                const urun = escapeHtml(item.urun || "");
+                const satisTipi = escapeHtml(item.satisTipi || "");
+                const tarih = escapeHtml(item.tarih || "");
+                const tarihTam = escapeHtml(item.tarihTam || new Date().toLocaleDateString('tr-TR'));
                 tbody.innerHTML += `
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/80 transition-colors group">
                         <td class="px-5 py-4">
-                            <div class="font-extrabold text-gray-900 dark:text-white mb-0.5">${item.isim}</div>
-                            <div class="text-xs font-semibold text-primary-600 dark:text-primary-400">${item.urun}</div>
-                            <div class="text-[10px] text-gray-400 mt-1"><i class="fa-regular fa-clock"></i> ${item.tarih}</div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg border ${meta.chip}"><i class="fa-solid ${meta.icon} text-xs"></i></span>
+                                <div class="font-extrabold text-gray-900 dark:text-white">${name}</div>
+                            </div>
+                            <div class="text-xs font-semibold text-primary-600 dark:text-primary-400">${urun}</div>
+                            <div class="text-[10px] text-gray-400 mt-1"><i class="fa-regular fa-calendar"></i> ${tarihTam} <span class="mx-1">•</span><i class="fa-regular fa-clock"></i> ${tarih}</div>
                         </td>
                         <td class="px-5 py-4 align-middle text-sm font-medium text-gray-600 dark:text-gray-300">
-                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-xs">${item.satisTipi}</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-xs">${satisTipi}</span>
+                            <span class="ml-1 px-2 py-1 rounded-md text-[10px] border ${meta.chip}">${meta.label}</span>
                         </td>
                         <td class="px-5 py-4 align-middle text-right font-medium">₺${formatCurrency(item.satisTutari)}</td>
                         <td class="px-5 py-4 align-middle text-right font-bold text-emerald-600 dark:text-emerald-400 text-base">₺${formatCurrency(item.primTutari)}</td>
@@ -933,6 +1061,7 @@
 
             const pdfHeader = document.getElementById('pdfHeader');
             document.getElementById('pdfDateText').innerText = new Date().toLocaleDateString('tr-TR') + ' İşlem Özeti';
+            document.getElementById('pdfTotalText').innerText = document.getElementById('historyGrandTotal').innerText;
             pdfHeader.classList.remove('hidden');
 
             const element = document.getElementById('pdfContentArea');
