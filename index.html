@@ -588,7 +588,7 @@
                                 <i id="detailArrow" class="fa-solid fa-chevron-down ml-2 text-[10px] transition-transform"></i>
                             </button>
                             <div id="detailContent" class="collapsed transition-height bg-white/60 dark:bg-gray-800/60 mt-2 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-inner backdrop-blur-sm">
-                                <div class="p-5 space-y-3 text-sm text-gray-600 dark:text-gray-300 font-mono leading-relaxed" id="detailSteps"></div>
+                                <div class="p-5 space-y-3 text-sm text-gray-600 dark:text-gray-300 leading-relaxed" id="detailSteps"></div>
                             </div>
                         </div>
                         
@@ -925,6 +925,26 @@
             return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
         }
 
+        function detailBlock(title, colorClass, rows, note = "") {
+            const rowHtml = rows.map(row => `
+                <div class="flex justify-between gap-4 py-1.5 border-b border-gray-100 dark:border-gray-700/60 last:border-0">
+                    <span class="text-gray-500 dark:text-gray-400">${row.label}</span>
+                    <span class="font-bold text-gray-800 dark:text-gray-100 text-right">${row.value}</span>
+                </div>
+            `).join("");
+
+            return `
+                <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/30 p-4">
+                    <div class="${colorClass} font-bold mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-xs"></i>
+                        <span>${title}</span>
+                    </div>
+                    ${note ? `<p class="text-xs text-gray-500 dark:text-gray-400 mb-3">${note}</p>` : ""}
+                    ${rowHtml}
+                </div>
+            `;
+        }
+
         // --- EVENT LISTENERS ---
         elements.toggleDetailsBtn.addEventListener('click', () => {
             elements.detailContent.classList.toggle('collapsed');
@@ -1010,7 +1030,12 @@
                 document.getElementById('labelNakitOran').innerText = `%${oran}`;
                 document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(hesaplananToplamPrim)}`;
 
-                detailHtml += `<div class="text-indigo-600 font-bold mb-1 border-b pb-1 border-indigo-100">Kredi Kartı</div><div class="flex justify-between"><span>Hesaba Düşen:</span><span>₺${formatCurrency(hesaba)}</span></div><div class="flex justify-between text-xs text-gray-500"><span>(KDV Hariç)</span><span>= ₺${formatCurrency(kdvHaric)}</span></div><div class="flex justify-between mt-1 pt-1 border-t border-gray-100"><span>Prim (%${oran}):</span><span class="font-bold">₺${formatCurrency(hesaplananToplamPrim)}</span></div>`;
+                detailHtml += detailBlock("Kredi kartı primi nasıl hesaplandı?", "text-indigo-600", [
+                    { label: "1. Hesaba düşen net tutar", value: `₺${formatCurrency(hesaba)}` },
+                    { label: "2. KDV hariç tutar", value: `₺${formatCurrency(hesaba)} / 1,20 = ₺${formatCurrency(kdvHaric)}` },
+                    { label: "3. Uygulanan prim oranı", value: `%${oran}` },
+                    { label: "4. Kredi kartı primi", value: `₺${formatCurrency(kdvHaric)} x %${oran} = ₺${formatCurrency(hesaplananToplamPrim)}` }
+                ], "Kredi kartı satışında prim, hesaba düşen net tutarın KDV hariç hali üzerinden hesaplanır.");
             } else {
                 const satisKey = elements.satisSelect.value;
                 satisAciklama = satisKey;
@@ -1050,8 +1075,25 @@
                     document.getElementById('resSenetPrim').innerText = `₺${formatCurrency(senetPrim)}`;
                 }
 
-                if(nakit > 0) detailHtml += `<div class="text-blue-600 font-bold mb-1 border-b pb-1 border-blue-100">Nakit (${satisKey === "PEŞİN" ? "Tamamı" : "Peşinat"})</div><div class="flex justify-between"><span>Tutar:</span><span>₺${formatCurrency(nakit)}</span></div><div class="flex justify-between text-xs text-gray-500"><span>(KDV Hariç)</span><span>= ₺${formatCurrency(nakitKdv)}</span></div><div class="flex justify-between mt-1 pt-1 border-t border-gray-100"><span>Prim (%${nakitOran}):</span><span class="font-bold">₺${formatCurrency(nakitPrim)}</span></div>`;
-                if(senet > 0 && satisKey !== "PEŞİN") detailHtml += `<div class="mt-3 text-purple-600 font-bold mb-1 border-b pb-1 border-purple-100">Senet Bölümü</div><div class="flex justify-between"><span>Tutar:</span><span>₺${formatCurrency(senet)}</span></div><div class="flex justify-between text-xs text-gray-500"><span>(KDV Hariç)</span><span>= ₺${formatCurrency(senetKdv)}</span></div><div class="flex justify-between mt-1 pt-1 border-t border-gray-100"><span>Prim (%${senetOran}):</span><span class="font-bold">₺${formatCurrency(senetPrim)}</span></div>`;
+                if(nakit > 0) detailHtml += detailBlock(
+                    satisKey === "PEŞİN" ? "Peşin satış primi nasıl hesaplandı?" : "Peşinat / nakit primi nasıl hesaplandı?",
+                    "text-blue-600",
+                    [
+                        { label: "1. Nakit alınan tutar", value: `₺${formatCurrency(nakit)}` },
+                        { label: "2. KDV hariç tutar", value: `₺${formatCurrency(nakit)} / 1,20 = ₺${formatCurrency(nakitKdv)}` },
+                        { label: "3. Uygulanan prim oranı", value: `%${nakitOran}` },
+                        { label: "4. Nakit primi", value: `₺${formatCurrency(nakitKdv)} x %${nakitOran} = ₺${formatCurrency(nakitPrim)}` }
+                    ],
+                    "Önce nakit tutarın KDV hariç değeri bulunur, sonra ürün grubuna ait nakit prim oranı uygulanır."
+                );
+                if(senet > 0 && satisKey !== "PEŞİN") detailHtml += detailBlock("Senet primi nasıl hesaplandı?", "text-purple-600", [
+                    { label: "1. Katalog satış fiyatı", value: `₺${formatCurrency(mapVal)}` },
+                    { label: "2. Düşülen peşinat", value: `- ₺${formatCurrency(nakit)}` },
+                    { label: "3. Kalan senet tutarı", value: `₺${formatCurrency(senet)}` },
+                    { label: "4. KDV hariç senet tutarı", value: `₺${formatCurrency(senet)} / 1,20 = ₺${formatCurrency(senetKdv)}` },
+                    { label: "5. Senet prim oranı", value: `%${senetOran}` },
+                    { label: "6. Senet primi", value: `₺${formatCurrency(senetKdv)} x %${senetOran} = ₺${formatCurrency(senetPrim)}` }
+                ], "Senetli satışta peşinat ayrı, kalan senet tutarı ayrı oranla hesaplanır. Toplam prim bu iki sonucun toplamıdır.");
             }
             
             document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(hesaplananToplamPrim)}`;
