@@ -439,6 +439,23 @@
                             </div>
                         </div>
 
+                        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                                <div>
+                                    <h3 class="text-sm font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                                        <i class="fa-solid fa-grip"></i>
+                                        Ürün Kartları
+                                    </h3>
+                                    <p class="text-xs text-gray-400 mt-0.5"><span id="productCardCount">0</span> ürün listeleniyor</p>
+                                </div>
+                                <div class="relative w-full sm:w-64">
+                                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                                    <input id="productSearch" type="search" class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Ürün veya stok kodu ara">
+                                </div>
+                            </div>
+                            <div id="productCardGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 max-h-72 overflow-y-auto pr-1"></div>
+                        </div>
+
                         <div class="p-5 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800/60 dark:to-gray-800/30 rounded-2xl border border-gray-100 dark:border-gray-700/50 shadow-inner">
                             <div id="normalSatisRow" class="transition-height">
                                 <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Vade / Taksit Seçeneği</label>
@@ -787,7 +804,10 @@
             summaryCategoryBadge: document.getElementById('summaryCategoryBadge'),
             summaryPriceList: document.getElementById('summaryPriceList'),
             summarySaleType: document.getElementById('summarySaleType'),
-            totalResultCard: document.getElementById('totalResultCard')
+            totalResultCard: document.getElementById('totalResultCard'),
+            productSearch: document.getElementById('productSearch'),
+            productCardGrid: document.getElementById('productCardGrid'),
+            productCardCount: document.getElementById('productCardCount')
         };
 
         // --- INIT ---
@@ -868,6 +888,55 @@
             }[char]));
         }
 
+        function getStockCode(urun) {
+            return urun.match(/\(([^)]+)\)/)?.[1] || "";
+        }
+
+        function renderProductCards() {
+            const query = (elements.productSearch.value || "").trim().toLocaleLowerCase('tr-TR');
+            const products = Object.keys(satisMap).filter(urun => {
+                const haystack = `${urun} ${getStockCode(urun)} ${getProductMeta(urun).label}`.toLocaleLowerCase('tr-TR');
+                return !query || haystack.includes(query);
+            });
+
+            elements.productCardCount.innerText = products.length;
+            elements.productCardGrid.innerHTML = "";
+
+            if (products.length === 0) {
+                elements.productCardGrid.innerHTML = `<div class="col-span-full rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-5 text-center text-sm font-semibold text-gray-400">Aramanıza uygun ürün bulunamadı.</div>`;
+                return;
+            }
+
+            products.forEach(urun => {
+                const meta = getProductMeta(urun);
+                const isActive = urun === elements.urunSelect.value;
+                const price = satisMap[urun]["PEŞİN"] ?? Object.values(satisMap[urun])[0] ?? 0;
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = `text-left rounded-xl border p-3 transition-all bg-white dark:bg-gray-900 hover:border-primary-300 hover:bg-primary-50/40 dark:hover:bg-gray-800 ${isActive ? 'border-primary-500 ring-2 ring-primary-500/20' : 'border-gray-200 dark:border-gray-700'}`;
+                button.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-lg border ${meta.chip}">
+                            <i class="fa-solid ${meta.icon} text-sm"></i>
+                        </span>
+                        <span class="min-w-0 flex-1">
+                            <span class="block text-sm font-bold text-gray-900 dark:text-white leading-snug">${escapeHtml(urun.replace(/\s*\([^)]+\)/, ''))}</span>
+                            <span class="mt-1 flex flex-wrap items-center gap-1.5">
+                                <span class="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-[10px] font-bold text-gray-500">${escapeHtml(getStockCode(urun))}</span>
+                                <span class="px-1.5 py-0.5 rounded border ${meta.chip} text-[10px] font-bold">${meta.label}</span>
+                            </span>
+                            <span class="block mt-2 text-xs font-semibold text-gray-500">Peşin: <strong class="text-gray-900 dark:text-gray-100">₺${formatCurrency(price)}</strong></span>
+                        </span>
+                    </div>
+                `;
+                button.addEventListener("click", () => {
+                    elements.urunSelect.value = urun;
+                    elements.urunSelect.dispatchEvent(new Event("change"));
+                });
+                elements.productCardGrid.appendChild(button);
+            });
+        }
+
         function updateProductVisuals() {
             const meta = getProductMeta(elements.urunSelect.value || "");
             elements.appCard.classList.remove("category-accent-klima", "category-accent-sofben", "category-accent-ro", "category-accent-tr", "category-accent-default");
@@ -884,6 +953,7 @@
             elements.urunSelect.innerHTML = "";
             Object.keys(satisMap).forEach(u => elements.urunSelect.add(new Option(u, u)));
             updateProductVisuals();
+            renderProductCards();
         }
 
         function updateSatis() {
@@ -962,14 +1032,15 @@
                 if(satisMap[cU]) elements.urunSelect.value = cU;
                 updateSatis(); if(Array.from(elements.satisSelect.options).some(o => o.value === cS)) elements.satisSelect.value = cS;
                 updateKredi(); if(Array.from(elements.krediSelect.options).some(o => o.value === cK)) elements.krediSelect.value = cK;
-                updateToplam(); updateProductVisuals(); resetResultUI();
+                updateToplam(); updateProductVisuals(); renderProductCards(); resetResultUI();
             });
         });
 
-        elements.urunSelect.addEventListener("change", () => { updateProductVisuals(); updateSatis(); updateKredi(); resetResultUI(); });
+        elements.urunSelect.addEventListener("change", () => { updateProductVisuals(); updateSatis(); updateKredi(); renderProductCards(); resetResultUI(); });
         elements.satisSelect.addEventListener("change", updateToplam);
         elements.krediSelect.addEventListener("change", updateToplam);
         elements.nakitInput.addEventListener("input", calculateSenet);
+        elements.productSearch.addEventListener("input", renderProductCards);
 
         elements.checkKredi.addEventListener("change", () => {
             const isC = elements.checkKredi.checked;
