@@ -267,6 +267,30 @@
         .dark #appCard td {
             border-color: #374151;
         }
+        .tr-premium-badge {
+            display: inline-block !important;
+            width: 1.75em;
+            height: 1.75em;
+            min-width: 1.75em;
+            border-radius: 9999px;
+            background: url('tr-robot-badge.png?v=2') center / cover no-repeat;
+            box-shadow: 0 0 0 1px rgba(199, 162, 137, 0.75), 0 4px 10px -6px rgba(15, 23, 42, 0.55);
+            vertical-align: -0.35em;
+        }
+        .tr-premium-badge::before {
+            content: "" !important;
+        }
+        #productBadgeIcon.tr-premium-badge {
+            width: 1.15rem;
+            height: 1.15rem;
+            min-width: 1.15rem;
+        }
+        #productSelectIcon.tr-premium-badge,
+        #summaryCategoryIcon.tr-premium-badge {
+            width: 1.7rem;
+            height: 1.7rem;
+            min-width: 1.7rem;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-300 relative overflow-x-hidden">
@@ -870,7 +894,7 @@
                 return { key: "ro", label: "Su Arıtma", icon: "fa-droplet", chip: "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800" };
             }
             if (urun.startsWith("TR")) {
-                return { key: "tr", label: "TR", icon: "fa-shield-halved", chip: "bg-indigo-50 text-indigo-700 border-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800" };
+                return { key: "tr", label: "TR", icon: "tr-premium-badge", chip: "bg-rose-50 text-stone-800 border-rose-200 dark:bg-stone-900/40 dark:text-rose-200 dark:border-rose-900" };
             }
             return { key: "default", label: "Ürün", icon: "fa-box", chip: "bg-gray-50 text-gray-600 border-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700" };
         }
