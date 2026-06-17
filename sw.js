@@ -1,14 +1,13 @@
 // Uygulamanızın versiyonu. Önbelleğin güncellenmesi için v5.1 yapıldı.
 // Her yeni HTML/JS/CSS değişikliğinde bu rakamı değiştirin!
-const CACHE_NAME = 'primpro-store-v5.7';
+const CACHE_NAME = 'primpro-store-v5.8';
 
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/manifest.json',
   '/icon-192.png',
-  '/icon-512.png',
-  '/tr-robot-badge.png'
+  '/icon-512.png'
 ];
 
 // 1. Kurulum Aşaması (Dosyaları Cihaza Kaydet)

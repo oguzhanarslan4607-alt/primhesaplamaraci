@@ -268,17 +268,39 @@
             border-color: #374151;
         }
         .tr-premium-badge {
-            display: inline-block !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
             width: 1.75em;
             height: 1.75em;
             min-width: 1.75em;
             border-radius: 9999px;
-            background: url('tr-robot-badge.png?v=2') center / cover no-repeat;
-            box-shadow: 0 0 0 1px rgba(199, 162, 137, 0.75), 0 4px 10px -6px rgba(15, 23, 42, 0.55);
+            background:
+                radial-gradient(circle at 50% 30%, rgba(255,255,255,0.95) 0 20%, transparent 21%),
+                linear-gradient(145deg, #eff6ff 0%, #dbeafe 46%, #bfdbfe 100%);
+            border: 1px solid rgba(37, 99, 235, 0.28);
+            color: #1d4ed8;
+            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.72), 0 5px 12px -8px rgba(30, 64, 175, 0.85);
             vertical-align: -0.35em;
+            position: relative;
+            overflow: hidden;
         }
         .tr-premium-badge::before {
-            content: "" !important;
+            content: "\f544" !important;
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 0.74em;
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+        }
+        .tr-premium-badge::after {
+            content: "";
+            position: absolute;
+            inset: 0.22em;
+            border-radius: 9999px;
+            border: 1px solid rgba(37, 99, 235, 0.18);
+            background: linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0));
         }
         #productBadgeIcon.tr-premium-badge {
             width: 1.15rem;
