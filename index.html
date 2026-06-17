@@ -291,6 +291,10 @@
             height: 1.7rem;
             min-width: 1.7rem;
         }
+        #priceNoticeModal.is-open {
+            display: flex !important;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-300 relative overflow-x-hidden">
@@ -309,6 +313,33 @@
         <button onclick="window.location.reload(true)" class="bg-white text-primary-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 shadow-sm transition-transform active:scale-95">
             Yenile
         </button>
+    </div>
+
+    <div id="priceNoticeModal" class="hidden fixed inset-0 px-4 py-6 bg-slate-950/55 backdrop-blur-sm items-center justify-center">
+        <div class="w-full max-w-lg bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-fade-in-up">
+            <div class="h-1.5 bg-gradient-to-r from-primary-600 to-indigo-500"></div>
+            <div class="p-6 sm:p-7">
+                <div class="flex items-start gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-300 border border-primary-100 dark:border-primary-800/50 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h3 class="text-lg font-extrabold text-gray-900 dark:text-white">Fiyat Güncelleme Bilgilendirmesi</h3>
+                        <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                            RO-Unique, RO-Unique M5 ve RO-Platinum ürünlerinde planlanan fiyat güncellemesi 1 Temmuz 2026 tarihine ertelenmiştir.
+                        </p>
+                        <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                            Bu tarihe kadar ilgili ürünlerde mevcut fiyatlarla işlem yapmak için <strong class="font-extrabold text-gray-900 dark:text-white">Eski Fiyat Listesi</strong> seçeneğini kullanabilirsiniz.
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button id="priceNoticeClose" type="button" class="px-5 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-bold shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+                        Anladım
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <nav class="w-full glass-nav sticky top-0 z-50">
@@ -831,7 +862,9 @@
             totalResultCard: document.getElementById('totalResultCard'),
             productSearch: document.getElementById('productSearch'),
             productCardGrid: document.getElementById('productCardGrid'),
-            productCardCount: document.getElementById('productCardCount')
+            productCardCount: document.getElementById('productCardCount'),
+            priceNoticeModal: document.getElementById('priceNoticeModal'),
+            priceNoticeClose: document.getElementById('priceNoticeClose')
         };
 
         // --- INIT ---
@@ -847,6 +880,19 @@
             renderHistory();
         });
 
+        function showPricePostponementNotice() {
+            const noticeEndDate = new Date(2026, 6, 2);
+            if (new Date() >= noticeEndDate) return;
+
+            elements.priceNoticeModal.classList.remove('hidden');
+            elements.priceNoticeModal.classList.add('is-open');
+        }
+
+        elements.priceNoticeClose.addEventListener('click', () => {
+            elements.priceNoticeModal.classList.add('hidden');
+            elements.priceNoticeModal.classList.remove('is-open');
+        });
+
         // --- AUTH ---
         elements.loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -858,6 +904,7 @@
                 setTimeout(() => {
                     elements.loginCard.classList.add('hidden');
                     elements.appCard.classList.remove('hidden');
+                    showPricePostponementNotice();
                 }, 400);
             } else {
                 elements.loginCard.classList.add('animate-pulse');
