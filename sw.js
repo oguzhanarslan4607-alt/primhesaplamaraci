@@ -1,6 +1,6 @@
 // Uygulamanızın versiyonu. Önbelleğin güncellenmesi için v5.1 yapıldı.
 // Her yeni HTML/JS/CSS değişikliğinde bu rakamı değiştirin!
-const CACHE_NAME = 'primpro-store-v5.9';
+const CACHE_NAME = 'primpro-store-v6.0';
 
 const ASSETS_TO_CACHE = [
   '/',
@@ -39,6 +39,21 @@ self.addEventListener('activate', (e) => {
 
 // 3. Ağ İsteklerini Yakalama (Çevrimdışı Çalışma Desteği)
 self.addEventListener('fetch', (e) => {
+  const isPageRequest = e.request.mode === 'navigate' || e.request.destination === 'document';
+
+  if (isPageRequest) {
+    e.respondWith(
+      fetch(e.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy));
+          return response;
+        })
+        .catch(() => caches.match(e.request).then((response) => response || caches.match('/index.html')))
+    );
+    return;
+  }
+
   e.respondWith(
     caches.match(e.request).then((response) => {
        // Önce cihazdaki kayıtlı dosyaya bak, yoksa internetten indir
