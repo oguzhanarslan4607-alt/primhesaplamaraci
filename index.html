@@ -1088,10 +1088,6 @@
                 const isActive = urun === elements.urunSelect.value;
                 const prices = satisMap[urun] || {};
                 const paymentKeys = Object.keys(prices).filter(k => elements.checkKredi.checked ? k.includes("K.KARTI") : !k.includes("K.KARTI"));
-                const activePaymentKey = elements.checkKredi.checked ? elements.krediSelect.value : elements.satisSelect.value;
-                const fallbackPaymentKey = paymentKeys[0] || Object.keys(prices)[0];
-                const previewPaymentKey = prices[activePaymentKey] ? activePaymentKey : fallbackPaymentKey;
-                const previewPrice = prices[previewPaymentKey] || 0;
                 const productName = urun.replace(/\s*\([^)]+\)/, '');
                 const stockCode = getStockCode(urun);
                 const button = document.createElement("button");
@@ -1114,11 +1110,7 @@
                                 <span class="mt-1 inline-flex px-1.5 py-0.5 rounded bg-white/70 dark:bg-gray-950/30 text-[10px] font-bold text-gray-500 dark:text-gray-400 border border-gray-100 dark:border-gray-700">${escapeHtml(stockCode || 'Kod yok')}</span>
                             </span>
                         </div>
-                        <div class="mt-auto flex items-end justify-between gap-3">
-                            <span class="min-w-0">
-                                <span class="block text-[10px] font-bold text-gray-400 dark:text-gray-500 truncate">${escapeHtml(previewPaymentKey || 'Fiyat')}</span>
-                                <strong class="block text-base font-black text-gray-950 dark:text-white leading-tight">₺${formatCurrency(previewPrice)}</strong>
-                            </span>
+                        <div class="mt-auto flex items-center justify-end gap-3">
                             <span class="shrink-0 rounded-lg bg-white/75 dark:bg-gray-950/30 px-2 py-1 text-[10px] font-extrabold text-gray-500 dark:text-gray-300 border border-gray-100 dark:border-gray-700">${paymentKeys.length} seçenek</span>
                         </div>
                     </div>
