@@ -313,6 +313,88 @@
             height: 1.7rem;
             min-width: 1.7rem;
         }
+        .product-rich-card {
+            position: relative;
+            min-height: 132px;
+            overflow: hidden;
+            border-radius: 1rem;
+            border: 1px solid rgba(226, 232, 240, 0.96);
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.94), rgba(255,255,255,0.68)),
+                var(--product-card-glow, #f8fafc);
+            box-shadow: 0 12px 26px -20px rgba(15, 23, 42, 0.42);
+            transform: translateY(0);
+        }
+        .dark .product-rich-card {
+            border-color: rgba(55, 65, 81, 0.95);
+            background:
+                linear-gradient(135deg, rgba(17, 24, 39, 0.94), rgba(31, 41, 55, 0.74)),
+                color-mix(in srgb, var(--product-card-glow, #111827) 20%, #111827);
+            box-shadow: 0 16px 32px -24px rgba(0, 0, 0, 0.85);
+        }
+        .product-rich-card::after {
+            content: "";
+            position: absolute;
+            right: -34px;
+            bottom: -44px;
+            width: 128px;
+            height: 128px;
+            border-radius: 999px;
+            background: var(--product-card-mark, rgba(37, 99, 235, 0.14));
+            pointer-events: none;
+        }
+        .product-rich-card:hover,
+        .product-rich-card:focus-visible {
+            border-color: rgba(37, 99, 235, 0.45);
+            box-shadow: 0 18px 36px -24px rgba(37, 99, 235, 0.72);
+            transform: translateY(-1px);
+        }
+        .product-rich-card:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, 0.18);
+            outline-offset: 2px;
+        }
+        .product-rich-card.is-active {
+            border-color: rgba(37, 99, 235, 0.78);
+            box-shadow:
+                0 0 0 2px rgba(37, 99, 235, 0.16),
+                0 18px 36px -24px rgba(37, 99, 235, 0.85);
+        }
+        .product-rich-card[data-category="klima"] {
+            --product-card-glow: #ecfeff;
+            --product-card-mark: rgba(14, 165, 233, 0.18);
+            --product-card-icon: #0369a1;
+        }
+        .product-rich-card[data-category="sofben"] {
+            --product-card-glow: #fff1f2;
+            --product-card-mark: rgba(225, 29, 72, 0.16);
+            --product-card-icon: #be123c;
+        }
+        .product-rich-card[data-category="ro"] {
+            --product-card-glow: #ecfdf5;
+            --product-card-mark: rgba(16, 185, 129, 0.18);
+            --product-card-icon: #047857;
+        }
+        .product-rich-card[data-category="tr"] {
+            --product-card-glow: #eff6ff;
+            --product-card-mark: rgba(37, 99, 235, 0.17);
+            --product-card-icon: #1d4ed8;
+        }
+        .product-rich-icon {
+            color: var(--product-card-icon, #2563eb);
+            background: rgba(255,255,255,0.74);
+            border-color: color-mix(in srgb, var(--product-card-icon, #2563eb) 25%, transparent);
+        }
+        .dark .product-rich-icon {
+            background: rgba(17, 24, 39, 0.58);
+        }
+        @media (max-width: 640px) {
+            .product-rich-card {
+                min-height: 120px;
+            }
+            #productCardGrid {
+                max-height: 48vh;
+            }
+        }
         #priceNoticeModal.is-open {
             display: flex !important;
             z-index: 9999;
@@ -530,7 +612,7 @@
                                     <input id="productSearch" type="search" class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40" placeholder="Ürün veya stok kodu ara">
                                 </div>
                             </div>
-                            <div id="productCardGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 max-h-[45vh] sm:max-h-72 overflow-y-auto pr-1"></div>
+                            <div id="productCardGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[45vh] sm:max-h-72 overflow-y-auto pr-1"></div>
                         </div>
 
                         <div class="p-5 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800/60 dark:to-gray-800/30 rounded-2xl border border-gray-100 dark:border-gray-700/50 shadow-inner">
@@ -1004,21 +1086,41 @@
             products.forEach(urun => {
                 const meta = getProductMeta(urun);
                 const isActive = urun === elements.urunSelect.value;
+                const prices = satisMap[urun] || {};
+                const paymentKeys = Object.keys(prices).filter(k => elements.checkKredi.checked ? k.includes("K.KARTI") : !k.includes("K.KARTI"));
+                const activePaymentKey = elements.checkKredi.checked ? elements.krediSelect.value : elements.satisSelect.value;
+                const fallbackPaymentKey = paymentKeys[0] || Object.keys(prices)[0];
+                const previewPaymentKey = prices[activePaymentKey] ? activePaymentKey : fallbackPaymentKey;
+                const previewPrice = prices[previewPaymentKey] || 0;
+                const productName = urun.replace(/\s*\([^)]+\)/, '');
+                const stockCode = getStockCode(urun);
                 const button = document.createElement("button");
                 button.type = "button";
-                button.className = `text-left rounded-xl border p-3 transition-all bg-white dark:bg-gray-900 hover:border-primary-300 hover:bg-primary-50/40 dark:hover:bg-gray-800 ${isActive ? 'border-primary-500 ring-2 ring-primary-500/20' : 'border-gray-200 dark:border-gray-700'}`;
+                button.className = `product-rich-card text-left p-3 transition-all ${isActive ? 'is-active' : ''}`;
+                button.dataset.category = meta.key;
+                button.setAttribute("aria-pressed", isActive ? "true" : "false");
                 button.innerHTML = `
-                    <div class="flex items-start gap-3">
-                        <span class="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-lg border ${meta.chip}">
+                    <div class="relative z-10 flex h-full flex-col gap-3">
+                        <div class="flex items-start gap-3">
+                            <span class="product-rich-icon shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-xl border">
                             <i class="fa-solid ${meta.icon} text-sm"></i>
-                        </span>
-                        <span class="min-w-0 flex-1">
-                            <span class="block text-sm font-bold text-gray-900 dark:text-white leading-snug">${escapeHtml(urun.replace(/\s*\([^)]+\)/, ''))}</span>
-                            <span class="mt-1 flex flex-wrap items-center gap-1.5">
-                                <span class="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-[10px] font-bold text-gray-500">${escapeHtml(getStockCode(urun))}</span>
-                                <span class="px-1.5 py-0.5 rounded border ${meta.chip} text-[10px] font-bold">${meta.label}</span>
                             </span>
-                        </span>
+                            <span class="min-w-0 flex-1">
+                                <span class="flex items-center justify-between gap-2 text-[10px] font-black uppercase tracking-wide" style="color: var(--product-card-icon, #2563eb)">
+                                    <span>${meta.label}</span>
+                                    ${isActive ? '<i class="fa-solid fa-circle-check text-sm"></i>' : ''}
+                                </span>
+                                <span class="mt-1 block text-sm font-extrabold text-gray-950 dark:text-white leading-snug break-words">${escapeHtml(productName)}</span>
+                                <span class="mt-1 inline-flex px-1.5 py-0.5 rounded bg-white/70 dark:bg-gray-950/30 text-[10px] font-bold text-gray-500 dark:text-gray-400 border border-gray-100 dark:border-gray-700">${escapeHtml(stockCode || 'Kod yok')}</span>
+                            </span>
+                        </div>
+                        <div class="mt-auto flex items-end justify-between gap-3">
+                            <span class="min-w-0">
+                                <span class="block text-[10px] font-bold text-gray-400 dark:text-gray-500 truncate">${escapeHtml(previewPaymentKey || 'Fiyat')}</span>
+                                <strong class="block text-base font-black text-gray-950 dark:text-white leading-tight">₺${formatCurrency(previewPrice)}</strong>
+                            </span>
+                            <span class="shrink-0 rounded-lg bg-white/75 dark:bg-gray-950/30 px-2 py-1 text-[10px] font-extrabold text-gray-500 dark:text-gray-300 border border-gray-100 dark:border-gray-700">${paymentKeys.length} seçenek</span>
+                        </div>
                     </div>
                 `;
                 button.addEventListener("click", () => {
@@ -1065,6 +1167,7 @@
             const val = elements.checkKredi.checked ? satisMap[urun][elements.krediSelect.value] : satisMap[urun][elements.satisSelect.value];
             elements.toplamInput.value = formatCurrency(val || 0);
             updateProductVisuals();
+            renderProductCards();
             
             if (elements.satisSelect.value === "PEŞİN" && !elements.checkKredi.checked) {
                 elements.nakitInput.value = val;
