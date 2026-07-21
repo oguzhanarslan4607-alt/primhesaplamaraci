@@ -1324,7 +1324,6 @@
 
             const productName = (elements.urunSelect.value || "").replace(/\s*\([^)]+\)/, '');
             const stockCode = getStockCode(elements.urunSelect.value || "");
-            const saleType = elements.checkKredi.checked ? elements.krediSelect.value : elements.satisSelect.value;
             const modeText = elements.checkKredi.checked ? "Kredi Kartı" : "Nakit / Senet";
             const commissionInfo = getVisualCommissionInfo(elements.urunSelect.value || "");
             const rateText = elements.checkKredi.checked
@@ -1337,7 +1336,7 @@
             elements.selectedProductMode.innerHTML = `<i class="fa-solid ${elements.checkKredi.checked ? 'fa-credit-card' : 'fa-money-bill-wave'}"></i> ${modeText}`;
             elements.selectedProductRate.innerHTML = `<i class="fa-solid fa-percent"></i> ${rateText}`;
             elements.selectedProductName.innerText = productName || "Ürün seçin";
-            elements.selectedProductMeta.innerText = `${stockCode ? `Kod ${stockCode}` : "Kod yok"} • ${saleType || "Satış tipi seçin"}${commissionInfo.thresholdText ? ` • ${commissionInfo.thresholdText}` : ""}`;
+            elements.selectedProductMeta.innerText = `${stockCode ? `Kod ${stockCode}` : "Kod yok"}${commissionInfo.thresholdText ? ` • ${commissionInfo.thresholdText}` : ""}`;
         }
 
         function populateUrun() {
