@@ -483,9 +483,6 @@
         .dark .product-rich-icon {
             background: rgba(17, 24, 39, 0.58);
         }
-        .mobile-calc-button {
-            display: none;
-        }
         @keyframes cardSelectPulse {
             0% { transform: scale(0.985); }
             62% { transform: scale(1.012); }
@@ -502,28 +499,6 @@
             }
             #productCardGrid {
                 max-height: 48vh;
-            }
-            .mobile-calc-button {
-                position: fixed;
-                left: max(14px, env(safe-area-inset-left));
-                right: max(14px, env(safe-area-inset-right));
-                bottom: max(14px, env(safe-area-inset-bottom));
-                z-index: 60;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.55rem;
-                min-height: 54px;
-                border-radius: 1rem;
-                border: 1px solid rgba(255,255,255,0.55);
-                color: #fff;
-                background: linear-gradient(135deg, #2563eb, #0ea5e9);
-                box-shadow: 0 18px 38px -18px rgba(37, 99, 235, 0.9);
-                font-size: 0.9rem;
-                font-weight: 950;
-            }
-            body {
-                padding-bottom: calc(78px + env(safe-area-inset-bottom));
             }
         }
         #priceNoticeModal.is-open {
@@ -999,11 +974,6 @@
         </div>
     </main>
 
-    <button id="mobileQuickCalc" type="button" class="mobile-calc-button">
-        <i class="fa-solid fa-bolt"></i>
-        PRİMİ HESAPLA
-    </button>
-
     <script>
         // --- PWA SERVICE WORKER ---
         if ('serviceWorker' in navigator) {
@@ -1134,7 +1104,6 @@
             selectedProductRate: document.getElementById('selectedProductRate'),
             selectedProductName: document.getElementById('selectedProductName'),
             selectedProductMeta: document.getElementById('selectedProductMeta'),
-            mobileQuickCalc: document.getElementById('mobileQuickCalc'),
             priceNoticeModal: document.getElementById('priceNoticeModal'),
             priceNoticeClose: document.getElementById('priceNoticeClose')
         };
@@ -1432,9 +1401,6 @@
         elements.krediSelect.addEventListener("change", updateToplam);
         elements.nakitInput.addEventListener("input", calculateSenet);
         elements.productSearch.addEventListener("input", renderProductCards);
-        elements.mobileQuickCalc.addEventListener("click", () => {
-            document.getElementById("btnHesapla").click();
-        });
 
         elements.checkKredi.addEventListener("change", () => {
             const isC = elements.checkKredi.checked;
