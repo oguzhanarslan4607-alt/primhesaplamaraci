@@ -1269,6 +1269,11 @@
             return satisMapYeni[urun]?.[paymentKey] || getProductPrices(urun)[paymentKey] || 0;
         }
 
+        function getManualDefaultSaleAmount(urun, paymentKey) {
+            if (getSelectedPriceListValue() === "yeni") return getLatestCatalogSaleAmount(urun, paymentKey);
+            return getProductPrices(urun)[paymentKey] || 0;
+        }
+
         function getAvailableProducts() {
             if (!isManualMode()) return Object.keys(satisMap);
             return Array.from(new Set([
@@ -1396,10 +1401,10 @@
             const urun = elements.urunSelect.value;
             const paymentKey = elements.checkKredi.checked ? elements.krediSelect.value : elements.satisSelect.value;
             const catalogVal = getProductPrices(urun)[paymentKey] || 0;
-            const latestCatalogVal = getLatestCatalogSaleAmount(urun, paymentKey);
+            const manualDefaultVal = getManualDefaultSaleAmount(urun, paymentKey);
 
             if (isManualMode()) {
-                if (useLatestCatalogDefault) elements.toplamInput.value = formatCurrency(latestCatalogVal || catalogVal || 0);
+                if (useLatestCatalogDefault) elements.toplamInput.value = formatCurrency(manualDefaultVal || 0);
             } else {
                 elements.toplamInput.value = formatCurrency(catalogVal || 0);
             }
