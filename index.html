@@ -675,6 +675,20 @@
                             </div>
                         </div>
 
+                        <div class="rounded-2xl border border-dashed border-indigo-200 dark:border-indigo-800/70 bg-indigo-50/40 dark:bg-indigo-900/10 p-4">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <span class="relative mt-0.5 flex items-center">
+                                    <input type="checkbox" id="manualMode" class="sr-only peer">
+                                    <span class="w-11 h-6 rounded-full bg-gray-200 dark:bg-gray-700 peer-checked:bg-indigo-500 transition-colors"></span>
+                                    <span class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white border border-gray-300 transition-transform peer-checked:translate-x-5"></span>
+                                </span>
+                                <span class="min-w-0">
+                                    <span class="block text-sm font-black text-gray-800 dark:text-white">Manuel fiyat girişi</span>
+                                    <span class="block mt-1 text-xs leading-relaxed font-semibold text-gray-500 dark:text-gray-400">Çok eski veya anlık değişen fiyatlarda ürün grubunu kural için seç, satış fiyatını elle gir. TR ürününde peşinat 7.000 TL altındaysa düşük peşinat kuralı bu alandan hesaplanır.</span>
+                                </span>
+                            </label>
+                        </div>
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
                                 <div class="flex items-center justify-between mb-1.5 ml-1">
@@ -753,13 +767,14 @@
 
                         <div class="space-y-5">
                             <div class="relative">
-                                <label class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 ml-1">Katalog Satış Fiyatı</label>
+                                <label id="saleAmountLabel" class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 ml-1">Katalog Satış Fiyatı</label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                                         <span class="text-gray-400 dark:text-gray-500 text-lg font-medium">₺</span>
                                     </div>
                                     <input type="text" id="toplamSatis" disabled class="block w-full rounded-2xl border-0 py-4 pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-200 dark:ring-gray-700 bg-gray-50 dark:bg-gray-900 dark:text-white sm:text-xl font-black tracking-wider shadow-inner" placeholder="0.00">
                                 </div>
+                                <p id="manualAmountHint" class="hidden mt-2 ml-1 text-xs font-semibold text-indigo-600 dark:text-indigo-300"><i class="fa-solid fa-pen-to-square mr-1"></i> Manuel mod aktif: bu fiyat hesaplamada esas alınır.</p>
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="cashInputs">
@@ -791,7 +806,7 @@
                                     </div>
                                     <input type="number" id="hesabaDusen" class="block w-full rounded-xl border-0 py-3 pl-10 pr-4 text-gray-900 dark:text-white bg-indigo-50/30 dark:bg-indigo-900/10 ring-1 ring-inset ring-indigo-200 dark:ring-indigo-700 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm font-bold shadow-sm transition-shadow" placeholder="Net çekim tutarını giriniz">
                                 </div>
-                                <p class="mt-2 ml-1 text-xs text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5"><i class="fa-solid fa-circle-info text-indigo-400"></i> Banka kesintisi yapıldıktan sonraki net rakam.</p>
+                                <p class="mt-2 ml-1 text-xs text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5"><i class="fa-solid fa-circle-info text-indigo-400"></i> Banka kesintisi yapıldıktan sonraki net rakam. TR 6+6+6 seçeneğinde ilk çekilen tutar olarak değerlendirilir.</p>
                             </div>
                         </div>
 
@@ -1033,7 +1048,7 @@
         };
 
         const satisMapYeni = {
-            "TR (1300564)": { "PEŞİN":70000, "1+1":75000, "1+5":85000, "1+8":90000, "1+12":95000, "1+15":100000, "1+18":105000, "1+21":110000, "1+24":115000, "K.KARTI TEK ÇEKİM":70000, "K.KARTI 5 TAKSİT":75000, "K.KARTI 9 TAKSİT":80000 },
+            "TR (1300564)": { "PEŞİN":70000, "1+1":75000, "1+5":85000, "1+8":90000, "1+12":95000, "1+15":100000, "1+18":105000, "1+21":110000, "1+24":115000, "K.KARTI TEK ÇEKİM":70000, "K.KARTI 5 TAKSİT":75000, "K.KARTI 9 TAKSİT":80000, "K.KARTI 6+6+6":95000 },
             "RO - Unique (1300035D)": { "PEŞİN":28000, "1+1":29000,"1+4":32000,"1+7":34000,"1+12":38000,"1+15":40000,"1+18":42000,"1+21":46000,"K.KARTI TEK ÇEKİM":28000,"K.KARTI 2 TAKSİT":29000,"K.KARTI 5 TAKSİT":30000,"K.KARTI 9 TAKSİT":32000 },
             "RO - Unique M5 (1300035M5)": { "PEŞİN":28500, "1+1":29500,"1+4":33000,"1+7":35000,"1+12":39000,"1+15":41000,"1+18":43000,"1+21":47000,"K.KARTI TEK ÇEKİM":28500,"K.KARTI 2 TAKSİT":29500,"K.KARTI 5 TAKSİT":31000,"K.KARTI 9 TAKSİT":33000 },
             "RO - Platinum (1300334)": { "PEŞİN":17000, "1+1":18000,"1+4":20000,"1+7":22000,"1+12":24000,"1+15":26000,"K.KARTI TEK ÇEKİM":17000,"K.KARTI 2 TAKSİT":18000,"K.KARTI 9 TAKSİT":21000 },
@@ -1066,11 +1081,14 @@
             satisSelect: document.getElementById('satis'),
             krediSelect: document.getElementById('krediKart'),
             checkKredi: document.getElementById('checkKrediKart'),
+            manualMode: document.getElementById('manualMode'),
             normalSatisRow: document.getElementById('normalSatisRow'),
             krediSatisRow: document.getElementById('krediSatisRow'),
             hesabaInputRow: document.getElementById('hesabaInputRow'),
             cashInputs: document.getElementById('cashInputs'),
             toplamInput: document.getElementById('toplamSatis'),
+            saleAmountLabel: document.getElementById('saleAmountLabel'),
+            manualAmountHint: document.getElementById('manualAmountHint'),
             nakitInput: document.getElementById('nakit'),
             senetInput: document.getElementById('senet'),
             hesabaInput: document.getElementById('hesabaDusen'),
@@ -1171,6 +1189,18 @@
             return urun.includes("Klima") || urun.includes("Şofben");
         }
 
+        function isTemizlikRobotuProduct(urun) {
+            return urun === "TR (1300564)";
+        }
+
+        function shouldApplyManualRobotLowDownPaymentRule(urun, nakit, senetOran) {
+            return isManualMode() && isTemizlikRobotuProduct(urun) && nakit < 7000 && senetOran > 0;
+        }
+
+        function isTrTripleCardInstallment(urun, krediKey) {
+            return isTemizlikRobotuProduct(urun) && krediKey === "K.KARTI 6+6+6";
+        }
+
         function getProductMeta(urun) {
             if (urun.includes("WiFi")) {
                 return { key: "klima-wifi", label: "Klima WiFi", icon: "fa-wifi", chip: "bg-indigo-50 text-indigo-700 border-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800" };
@@ -1222,9 +1252,40 @@
             return urun.match(/\(([^)]+)\)/)?.[1] || "";
         }
 
+        function isManualMode() {
+            return elements.manualMode.checked;
+        }
+
+        function parseAmountInput(value) {
+            const normalized = String(value || "").replace(/\s/g, "").replace(/\./g, "").replace(",", ".");
+            return parseFloat(normalized) || 0;
+        }
+
+        function getProductPrices(urun) {
+            return satisMap[urun] || satisMapYeni[urun] || satisMapEski[urun] || satisMapDahaEski[urun] || {};
+        }
+
+        function getLatestCatalogSaleAmount(urun, paymentKey) {
+            return satisMapYeni[urun]?.[paymentKey] || getProductPrices(urun)[paymentKey] || 0;
+        }
+
+        function getAvailableProducts() {
+            if (!isManualMode()) return Object.keys(satisMap);
+            return Array.from(new Set([
+                ...Object.keys(satisMapYeni),
+                ...Object.keys(satisMapEski),
+                ...Object.keys(satisMapDahaEski),
+            ]));
+        }
+
+        function getActiveSaleAmount(paymentKey) {
+            if (isManualMode()) return parseAmountInput(elements.toplamInput.value);
+            return getProductPrices(elements.urunSelect.value)[paymentKey] || 0;
+        }
+
         function renderProductCards() {
             const query = (elements.productSearch.value || "").trim().toLocaleLowerCase('tr-TR');
-            const products = Object.keys(satisMap).filter(urun => {
+            const products = getAvailableProducts().filter(urun => {
                 const haystack = `${urun} ${getStockCode(urun)} ${getProductMeta(urun).label}`.toLocaleLowerCase('tr-TR');
                 return !query || haystack.includes(query);
             });
@@ -1240,7 +1301,7 @@
             products.forEach(urun => {
                 const meta = getProductMeta(urun);
                 const isActive = urun === elements.urunSelect.value;
-                const prices = satisMap[urun] || {};
+                const prices = getProductPrices(urun);
                 const paymentKeys = Object.keys(prices).filter(k => elements.checkKredi.checked ? k.includes("K.KARTI") : !k.includes("K.KARTI"));
                 const productName = urun.replace(/\s*\([^)]+\)/, '');
                 const stockCode = getStockCode(urun);
@@ -1301,7 +1362,9 @@
             elements.selectedProductPanel.dataset.category = meta.key;
             elements.selectedProductIcon.className = `fa-solid ${meta.icon} text-base`;
             elements.selectedProductCategory.innerHTML = `<i class="fa-solid ${meta.icon}"></i> ${meta.label}`;
-            elements.selectedProductList.innerHTML = `<i class="fa-solid fa-layer-group"></i> ${getPriceListLabel()}`;
+            elements.selectedProductList.innerHTML = isManualMode()
+                ? '<i class="fa-solid fa-pen-to-square"></i> Manuel Fiyat'
+                : `<i class="fa-solid fa-layer-group"></i> ${getPriceListLabel()}`;
             elements.selectedProductMode.innerHTML = `<i class="fa-solid ${elements.checkKredi.checked ? 'fa-credit-card' : 'fa-money-bill-wave'}"></i> ${modeText}`;
             elements.selectedProductRate.innerHTML = `<i class="fa-solid fa-percent"></i> ${rateText}`;
             elements.selectedProductName.innerText = productName || "Ürün seçin";
@@ -1309,28 +1372,39 @@
         }
 
         function populateUrun() {
+            const current = elements.urunSelect.value;
             elements.urunSelect.innerHTML = "";
-            Object.keys(satisMap).forEach(u => elements.urunSelect.add(new Option(u, u)));
+            getAvailableProducts().forEach(u => elements.urunSelect.add(new Option(u, u)));
+            if (current && getAvailableProducts().includes(current)) elements.urunSelect.value = current;
             updateProductVisuals();
             renderProductCards();
         }
 
         function updateSatis() {
             elements.satisSelect.innerHTML = "";
-            Object.keys(satisMap[elements.urunSelect.value]).filter(k => !k.includes("K.KARTI")).forEach(k => elements.satisSelect.add(new Option(k, k)));
+            Object.keys(getProductPrices(elements.urunSelect.value)).filter(k => !k.includes("K.KARTI")).forEach(k => elements.satisSelect.add(new Option(k, k)));
             if (!elements.checkKredi.checked) updateToplam();
         }
 
         function updateKredi() {
             elements.krediSelect.innerHTML = "";
-            Object.keys(satisMap[elements.urunSelect.value]).filter(k => k.includes("K.KARTI")).forEach(k => elements.krediSelect.add(new Option(k, k)));
+            Object.keys(getProductPrices(elements.urunSelect.value)).filter(k => k.includes("K.KARTI")).forEach(k => elements.krediSelect.add(new Option(k, k)));
             if (elements.checkKredi.checked) updateToplam();
         }
 
-        function updateToplam() {
+        function updateToplam(useLatestCatalogDefault = false) {
             const urun = elements.urunSelect.value;
-            const val = elements.checkKredi.checked ? satisMap[urun][elements.krediSelect.value] : satisMap[urun][elements.satisSelect.value];
-            elements.toplamInput.value = formatCurrency(val || 0);
+            const paymentKey = elements.checkKredi.checked ? elements.krediSelect.value : elements.satisSelect.value;
+            const catalogVal = getProductPrices(urun)[paymentKey] || 0;
+            const latestCatalogVal = getLatestCatalogSaleAmount(urun, paymentKey);
+
+            if (isManualMode()) {
+                if (useLatestCatalogDefault) elements.toplamInput.value = formatCurrency(latestCatalogVal || catalogVal || 0);
+            } else {
+                elements.toplamInput.value = formatCurrency(catalogVal || 0);
+            }
+
+            const val = isManualMode() ? parseAmountInput(elements.toplamInput.value) : catalogVal;
             updateProductVisuals();
             renderProductCards();
             
@@ -1346,9 +1420,23 @@
 
         function calculateSenet() {
             if (elements.checkKredi.checked) return;
-            const toplam = parseFloat(elements.toplamInput.value.replace(/\./g, '').replace(',', '.')) || 0;
+            const toplam = parseAmountInput(elements.toplamInput.value);
             const nakit = parseFloat(elements.nakitInput.value) || 0;
             elements.senetInput.value = formatCurrency(Math.max(toplam - nakit, 0));
+        }
+
+        function applyManualModeUI() {
+            const manual = isManualMode();
+            elements.toplamInput.disabled = !manual;
+            elements.toplamInput.classList.toggle('bg-white', manual);
+            elements.toplamInput.classList.toggle('dark:bg-gray-800', manual);
+            elements.toplamInput.classList.toggle('ring-indigo-300', manual);
+            elements.toplamInput.classList.toggle('dark:ring-indigo-700', manual);
+            elements.saleAmountLabel.innerText = manual ? "Manuel Satış Fiyatı" : "Katalog Satış Fiyatı";
+            elements.manualAmountHint.classList.toggle('hidden', !manual);
+            elements.selectedProductList.innerHTML = manual
+                ? '<i class="fa-solid fa-pen-to-square"></i> Manuel Fiyat'
+                : `<i class="fa-solid fa-layer-group"></i> ${getPriceListLabel()}`;
         }
 
         function formatCurrency(num) {
@@ -1389,18 +1477,35 @@
                 
                 const [cU, cS, cK] = [elements.urunSelect.value, elements.satisSelect.value, elements.krediSelect.value];
                 populateUrun();
-                if(satisMap[cU]) elements.urunSelect.value = cU;
+                if(getAvailableProducts().includes(cU)) elements.urunSelect.value = cU;
                 updateSatis(); if(Array.from(elements.satisSelect.options).some(o => o.value === cS)) elements.satisSelect.value = cS;
                 updateKredi(); if(Array.from(elements.krediSelect.options).some(o => o.value === cK)) elements.krediSelect.value = cK;
-                updateToplam(); updateProductVisuals(); renderProductCards(); resetResultUI();
+                updateToplam(isManualMode()); updateProductVisuals(); renderProductCards(); resetResultUI();
             });
         });
 
-        elements.urunSelect.addEventListener("change", () => { updateProductVisuals(); updateSatis(); updateKredi(); renderProductCards(); resetResultUI(); });
-        elements.satisSelect.addEventListener("change", updateToplam);
-        elements.krediSelect.addEventListener("change", updateToplam);
+        elements.urunSelect.addEventListener("change", () => { updateProductVisuals(); updateSatis(); updateKredi(); updateToplam(isManualMode()); renderProductCards(); resetResultUI(); });
+        elements.satisSelect.addEventListener("change", () => { updateToplam(isManualMode()); resetResultUI(); });
+        elements.krediSelect.addEventListener("change", () => { updateToplam(isManualMode()); resetResultUI(); });
         elements.nakitInput.addEventListener("input", calculateSenet);
+        elements.toplamInput.addEventListener("input", () => {
+            if (isManualMode()) {
+                updateToplam();
+                resetResultUI();
+            }
+        });
         elements.productSearch.addEventListener("input", renderProductCards);
+
+        elements.manualMode.addEventListener("change", () => {
+            const currentProduct = elements.urunSelect.value;
+            populateUrun();
+            if (getAvailableProducts().includes(currentProduct)) elements.urunSelect.value = currentProduct;
+            updateSatis();
+            updateKredi();
+            applyManualModeUI();
+            updateToplam(isManualMode());
+            resetResultUI();
+        });
 
         elements.checkKredi.addEventListener("change", () => {
             const isC = elements.checkKredi.checked;
@@ -1413,13 +1518,14 @@
             if (isC) {
                 elements.nakitInput.disabled = true; elements.nakitInput.value = ''; elements.senetInput.value = '';
             } else {
-                elements.satisSelect.value !== "PEŞİN" ? elements.nakitInput.disabled = false : (elements.nakitInput.value = parseFloat(elements.toplamInput.value.replace(/\./g, '').replace(',', '.')) || 0, elements.nakitInput.disabled = true);
+                elements.satisSelect.value !== "PEŞİN" ? elements.nakitInput.disabled = false : (elements.nakitInput.value = parseAmountInput(elements.toplamInput.value) || 0, elements.nakitInput.disabled = true);
             }
-            updateToplam(); resetResultUI();
+            updateToplam(isManualMode()); resetResultUI();
         });
 
         document.getElementById("btnTemizle").addEventListener("click", () => {
             elements.nakitInput.value = ""; elements.senetInput.value = ""; elements.hesabaInput.value = "";
+            if (isManualMode()) elements.toplamInput.value = "";
             elements.checkKredi.checked = false; elements.checkKredi.dispatchEvent(new Event('change'));
             elements.urunSelect.selectedIndex = 0; updateSatis(); updateKredi(); resetResultUI();
         });
@@ -1452,36 +1558,54 @@
             
             const kdvOran = 1.20;
             const secilenUrun = elements.urunSelect.value;
-            let hesaplananToplamPrim = 0, satisTutari = parseFloat(elements.toplamInput.value.replace(/\./g, '').replace(',', '.')) || 0, satisAciklama = "", detailHtml = "";
+            let hesaplananToplamPrim = 0, satisTutari = parseAmountInput(elements.toplamInput.value), satisAciklama = "", detailHtml = "";
 
             if (elements.checkKredi.checked) {
                 const hesaba = parseFloat(elements.hesabaInput.value) || 0;
-                const kdvHaric = hesaba / kdvOran;
+                const krediKey = elements.krediSelect.value;
+                const isSpecialTrCard = isTrTripleCardInstallment(secilenUrun, krediKey);
+                const kalanKartTutari = isSpecialTrCard ? Math.max(satisTutari - hesaba, 0) : 0;
+                const kdvHaric = isSpecialTrCard ? (hesaba + kalanKartTutari) / kdvOran : hesaba / kdvOran;
+                const ilkCekimKdv = hesaba / kdvOran;
+                const kalanKartKdv = kalanKartTutari / kdvOran;
                 let oran = 21;
                 
                 if (secilenUrun === "RO - Platinum (1300334)" || secilenUrun === "RO - Silver (1300534)") oran = 13;
                 else if (isKlimaRateProduct(secilenUrun)) oran = 11;
 
-                hesaplananToplamPrim = kdvHaric * (oran / 100);
-                satisAciklama = `K.Kartı (${elements.krediSelect.value.replace('K.KARTI ', '')})`;
+                hesaplananToplamPrim = isSpecialTrCard
+                    ? (ilkCekimKdv * 21 / 100) + (kalanKartKdv * 11 / 100)
+                    : kdvHaric * (oran / 100);
+                satisAciklama = `K.Kartı (${krediKey.replace('K.KARTI ', '')})`;
 
                 document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(kdvHaric)}`;
                 document.getElementById('rowNakitPrim').classList.remove('hidden');
                 document.getElementById('rowSenetPrim').classList.add('hidden');
                 document.querySelector('#rowNakitPrim span.font-bold').innerText = "Kredi Kartı Primi";
-                document.getElementById('labelNakitOran').innerText = `%${oran}`;
+                document.getElementById('labelNakitOran').innerText = isSpecialTrCard ? "%21 / %11" : `%${oran}`;
                 document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(hesaplananToplamPrim)}`;
 
-                detailHtml += detailBlock("Kredi kartı primi nasıl hesaplandı?", "text-indigo-600", [
-                    { label: "1. Hesaba düşen net tutar", value: `₺${formatCurrency(hesaba)}` },
-                    { label: "2. KDV hariç tutar", value: `₺${formatCurrency(hesaba)} / 1,20 = ₺${formatCurrency(kdvHaric)}` },
-                    { label: "3. Uygulanan prim oranı", value: `%${oran}` },
-                    { label: "4. Kredi kartı primi", value: `₺${formatCurrency(kdvHaric)} x %${oran} = ₺${formatCurrency(hesaplananToplamPrim)}` }
-                ], "Kredi kartı satışında prim, hesaba düşen net tutarın KDV hariç hali üzerinden hesaplanır.");
+                if (isSpecialTrCard) {
+                    detailHtml += detailBlock("TR 6+6+6 kredi kartı primi nasıl hesaplandı?", "text-indigo-600", [
+                        { label: "1. Satış fiyatı", value: `₺${formatCurrency(satisTutari)}` },
+                        { label: "2. İlk çekilen tutar", value: `₺${formatCurrency(hesaba)}` },
+                        { label: "3. Kalan tutar", value: `₺${formatCurrency(kalanKartTutari)}` },
+                        { label: "4. İlk çekim primi", value: `₺${formatCurrency(ilkCekimKdv)} x %21 = ₺${formatCurrency(ilkCekimKdv * 21 / 100)}` },
+                        { label: "5. Kalan tutar primi", value: `₺${formatCurrency(kalanKartKdv)} x %11 = ₺${formatCurrency(kalanKartKdv * 11 / 100)}` },
+                        { label: "6. Kredi kartı primi", value: `₺${formatCurrency(hesaplananToplamPrim)}` }
+                    ], "TR 6+6+6 kredi kartı satışında ilk çekilen tutara %21, kalan tutara %11 prim uygulanır.");
+                } else {
+                    detailHtml += detailBlock("Kredi kartı primi nasıl hesaplandı?", "text-indigo-600", [
+                        { label: "1. Hesaba düşen net tutar", value: `₺${formatCurrency(hesaba)}` },
+                        { label: "2. KDV hariç tutar", value: `₺${formatCurrency(hesaba)} / 1,20 = ₺${formatCurrency(kdvHaric)}` },
+                        { label: "3. Uygulanan prim oranı", value: `%${oran}` },
+                        { label: "4. Kredi kartı primi", value: `₺${formatCurrency(kdvHaric)} x %${oran} = ₺${formatCurrency(hesaplananToplamPrim)}` }
+                    ], "Kredi kartı satışında prim, hesaba düşen net tutarın KDV hariç hali üzerinden hesaplanır.");
+                }
             } else {
                 const satisKey = elements.satisSelect.value;
                 satisAciklama = satisKey;
-                const mapVal = satisMap[secilenUrun][satisKey] || 0;
+                const mapVal = getActiveSaleAmount(satisKey);
                 const nakit = parseFloat(elements.nakitInput.value) || 0;
                 const senet = Math.max(mapVal - nakit, 0);
                 const nakitKdv = nakit / kdvOran, senetKdv = senet / kdvOran;
@@ -1501,6 +1625,9 @@
                     else if (["RO - Platinum (1300334)", "RO - Silver (1300534)"].includes(secilenUrun)) [nakitOran, senetOran] = [13, 11];
                     else if (isKlimaRateProduct(secilenUrun)) [nakitOran, senetOran] = [11, 9];
                 }
+
+                const robotLowDownPaymentRule = shouldApplyManualRobotLowDownPaymentRule(secilenUrun, nakit, senetOran);
+                if (robotLowDownPaymentRule) senetOran = Math.max(senetOran - 2, 0);
 
                 const nakitPrim = nakitKdv * nakitOran / 100, senetPrim = senetKdv * senetOran / 100;
                 hesaplananToplamPrim = nakitPrim + senetPrim;
@@ -1529,12 +1656,13 @@
                     "Önce nakit tutarın KDV hariç değeri bulunur, sonra ürün grubuna ait nakit prim oranı uygulanır."
                 );
                 if(senet > 0 && satisKey !== "PEŞİN") detailHtml += detailBlock("Senet primi nasıl hesaplandı?", "text-purple-600", [
-                    { label: "1. Katalog satış fiyatı", value: `₺${formatCurrency(mapVal)}` },
+                    { label: isManualMode() ? "1. Manuel satış fiyatı" : "1. Katalog satış fiyatı", value: `₺${formatCurrency(mapVal)}` },
                     { label: "2. Düşülen peşinat", value: `- ₺${formatCurrency(nakit)}` },
                     { label: "3. Kalan senet tutarı", value: `₺${formatCurrency(senet)}` },
                     { label: "4. KDV hariç senet tutarı", value: `₺${formatCurrency(senet)} / 1,20 = ₺${formatCurrency(senetKdv)}` },
-                    { label: "5. Senet prim oranı", value: `%${senetOran}` },
-                    { label: "6. Senet primi", value: `₺${formatCurrency(senetKdv)} x %${senetOran} = ₺${formatCurrency(senetPrim)}` }
+                    ...(robotLowDownPaymentRule ? [{ label: "5. Temizlik robotu düşük peşinat kuralı", value: "Peşinat ₺7.000 altında olduğu için senet oranı %2 düşürüldü." }] : []),
+                    { label: robotLowDownPaymentRule ? "6. Senet prim oranı" : "5. Senet prim oranı", value: `%${senetOran}` },
+                    { label: robotLowDownPaymentRule ? "7. Senet primi" : "6. Senet primi", value: `₺${formatCurrency(senetKdv)} x %${senetOran} = ₺${formatCurrency(senetPrim)}` }
                 ], "Senetli satışta peşinat ayrı, kalan senet tutarı ayrı oranla hesaplanır. Toplam prim bu iki sonucun toplamıdır.");
             }
             
@@ -1695,7 +1823,7 @@
             if(eskiListeMetni) eskiListeMetni.innerText = "Mevcut Fiyat Listesi";
         }
 
-        populateUrun(); updateSatis(); updateKredi(); updateToplam();
+        populateUrun(); updateSatis(); updateKredi(); applyManualModeUI(); updateToplam();
     </script>
 </body>
 </html>
