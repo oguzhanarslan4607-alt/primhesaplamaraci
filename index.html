@@ -278,6 +278,8 @@
             left: 1rem;
             right: 1rem;
         }
+        #priceCatalogModal.is-open { display: flex; }
+        .catalog-price-chip { min-width: 6.25rem; }
         .selected-product-panel {
             position: relative;
             overflow: hidden;
@@ -643,6 +645,11 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="flex justify-end -mt-5">
+                            <button id="openPriceCatalog" type="button" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-primary-200 dark:border-primary-800 bg-primary-50/70 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-xs font-extrabold hover:bg-primary-100 dark:hover:bg-primary-900/40 transition-colors">
+                                <i class="fa-solid fa-table-list"></i> Tüm Fiyat Listeleri
+                            </button>
+                        </div>
 
                         <div class="rounded-2xl border border-dashed border-indigo-200 dark:border-indigo-800/70 bg-indigo-50/40 dark:bg-indigo-900/10 p-4">
                             <label class="flex items-start gap-3 cursor-pointer">
@@ -958,6 +965,35 @@
         </div>
     </main>
 
+    <div id="priceCatalogModal" class="hidden fixed inset-0 z-[10000] items-center justify-center bg-slate-950/60 backdrop-blur-sm p-3 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="priceCatalogTitle">
+        <section class="w-full max-w-6xl max-h-[92vh] overflow-hidden rounded-3xl bg-white dark:bg-gray-900 shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col">
+            <header class="px-5 py-5 sm:px-7 border-b border-gray-100 dark:border-gray-800 flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-[10px] uppercase tracking-[0.2em] font-black text-primary-600 dark:text-primary-400">PrimPro · Fiyat kataloğu</p>
+                    <h2 id="priceCatalogTitle" class="mt-1 text-xl sm:text-2xl font-black text-gray-900 dark:text-white">Tüm Fiyat Listeleri</h2>
+                    <p class="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400">Ürünlerin satış ve taksit seçeneklerini tek yerde görüntüleyin.</p>
+                </div>
+                <button id="closePriceCatalog" type="button" aria-label="Fiyat listelerini kapat" class="w-10 h-10 shrink-0 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800"><i class="fa-solid fa-xmark"></i></button>
+            </header>
+            <div class="p-4 sm:px-7 sm:pt-5 sm:pb-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+                <label class="relative block sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                    <input id="priceCatalogSearch" type="search" placeholder="Ürün adı veya kodu ara..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40">
+                </label>
+                <div class="flex flex-wrap items-center gap-2">
+                    <label for="priceCatalogList" class="text-xs font-bold text-gray-500 dark:text-gray-400">Liste:</label>
+                    <select id="priceCatalogList" class="min-w-40 px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-bold text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/40">
+                        <option value="yeni">Yeni Liste</option>
+                        <option value="eski">Eski Fiyat Listesi</option>
+                        <option value="dahaEski">Önceki Liste</option>
+                    </select>
+                    <span id="priceCatalogCount" class="text-xs font-bold text-gray-400 px-2"></span>
+                </div>
+            </div>
+            <div id="priceCatalogProducts" class="px-4 pb-5 sm:px-7 sm:pb-7 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4"></div>
+        </section>
+    </div>
+
     <script>
         // --- PWA SERVICE WORKER ---
         if ('serviceWorker' in navigator) {
@@ -1094,6 +1130,56 @@
             selectedProductName: document.getElementById('selectedProductName'),
             selectedProductMeta: document.getElementById('selectedProductMeta')
         };
+
+        const priceCatalogMaps = { yeni: satisMapYeni, eski: satisMapEski, dahaEski: satisMapDahaEski };
+        const priceCatalogNames = { yeni: "Yeni Liste", eski: "Eski Fiyat Listesi", dahaEski: "Önceki Liste" };
+        const priceCatalogModal = document.getElementById("priceCatalogModal");
+
+        function renderPriceCatalog() {
+            const listKey = document.getElementById("priceCatalogList").value;
+            const query = document.getElementById("priceCatalogSearch").value.trim().toLocaleLowerCase("tr-TR");
+            const priceMap = priceCatalogMaps[listKey];
+            const products = Object.entries(priceMap).filter(([name]) => name.toLocaleLowerCase("tr-TR").includes(query));
+            document.getElementById("priceCatalogCount").innerText = `${products.length} / ${Object.keys(priceMap).length} ürün`;
+            document.getElementById("priceCatalogProducts").innerHTML = products.length ? products.map(([name, prices]) => `
+                <article class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-800/60 p-4 sm:p-5">
+                    <div class="flex items-start justify-between gap-3 mb-3">
+                        <div class="min-w-0">
+                            <h3 class="font-extrabold text-sm sm:text-base text-gray-900 dark:text-white">${escapeHtml(name.replace(/\s*\([^)]+\)/, ""))}</h3>
+                            <p class="text-[10px] font-bold tracking-wide text-gray-400 mt-1">${escapeHtml(getStockCode(name) || "Ürün kodu yok")}</p>
+                        </div>
+                        <span class="shrink-0 px-2.5 py-1 rounded-lg text-[10px] font-black text-primary-700 dark:text-primary-300 bg-primary-100 dark:bg-primary-900/40">${escapeHtml(priceCatalogNames[listKey])}</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        ${Object.entries(prices).map(([option, amount]) => `
+                            <div class="catalog-price-chip rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2">
+                                <div class="text-[10px] leading-tight font-bold text-gray-400">${escapeHtml(option)}</div>
+                                <div class="mt-1 text-sm font-black text-gray-800 dark:text-gray-100">₺${formatCurrency(amount)}</div>
+                            </div>
+                        `).join("")}
+                    </div>
+                </article>
+            `).join("") : `<div class="md:col-span-2 py-14 text-center text-sm font-semibold text-gray-400">Bu aramayla eşleşen ürün yok.</div>`;
+        }
+
+        function closePriceCatalog() {
+            priceCatalogModal.classList.remove("is-open");
+            priceCatalogModal.classList.add("hidden");
+        }
+
+        document.getElementById("openPriceCatalog").addEventListener("click", () => {
+            const selectedList = document.querySelector('input[name="priceList"]:checked')?.value || "yeni";
+            document.getElementById("priceCatalogList").value = selectedList;
+            document.getElementById("priceCatalogSearch").value = "";
+            renderPriceCatalog();
+            priceCatalogModal.classList.remove("hidden");
+            priceCatalogModal.classList.add("is-open");
+        });
+        document.getElementById("closePriceCatalog").addEventListener("click", closePriceCatalog);
+        document.getElementById("priceCatalogList").addEventListener("change", renderPriceCatalog);
+        document.getElementById("priceCatalogSearch").addEventListener("input", renderPriceCatalog);
+        priceCatalogModal.addEventListener("click", event => { if (event.target === priceCatalogModal) closePriceCatalog(); });
+        document.addEventListener("keydown", event => { if (event.key === "Escape") closePriceCatalog(); });
 
         // --- INIT ---
         window.addEventListener('DOMContentLoaded', () => {
