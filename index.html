@@ -1323,7 +1323,7 @@
 
             const pdfRoot = document.createElement("div");
             pdfRoot.id = "price-catalog-pdf";
-            pdfRoot.style.cssText = "position:fixed;left:-12000px;top:0;width:283mm;box-sizing:border-box;padding:8mm;background:#f1f5f9;color:#172033;font-family:Arial,sans-serif;";
+            pdfRoot.style.cssText = "position:fixed;left:0;top:0;z-index:2147483647;width:283mm;box-sizing:border-box;padding:8mm;background:#f1f5f9;color:#172033;font-family:Arial,sans-serif;";
             pdfRoot.innerHTML = `
                 <div style="padding:0 0 7mm;">
                     <header style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 1mm 5mm;border-bottom:2px solid #dbeafe;">
@@ -1347,7 +1347,12 @@
                     scrollY: 0,
                     onclone: clonedDocument => {
                         const clonedRoot = clonedDocument.getElementById("price-catalog-pdf");
-                        if (clonedRoot) { clonedRoot.style.position = "static"; clonedRoot.style.left = "0"; }
+                        if (clonedRoot) {
+                            clonedRoot.style.position = "static";
+                            clonedRoot.style.left = "0";
+                            clonedRoot.style.top = "0";
+                            clonedRoot.style.zIndex = "auto";
+                        }
                     }
                 },
                 pagebreak: { mode: ["css", "legacy"], avoid: [".pdf-price-card"] },
